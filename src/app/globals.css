@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* Make the specific top middle area transparent */
+.transparent-top-bar {
+  position: fixed;
+  top: 0;
+  left: 20rem;
+  right: 16rem;
+  height: 4rem;
+  background: transparent !important;
+  z-index: 25;
+  pointer-events: none;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+  
+  .input-field {
+    @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors;
+  }
+  
+  .nav-item {
+    @apply flex items-center justify-center w-12 h-12 rounded-xl transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500;
+  }
+  
+  .nav-item.active {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+  
+  .list-card {
+    @apply bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-400 dark:border-gray-500 transition-shadow hover:shadow-md;
+  }
+  
+  .vote-button {
+    @apply p-2 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500;
+  }
+  
+  .vote-button.voted {
+    @apply bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400;
+  }
+
+  .event-card-custom {
+    background-color: #f0fdf4 !important;
+    background: #f0fdf4 !important;
+  }
+
+  .dark .event-card-custom {
+    background-color: #1f2937 !important;
+    background: #1f2937 !important;
+    border-color: #374151 !important;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .vote-button.upvoted {
+    @apply bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400;
+  }
+  
+  .vote-button.downvoted {
+    @apply bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400;
+  }
+}

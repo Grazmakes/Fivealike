@@ -1,0 +1,517 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Play, ExternalLink, Star, Calendar, Clock, Users, Trophy, Book, Music, Film, Gamepad2 } from 'lucide-react';
+import { UnifiedSearch, UnifiedSearchResult } from '@/utils/apiService';
+import { wikipediaService, WikipediaSummary } from '@/services/wikipediaService';
+
+interface EnhancedItemDetailsProps {
+  itemName: string;
+  category?: string;
+  onClose: () => void;
+}
+
+export default function EnhancedItemDetails({ itemName, category, onClose }: EnhancedItemDetailsProps) {
+  const [searchResults, setSearchResults] = useState<UnifiedSearchResult[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeResult, setActiveResult] = useState<UnifiedSearchResult | null>(null);
+  const [artistBio, setArtistBio] = useState<string | null>(null);
+  const [bioLoading, setBioLoading] = useState(false);
+  const [componentError, setComponentError] = useState<string | null>(null);
+  const [wikipediaSummary, setWikipediaSummary] = useState<WikipediaSummary | null>(null);
+  const [wikipediaLoading, setWikipediaLoading] = useState(false);
+
+  // Early return for testing
+  if (componentError) {
+    return (
+      <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        <h3>Component Error:</h3>
+        <p>{componentError}</p>
+        <button onClick={onClose} className="mt-2 px-4 py-2 bg-red-600 text-white rounded">
+          Close
+        </button>
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    const searchItem = async () => {
+      setLoading(true);
+      try {
+        // Check if category has API support
+        const supportedCategories = ['Movies', 'TV Shows', 'Books', 'Games', 'Music', 'Podcasts'];
+        const hasApiSupport = category && supportedCategories.includes(category);
+
+        console.log(`[EnhancedItemDetails] Item: "${itemName}", Category: "${category}", HasApiSupport: ${hasApiSupport}`);
+
+        // If category doesn't have API support, try Wikipedia
+        if (!hasApiSupport) {
+          console.log(`[EnhancedItemDetails] No API support for "${category}", using Wikipedia for "${itemName}"`);
+          setSearchResults([]);
+          setActiveResult(null);
+
+          // Fetch Wikipedia summary as fallback
+          setWikipediaLoading(true);
+          try {
+            const summary = await wikipediaService.getWikipediaSummary(itemName);
+            setWikipediaSummary(summary);
+          } catch (error) {
+            console.error('Wikipedia fallback failed:', error);
+            setWikipediaSummary(null);
+          } finally {
+            setWikipediaLoading(false);
+          }
+
+          setLoading(false);
+          return;
+        }
+        
+        // If we have a category hint, try searching by type first
+        let results: UnifiedSearchResult[] = [];
+        
+        if (category) {
+          const typeMap: { [key: string]: 'music' | 'movie' | 'book' | 'game' } = {
+            'Music': 'music',
+            'Movies': 'movie',
+            'Books': 'book',
+            'Games': 'game',
+            'TV Shows': 'movie',
+            'Podcasts': 'music' // Treat podcasts as music for now
+          };
+          
+          const searchType = typeMap[category];
+          
+          if (searchType) {
+            console.log(`[EnhancedItemDetails] Starting search for "${itemName}" with category "${category}" as type "${searchType}"`);
+            results = await UnifiedSearch.searchByType(itemName, searchType);
+            console.log(`[EnhancedItemDetails] Search completed, got ${results.length} results`);
+          }
+        }
+        
+        setSearchResults(results);
+        setActiveResult(results[0] || null);
+      } catch (error) {
+        console.error(`[EnhancedItemDetails] Search failed for "${itemName}" in category "${category}":`, error);
+        setComponentError(`Search failed: ${error instanceof Error ? error.message : String(error)}`);
+        setSearchResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    searchItem();
+  }, [itemName, category]);
+
+  // Fetch artist biography when a music result is selected
+  useEffect(() => {
+    const fetchArtistBio = async () => {
+      if (activeResult?.type === 'music') {
+        setBioLoading(true);
+        try {
+          const { wikipediaService } = await import('@/services/wikipediaService');
+          
+          // Determine artist name - use the artist name or first artist from the array or title
+          let artistName = '';
+          if (activeResult.raw_data?.type === 'artist') {
+            artistName = activeResult.raw_data.name || activeResult.title;
+          } else if (activeResult.raw_data?.artists && activeResult.raw_data.artists.length > 0) {
+            artistName = activeResult.raw_data.artists[0]?.name || '';
+          } else {
+            // Fallback to using the title as artist name
+            artistName = activeResult.title;
+          }
+
+          if (artistName) {
+            const artistInfo = await wikipediaService.getPageSummary(artistName);
+            if (artistInfo?.summary) {
+              // Clean up the summary by removing Last.fm attribution and HTML tags
+              const cleanBio = artistInfo.summary
+                .replace(/<a[^>]*>.*?<\/a>/g, '') // Remove links
+                .replace(/\s+Read more on Last\.fm.*$/, '') // Remove "Read more on Last.fm" text
+                .replace(/\s+User-contributed text is available under.*$/, '') // Remove attribution
+                .trim();
+              setArtistBio(cleanBio || null);
+            } else {
+              setArtistBio(null);
+            }
+          } else {
+            // Even if no artist name, try using the title
+            if (activeResult.title) {
+              const artistInfo = await wikipediaService.getPageSummary(activeResult.title);
+              if (artistInfo?.summary) {
+                const cleanBio = artistInfo.summary
+                  .replace(/<a[^>]*>.*?<\/a>/g, '')
+                  .replace(/\s+Read more on Last\.fm.*$/, '')
+                  .replace(/\s+User-contributed text is available under.*$/, '')
+                  .trim();
+                setArtistBio(cleanBio || null);
+              } else {
+                setArtistBio(null);
+              }
+            } else {
+              setArtistBio(null);
+            }
+          }
+        } catch (error) {
+          setArtistBio(null);
+        } finally {
+          setBioLoading(false);
+        }
+      } else {
+        setArtistBio(null);
+        setBioLoading(false);
+      }
+    };
+
+    fetchArtistBio();
+  }, [activeResult]);
+
+  const renderTypeIcon = (type: string) => {
+    switch (type) {
+      case 'music': return <Music size={16} className="text-green-500" />;
+      case 'movie': return <Film size={16} className="text-red-500" />;
+      case 'book': return <Book size={16} className="text-blue-500" />;
+      case 'game': return <Gamepad2 size={16} className="text-purple-500" />;
+      default: return <Star size={16} className="text-gray-500" />;
+    }
+  };
+
+  const renderRating = (rating?: number) => {
+    if (!rating) return null;
+    
+    return (
+      <div className="flex items-center space-x-1">
+        <Star size={14} className="text-yellow-500 fill-current" />
+        <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+      </div>
+    );
+  };
+
+  const renderActiveResult = () => {
+    // Check if category has API support
+    const supportedCategories = ['Movies', 'TV Shows', 'Books', 'Games', 'Music', 'Podcasts'];
+    const hasApiSupport = category && supportedCategories.includes(category);
+    
+    if (!hasApiSupport) {
+      if (wikipediaLoading) {
+        return (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto mb-2"></div>
+            <div className="text-gray-400 mb-2">Loading Wikipedia information...</div>
+          </div>
+        );
+      }
+
+      if (wikipediaSummary) {
+        return (
+          <div className="space-y-4">
+            {/* Wikipedia Header */}
+            <div className="flex items-center space-x-2 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <span className="text-2xl">📖</span>
+              <span className="font-medium text-blue-700 dark:text-blue-300">
+                Wikipedia Information
+              </span>
+            </div>
+
+            {/* Wikipedia Content */}
+            <div className="space-y-4">
+              {/* Header with image and basic info */}
+              <div className="flex space-x-4">
+                {wikipediaSummary.thumbnail && (
+                  <Image
+                    src={wikipediaSummary.thumbnail.source}
+                    alt={wikipediaSummary.title}
+                    width={96}
+                    height={96}
+                    className="flex-shrink-0 rounded-lg object-cover w-24 h-24"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                )}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-lg text-gray-900 dark:text-white">
+                    {wikipediaSummary.title}
+                  </h3>
+
+                  {wikipediaSummary.description && (
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                      {wikipediaSummary.description}
+                    </p>
+                  )}
+
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <Book size={12} />
+                    <span>Wikipedia Article</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              {wikipediaSummary.extract && (
+                <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {wikipediaService.getFirstParagraph(wikipediaSummary.extract)}
+                </div>
+              )}
+
+              {/* Wikipedia link */}
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                <a
+                  href={wikipediaSummary.pageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium"
+                >
+                  <ExternalLink size={14} />
+                  <span>Read full article on Wikipedia</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="text-center py-8">
+          <div className="text-gray-400 mb-2">No specialized API available</div>
+          <div className="text-sm text-gray-500 mb-4">
+            {category} items don&apos;t have dedicated API support
+          </div>
+          <a
+            href={`https://en.wikipedia.org/wiki/${encodeURIComponent(itemName)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
+          >
+            <ExternalLink size={16} />
+            <span>Search Wikipedia</span>
+          </a>
+        </div>
+      );
+    }
+    
+    if (!activeResult) {
+      return (
+        <div className="text-center py-8">
+          <div className="text-gray-400 mb-2">No additional information found</div>
+          <div className="text-sm text-gray-500">
+            Information about &quot;{itemName}&quot; would be displayed here
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        {/* Header with image and basic info */}
+        <div className="flex space-x-4">
+          {activeResult.image && (
+            <Image 
+              src={activeResult.image} 
+              alt={activeResult.title}
+              width={activeResult.type === 'movie' || activeResult.type === 'book' ? 80 : 96}
+              height={activeResult.type === 'movie' || activeResult.type === 'book' ? 128 : 96}
+              className={`flex-shrink-0 rounded-lg object-cover ${
+                activeResult.type === 'movie' || activeResult.type === 'book'
+                  ? 'w-20 h-32' // Book/Movie cover aspect ratio (2:3)
+                  : 'w-24 h-24' // Square for other types (music, games)
+              }`}
+            />
+          )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">
+                {activeResult.title}
+              </h3>
+              {renderRating(activeResult.rating)}
+            </div>
+            
+            {activeResult.subtitle && (
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                {activeResult.subtitle}
+              </p>
+            )}
+            
+            <div className="flex items-center space-x-4 text-xs text-gray-500">
+              <div className="flex items-center space-x-1">
+                {renderTypeIcon(activeResult.type)}
+                <span className="capitalize">{activeResult.type}</span>
+              </div>
+              
+              {activeResult.year && (
+                <div className="flex items-center space-x-1">
+                  <Calendar size={12} />
+                  <span>{activeResult.year}</span>
+                </div>
+              )}
+              
+              {activeResult.genres && activeResult.genres.length > 0 && (
+                <div className="flex items-center space-x-1">
+                  <Trophy size={12} />
+                  <span>{activeResult.genres.slice(0, 2).join(', ')}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        {(activeResult.description || (activeResult.type === 'music' && artistBio)) && (
+          <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            {bioLoading && activeResult.type === 'music' ? (
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600"></div>
+                <span>Loading artist information...</span>
+              </div>
+            ) : activeResult.type === 'music' && artistBio ? (
+              // Show artist bio for music items
+              artistBio.length > 300 ? `${artistBio.substring(0, 300)}...` : artistBio
+            ) : activeResult.description ? (
+              // Show regular description for non-music items
+              activeResult.description.length > 200 
+                ? `${activeResult.description.substring(0, 200)}...`
+                : activeResult.description
+            ) : null}
+          </div>
+        )}
+
+        {/* Additional details based on type */}
+        {activeResult.type === 'music' && activeResult.raw_data && (
+          <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+            <div className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
+              Music Details
+            </div>
+            <div className="text-sm space-y-1">
+              <div>
+                {activeResult.raw_data.type === 'artist' ? 
+                  `Artist: ${activeResult.raw_data.name}` : 
+                  activeResult.raw_data.type === 'album' ? 
+                    `Album: ${activeResult.raw_data.name}` :
+                    activeResult.raw_data.album?.name ? 
+                      `Album: ${activeResult.raw_data.album.name}` : 
+                      `Track: ${activeResult.raw_data.name || activeResult.title}`
+                }
+              </div>
+              {activeResult.raw_data.artists && (
+                <div>Artist(s): {activeResult.raw_data.artists.map((a: any) => a?.name || 'Unknown').join(', ')}</div>
+              )}
+              {activeResult.raw_data.album?.release_date && (
+                <div className="flex items-center space-x-1">
+                  <Calendar size={12} />
+                  <span>Released: {activeResult.raw_data.album.release_date ? new Date(activeResult.raw_data.album.release_date).getFullYear() : 'Unknown'}</span>
+                </div>
+              )}
+              {activeResult.raw_data.duration_ms && (
+                <div className="flex items-center space-x-1">
+                  <Clock size={12} />
+                  <span>{Math.round(activeResult.raw_data.duration_ms / 60000)}:{String(Math.round((activeResult.raw_data.duration_ms % 60000) / 1000)).padStart(2, '0')}</span>
+                </div>
+              )}
+              {activeResult.raw_data.popularity && (
+                <div className="flex items-center space-x-1">
+                  <Star size={12} />
+                  <span>Popularity: {activeResult.raw_data.popularity}/100</span>
+                </div>
+              )}
+              {activeResult.raw_data.genres && activeResult.raw_data.genres.length > 0 && (
+                <div>Genres: {activeResult.raw_data.genres.join(', ')}</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeResult.type === 'movie' && activeResult.raw_data && (
+          <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
+            <div className="text-xs font-medium text-red-700 dark:text-red-300 mb-1">
+              Movie Details
+            </div>
+            <div className="text-sm space-y-1">
+              <div>Director: {activeResult.raw_data.director || 'Not available'}</div>
+              <div>Runtime: {activeResult.raw_data.runtime ? `${activeResult.raw_data.runtime} min` : 'Not available'}</div>
+              <div>Rated: {activeResult.raw_data.vote_average ? `${activeResult.raw_data.vote_average}/10` : 'Not available'}</div>
+              {activeResult.raw_data.genres && activeResult.raw_data.genres.length > 0 && (
+                <div>Genres: {activeResult.raw_data.genres.map((g: any) => g?.name || 'Unknown').join(', ')}</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeResult.type === 'book' && activeResult.raw_data && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+            <div className="text-xs font-medium text-blue-700 dark:text-blue-300 mb-1">
+              Book Details
+            </div>
+            <div className="text-sm space-y-1">
+              {activeResult.raw_data.volumeInfo?.pageCount && (
+                <div>{activeResult.raw_data.volumeInfo.pageCount} pages</div>
+              )}
+              {activeResult.raw_data.volumeInfo?.language && (
+                <div>Language: {activeResult.raw_data.volumeInfo.language?.toUpperCase?.() || activeResult.raw_data.volumeInfo.language}</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeResult.type === 'game' && activeResult.raw_data && (
+          <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+            <div className="text-xs font-medium text-purple-700 dark:text-purple-300 mb-1">
+              Game Details
+            </div>
+            <div className="text-sm space-y-1">
+              {activeResult.raw_data.platforms && Array.isArray(activeResult.raw_data.platforms) && (
+                <div>Platforms: {activeResult.raw_data.platforms.slice(0, 3).map((p: any) => {
+                  // Handle different platform data structures
+                  if (p.platform && p.platform.name) {
+                    return p.platform.name;
+                  } else if (p.name) {
+                    return p.name;
+                  } else if (typeof p === 'string') {
+                    return p;
+                  }
+                  return 'Unknown Platform';
+                }).join(', ')}</div>
+              )}
+              {activeResult.raw_data.metacritic && (
+                <div className="flex items-center space-x-1">
+                  <Trophy size={12} />
+                  <span>Metacritic: {activeResult.raw_data.metacritic}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* External link */}
+        {activeResult.external_url && (
+          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+            <a 
+              href={activeResult.external_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium"
+            >
+              <ExternalLink size={14} />
+              <span>View More Details</span>
+            </a>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-200 dark:border-gray-600 shadow-sm">
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+          <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+            Loading details...
+          </span>
+        </div>
+      ) : (
+        renderActiveResult()
+      )}
+    </div>
+  );
+};
