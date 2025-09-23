@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Five Alike - Test Deployment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; }
+        .success { color: #28a745; font-weight: bold; }
+        .info { background: #e7f3ff; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Five Alike Deployment Test</h1>
+        <p class="success">✅ SUCCESS! Your site is working correctly.</p>
+
+        <div class="info">
+            <h3>What this confirms:</h3>
+            <ul>
+                <li>✅ Netlify can serve your static files</li>
+                <li>✅ HTML, CSS, and JavaScript are loading</li>
+                <li>✅ No "Page not found" errors</li>
+                <li>✅ Ready for the full Five Alike deployment</li>
+            </ul>
+        </div>
+
+        <p><strong>Next steps:</strong></p>
+        <ol>
+            <li>This test confirms deployment works</li>
+            <li>Deploy the full <code>five-alike-static-export.zip</code></li>
+            <li>Add your API environment variables</li>
+            <li>Enjoy your working Five Alike site!</li>
+        </ol>
+
+        <button class="button" onclick="testFunction()">Test JavaScript</button>
+        <p id="js-test" style="margin-top: 10px;"></p>
+
+        <script>
+            function testFunction() {
+                document.getElementById('js-test').innerHTML =
+                    '<span style="color: green;">✅ JavaScript is working too!</span>';
+            }
+        </script>
+    </div>
+</body>
+</html>
