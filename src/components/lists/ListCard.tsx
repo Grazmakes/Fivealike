@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
-import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle } from 'lucide-react';
+import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, Archive } from 'lucide-react';
 import { List, ItemVotes as ItemVoteData, Comment, UserBadge } from '@/types';
 import { mockTMDbData, mockArtistData } from '@/data/mockData';
 import { getItemDetailsByName } from '@/utils/tmdbApi';
@@ -11,12 +11,11 @@ import SimpleItemDetails from '@/components/items/SimpleItemDetails';
 import MentionInput from '@/components/mentions/MentionInput';
 import MentionDisplay from '@/components/mentions/MentionDisplay';
 import { useRealTimeVotesContext } from '@/context/RealTimeVotesContext';
+import { HighFivedBadge } from '@/components/achievements/GoldHighFiveNotification';
 
 interface ListCardProps {
   list: List;
-  itemVotes: { [itemIndex: number]: { upvotes: number; downvotes: number; userVote: 'up' | 'down' | null; } };
   onListVote: (listId: number, voteType: 'up' | 'down') => void;
-  onItemVote: (listId: number, itemIndex: number, voteType: 'up' | 'down') => void;
   onSaveList: (listId: number) => void;
   onHighFive: (listId: number) => void;
   onCategoryClick?: (category: string) => void;
@@ -28,6 +27,7 @@ interface ListCardProps {
   onSetReminder?: (listId: number, reminderDate: string, reminderType: string, message?: string) => void;
   onItemBookmark?: (listId: number, itemIndex: number) => void;
   onMessage?: (username: string) => void;
+  onArchiveItem?: (listId: number, itemIndex: number) => void;
   bookmarkState?: { [key: string]: boolean };
   isSaved: boolean;
   antiSocialMode?: boolean;
@@ -66,12 +66,10 @@ const getUserBadges = (username: string): UserBadge[] => {
   return badgeMap[username] || [];
 };
 
-function ListCard({ 
-  list, 
-  itemVotes, 
-  onListVote, 
-  onItemVote, 
-  onSaveList, 
+function ListCard({
+  list,
+  onListVote,
+  onSaveList,
   onHighFive,
   onCategoryClick,
   onTitleClick,
@@ -82,6 +80,7 @@ function ListCard({
   onSetReminder,
   onItemBookmark,
   onMessage,
+  onArchiveItem,
   bookmarkState = {},
   isSaved,
   antiSocialMode = false
@@ -212,16 +211,6 @@ function ListCard({
   }, []);
   const displayVotes = currentVotes;
 
-  const getItemVoteTotal = (itemIndex: number) => {
-    const votes = itemVotes[itemIndex];
-    if (!votes) return 0;
-    return votes.upvotes - votes.downvotes;
-  };
-
-  const getUserVote = (itemIndex: number) => {
-    const votes = itemVotes[itemIndex];
-    return votes?.userVote || null;
-  };
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;
@@ -406,12 +395,30 @@ function ListCard({
     setShowExportMenu(false);
   };
 
+  // Get category border color
+  const getCategoryBorderColor = (category: string) => {
+    switch (category) {
+      case 'Movies': return 'border-l-red-500';
+      case 'TV Shows': return 'border-l-purple-500';
+      case 'Books': return 'border-l-green-600';
+      case 'Music': return 'border-l-pink-500';
+      case 'Games': return 'border-l-orange-500';
+      case 'Food & Drink': return 'border-l-yellow-500';
+      case 'Travel': return 'border-l-cyan-500';
+      case 'Technology': return 'border-l-indigo-500';
+      case 'Health & Fitness': return 'border-l-emerald-500';
+      case 'Arts & Crafts': return 'border-l-violet-500';
+      case 'Sports': return 'border-l-blue-600';
+      default: return 'border-l-gray-500';
+    }
+  };
+
   return (
-    <div id={`list-${list.id}`} className="list-card relative">
+    <div id={`list-${list.id}`} className={`list-card relative mb-6 border-l-4 ${getCategoryBorderColor(list.category)}`}>
       {/* Genre Bubble */}
       <button
         onClick={() => onCategoryClick?.(list.category)}
-        className={`absolute -top-3 -right-3 text-white text-sm px-3 py-1.5 rounded-full z-10 flex items-center space-x-1 font-medium shadow-lg hover:scale-105 transition-transform cursor-pointer ${
+        className={`absolute -top-2 -right-2 text-white text-sm px-3 py-1.5 rounded-full z-20 flex items-center space-x-1 font-medium shadow-lg hover:scale-105 transition-transform cursor-pointer ${
           list.category === 'Movies' ? 'bg-red-500 hover:bg-red-600' :
           list.category === 'TV Shows' ? 'bg-purple-500 hover:bg-purple-600' :
           list.category === 'Books' ? 'bg-green-600 hover:bg-green-700' :
@@ -452,6 +459,7 @@ function ListCard({
               </span>
             )}
             </h3>
+
           </div>
           <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
             <span>by</span>
@@ -637,14 +645,15 @@ function ListCard({
         <div className="flex items-center space-x-2 mt-3">
           <button
             onClick={() => onSaveList(list.id)}
-            className={`p-2 rounded-lg transition-colors ${
-              isSaved 
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900' 
+            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+              isSaved
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900'
                 : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
-            title={isSaved ? 'Unsave list' : 'Save list'}
+            title={isSaved ? 'Unsave list' : 'Save List'}
           >
-            <Bookmark size={24} fill={isSaved ? 'currentColor' : 'none'} />
+            <Bookmark size={20} fill={isSaved ? 'currentColor' : 'none'} />
+            <span className="text-sm font-medium">{isSaved ? 'Saved' : 'Save List'}</span>
           </button>
 
           {/* Reminder Button */}
@@ -751,36 +760,29 @@ function ListCard({
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  {!antiSocialMode && (
-                    <button
-                      onClick={() => onItemVote(list.id, index, 'up')}
-                      className={`vote-button ${getUserVote(index) === 'up' ? 'upvoted' : ''}`}
-                    >
-                      <ArrowUp size={18} />
-                    </button>
-                  )}
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[20px] text-center">
-                    {getItemVoteTotal(index)}
-                  </span>
-                  {!antiSocialMode && (
-                    <button
-                      onClick={() => onItemVote(list.id, index, 'down')}
-                      className={`vote-button ${getUserVote(index) === 'down' ? 'downvoted' : ''}`}
-                    >
-                      <ArrowDown size={18} />
-                    </button>
-                  )}
                   {onItemBookmark && (
                     <button
                       onClick={() => onItemBookmark(list.id, index)}
-                      className={`p-1 rounded-lg transition-colors ${
+                      className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                         bookmarkState[`${list.id}-${index}`]
-                          ? 'text-yellow-500 hover:text-yellow-600 dark:text-yellow-400 dark:hover:text-yellow-300'
-                          : 'text-gray-400 hover:text-yellow-500 dark:text-gray-500 dark:hover:text-yellow-400'
+                          ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800'
+                          : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-blue-900 dark:hover:text-blue-300'
                       }`}
-                      title={bookmarkState[`${list.id}-${index}`] ? 'Remove bookmark' : 'Bookmark this item'}
+                      title={bookmarkState[`${list.id}-${index}`] ? 'Saved to your bookmarks' : 'Save to bookmarks'}
                     >
-                      <Bookmark size={16} className={bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''} />
+                      <Bookmark size={14} className={bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''} />
+                      <span>{bookmarkState[`${list.id}-${index}`] ? 'Saved' : 'Save Item'}</span>
+                    </button>
+                  )}
+
+                  {onArchiveItem && (
+                    <button
+                      onClick={() => onArchiveItem(list.id, index)}
+                      className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-purple-100 hover:text-purple-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900 dark:hover:text-purple-300 transition-colors"
+                      title="Archive this item"
+                    >
+                      <Archive size={14} />
+                      <span>Archive</span>
                     </button>
                   )}
                 </div>
@@ -900,31 +902,21 @@ function ListCard({
           )}
         </div>
 
-        <div className="flex items-center space-x-3 sm:space-x-4">
-            {!antiSocialMode && (
-              <button
-                onClick={() => onHighFive(list.id)}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-full font-medium shadow-sm hover:scale-105 transition-all text-sm ${
-                  list.userHighFived 
-                    ? 'bg-yellow-500 text-white' 
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-yellow-500 hover:text-white'
-                }`}
-                title={list.userHighFived ? 'Remove high five' : 'Give high five'}
-              >
-                <span className="text-lg">🖐️</span>
-                <span>{list.highFives}</span>
-              </button>
-            )}
-            
-            {!antiSocialMode && (
-              <button
-                onClick={() => setShowComments(!showComments)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-              >
-                <MessageSquare size={20} />
-                <span className="text-sm font-medium">{list.comments.length}</span>
-              </button>
-            )}
+        {/* Right side - High Fived Badge and Comments */}
+        <div className="flex items-center space-x-4">
+          {!antiSocialMode && list.highFives >= 10 && (
+            <HighFivedBadge count={list.highFives} size="md" showCount={true} />
+          )}
+
+          {!antiSocialMode && (
+            <button
+              onClick={() => setShowComments(!showComments)}
+              className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            >
+              <MessageSquare size={20} />
+              <span className="text-sm font-medium">{list.comments.length}</span>
+            </button>
+          )}
         </div>
       </div>
 

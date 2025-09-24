@@ -151,12 +151,12 @@ export default function LocalDiscovery({
     );
   }, [setUserProfile]);
 
-  // Auto-detect location on first mount if no location is set
-  useEffect(() => {
-    if (!userLocation && !userProfile.homeCity) {
-      detectLocation();
-    }
-  }, [detectLocation, userLocation, userProfile.homeCity]);
+  // Auto-detect location on first mount if no location is set (disabled - user should manually choose)
+  // useEffect(() => {
+  //   if (!userLocation && !userProfile.homeCity) {
+  //     detectLocation();
+  //   }
+  // }, [detectLocation, userLocation, userProfile.homeCity]);
   
   // Mock location data for demonstration
   const mockUserLocations = useMemo((): { [key: string]: string } => ({
@@ -205,7 +205,7 @@ export default function LocalDiscovery({
 
   // Filter lists based on location proximity and genre
   const getLocationFilteredLists = useMemo(() => {
-    if (!userLocation) return allLists;
+    if (!userLocation) return []; // Show no lists until location is set
 
     let filtered = allLists.filter(list => {
       const authorLocation = mockUserLocations[list.author] || '';
@@ -357,17 +357,29 @@ export default function LocalDiscovery({
               <div className="text-center py-12">
                 <MapPin size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  No local lists found
+                  {!userLocation ? 'Set your location to discover local lists' : 'No local lists found'}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  Try expanding your search radius or check back later
+                  {!userLocation
+                    ? 'Enter your city in the location settings above to see lists from people near you'
+                    : 'Try expanding your search radius or check back later'
+                  }
                 </p>
-                <button
-                  onClick={() => setDistanceFilter('region')}
-                  className="btn-primary"
-                >
-                  Expand to Regional
-                </button>
+                {!userLocation ? (
+                  <button
+                    onClick={() => setShowLocationSettings(true)}
+                    className="btn-primary bg-green-600 hover:bg-green-700"
+                  >
+                    Set Location
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setDistanceFilter('region')}
+                    className="btn-primary"
+                  >
+                    Expand to Regional
+                  </button>
+                )}
               </div>
             )}
           </div>
