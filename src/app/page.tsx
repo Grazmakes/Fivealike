@@ -1496,6 +1496,8 @@ function HomeContent() {
     // Create history item
     const historyItem = {
       id: `${listId}-${itemIndex}-${Date.now()}`,
+      type: 'item' as const,
+      action: 'tried' as const,
       listId,
       itemIndex,
       itemName: list.items[itemIndex],

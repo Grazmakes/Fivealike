@@ -263,7 +263,7 @@ export function HighFivedBadge({
             This list is popular! 10+ people liked
           </div>
           <div className="text-xs text-gray-200">
-            everything on the list - that's why they got High Fived!
+            everything on the list - that&apos;s why they got High Fived!
           </div>
 
           {/* Tooltip arrow */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { History as HistoryIcon, Search, Calendar, ThumbsUp, ThumbsDown, TrendingUp, Medal, BarChart3, Filter, Clock } from 'lucide-react';
+import { History as HistoryIcon, Search, Calendar, ThumbsUp, ThumbsDown, TrendingUp, Medal, BarChart3, Filter, Clock, Bookmark } from 'lucide-react';
 import { HistoryItem } from '@/types';
 
 interface HistoryProps {
@@ -79,7 +79,7 @@ export default function History({
           Your History
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Your journey through all the lists and items you've saved and tried
+          Your journey through all the lists and items you&apos;ve saved and tried
         </p>
       </div>
 
@@ -204,7 +204,7 @@ export default function History({
                     Great Taste Achievement! 🎉
                   </h3>
                   <p className="text-yellow-700 dark:text-yellow-300">
-                    You have a {successRate}% success rate! You're great at discovering things you'll love.
+                    You have a {successRate}% success rate! You&apos;re great at discovering things you&apos;ll love.
                   </p>
                 </div>
               </div>
