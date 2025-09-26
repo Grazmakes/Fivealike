@@ -1,7 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { X } from 'lucide-react';
+import { mockArtistData } from '@/data/mockData';
+import { artistFallbacks } from '@/data/artistFallbacks';
+import { getBookFallback } from '@/data/bookFallbacks';
 
 interface SimpleItemDetailsProps {
   itemName: string;
@@ -14,9 +17,90 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
 
+  const fallbackData = useMemo(() => {
+    if (!category) return null;
+    const normalizedCategory = category.toLowerCase();
+
+    if (normalizedCategory === 'music') {
+      const candidates = [
+        itemName,
+        itemName.replace(/ essentials? playlist/i, '').trim(),
+        itemName.replace(/ fan favorites/i, '').trim(),
+        itemName.replace(/ greatest hits/i, '').trim()
+      ].filter(Boolean);
+
+      for (const candidate of candidates) {
+        const artist = mockArtistData[candidate] || artistFallbacks[candidate];
+        if (artist) {
+          return {
+            type: 'music',
+            name: artist.name,
+            description: artist.biography,
+            image: artist.image,
+            formed: artist.formed,
+            genres: artist.genres?.join(', '),
+            members: artist.members?.join(', ')
+          };
+        }
+      }
+    }
+
+    if (normalizedCategory === 'books') {
+      const book = getBookFallback(itemName);
+      if (book) {
+        return {
+          volumeInfo: {
+            title: book.title,
+            authors: book.authors,
+            description: book.description,
+            imageLinks: book.thumbnail ? { thumbnail: book.thumbnail } : undefined,
+            publishedDate: book.publishedDate,
+            pageCount: book.pageCount
+          }
+        };
+      }
+    }
+
+    if (normalizedCategory === 'books') {
+      const candidates = [
+        itemName,
+        itemName.replace(/ companion stories?/i, '').trim(),
+        itemName.replace(/ fan favorites?/i, '').trim()
+      ].filter(Boolean);
+
+      for (const candidate of candidates) {
+        const book = getBookFallback(candidate);
+        if (book) {
+          return {
+            volumeInfo: {
+              title: book.title,
+              authors: book.authors,
+              description: book.description,
+              imageLinks: book.thumbnail ? { thumbnail: book.thumbnail } : undefined,
+              publishedDate: book.publishedDate,
+              pageCount: book.pageCount
+            }
+          };
+        }
+      }
+    }
+
+    return null;
+  }, [category, itemName]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // For music, prioritize live API over fallbacks
+        const shouldPrioritizeLiveAPI = category === 'Music';
+
+        if (fallbackData && !shouldPrioritizeLiveAPI) {
+          setData(fallbackData);
+          setError(null);
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
         setError(null);
 
@@ -25,6 +109,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
         console.log(`[SimpleItemDetails] Category exact value:`, JSON.stringify(category));
 
         if (category === 'Books') {
+          const bookFallback = getBookFallback(itemName);
           console.log('[SimpleItemDetails] Fetching books data...');
           try {
             const response = await fetch(`/api/search/books?query=${encodeURIComponent(itemName)}&limit=1`, {
@@ -45,11 +130,39 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
               console.log('[SimpleItemDetails] Setting book data:', results[0]);
               setData(results[0]);
             } else {
-              console.log('[SimpleItemDetails] No books found, will use Wikipedia fallback');
-              setData(null);
+              console.log('[SimpleItemDetails] No books found, will use fallback');
+              if (bookFallback) {
+                setData({
+                  volumeInfo: {
+                    title: bookFallback.title,
+                    authors: bookFallback.authors,
+                    description: bookFallback.description,
+                    imageLinks: bookFallback.thumbnail ? { thumbnail: bookFallback.thumbnail } : undefined,
+                    publishedDate: bookFallback.publishedDate,
+                    pageCount: bookFallback.pageCount
+                  }
+                });
+              } else {
+                setData(null);
+              }
             }
           } catch (fetchError) {
             console.error('[SimpleItemDetails] Books fetch error:', fetchError);
+            if (bookFallback) {
+              setData({
+                volumeInfo: {
+                  title: bookFallback.title,
+                  authors: bookFallback.authors,
+                  description: bookFallback.description,
+                  imageLinks: bookFallback.thumbnail ? { thumbnail: bookFallback.thumbnail } : undefined,
+                  publishedDate: bookFallback.publishedDate,
+                  pageCount: bookFallback.pageCount
+                }
+              });
+              setError(null);
+              setLoading(false);
+              return;
+            }
             throw fetchError;
           }
         } else if (category === 'Movies') {
@@ -79,23 +192,6 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           } catch (fetchError) {
             console.error('[SimpleItemDetails] Movies fetch error:', fetchError);
             throw fetchError;
-          }
-        } else if (category === 'Music') {
-          const response = await fetch(`/api/search/music?query=${encodeURIComponent(itemName)}&limit=1`, {
-            signal: AbortSignal.timeout(15000) // 15 second timeout for music due to Spotify delays
-          });
-          if (!response.ok) {
-            throw new Error(`Music API failed: ${response.status}`);
-          }
-          const results = await response.json();
-          console.log('[SimpleItemDetails] Music API results:', results);
-
-          if (results && results.length > 0) {
-            console.log('[SimpleItemDetails] Setting music data:', results[0]);
-            setData(results[0]);
-          } else {
-            console.log('[SimpleItemDetails] No music found, will use Wikipedia fallback');
-            setData(null);
           }
         } else if (category === 'Games') {
           const response = await fetch(`/api/search/games?query=${encodeURIComponent(itemName)}&limit=1`, {
@@ -148,6 +244,54 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
             console.log('[SimpleItemDetails] No TV shows found, will use Wikipedia fallback');
             setData(null);
           }
+        } else if (category === 'Music') {
+          console.log('[SimpleItemDetails] Fetching music data via subject-info API...');
+          try {
+            const response = await fetch('/api/subject-info', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ subject: itemName, category }),
+              signal: AbortSignal.timeout(10000) // 10 second timeout
+            });
+
+            if (!response.ok) {
+              console.error('[SimpleItemDetails] Subject-info API error:', response.status);
+              throw new Error(`Subject-info API failed: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('[SimpleItemDetails] Subject-info API results:', result);
+
+            if (result && (result.image || result.description)) {
+              console.log('[SimpleItemDetails] Setting subject-info data:', result);
+              setData({
+                type: 'music',
+                name: itemName,
+                description: result.description,
+                image: result.image,
+                sourceName: result.sourceName,
+                sourceUrl: result.sourceUrl
+              });
+            } else {
+              console.log('[SimpleItemDetails] No subject-info found, will check fallbacks');
+              // Try fallback data if available
+              if (fallbackData) {
+                console.log('[SimpleItemDetails] Using fallback data after no API results:', fallbackData);
+                setData(fallbackData);
+              } else {
+                setData(null);
+              }
+            }
+          } catch (fetchError) {
+            console.error('[SimpleItemDetails] Subject-info fetch error:', fetchError);
+            // Try fallback data if available
+            if (fallbackData) {
+              console.log('[SimpleItemDetails] Using fallback data after API failure:', fallbackData);
+              setData(fallbackData);
+            } else {
+              setData(null);
+            }
+          }
         } else {
           // If no specific category handler, set data to null to trigger Wikipedia fallback
           setData(null);
@@ -161,7 +305,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
     };
 
     fetchData();
-  }, [itemName, category]);
+  }, [itemName, category, fallbackData]);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
@@ -198,20 +342,31 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           {category === 'Books' && data.volumeInfo ? (
             <div className="flex gap-4">
               {/* Book cover on the left */}
-              {data.volumeInfo.imageLinks?.thumbnail && (
+              {(() => {
+                const thumbnail = data.volumeInfo.imageLinks?.thumbnail;
+                if (!thumbnail) return null;
+                return (
                 <div className="flex-shrink-0">
                   <img
-                    src={data.volumeInfo.imageLinks.thumbnail}
+                    src={thumbnail}
                     alt={data.volumeInfo.title}
                     className="w-24 h-36 object-cover rounded shadow-md"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       console.log('Book cover failed to load:', target.src);
                       target.style.display = 'none';
+                      const placeholder = target.parentElement?.querySelector('.book-placeholder');
+                      if (placeholder) {
+                        (placeholder as HTMLElement).style.display = 'flex';
+                      }
                     }}
                   />
                 </div>
-              )}
+                );
+              })()}
+              <div className="book-placeholder w-24 h-36 bg-gradient-to-br from-slate-400 to-slate-600 rounded shadow-md flex items-center justify-center text-white font-bold text-lg" style={{ display: data.volumeInfo.imageLinks?.thumbnail ? 'none' : 'flex' }}>
+                {data.volumeInfo.title.substring(0, 2).toUpperCase()}
+              </div>
 
               {/* Details on the right */}
               <div className="flex-1 min-w-0">
@@ -300,31 +455,46 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           ) : category === 'Music' && data ? (
             <div className="flex gap-4">
               {/* Artist artwork on the left */}
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 relative">
                 {(() => {
-                  const imageUrl = data.image || data.artwork || data.images?.[0]?.url;
-                  if (!imageUrl) return null;
-                  return (
-                  <img
-                    src={imageUrl}
-                    alt={data.name}
-                    className="w-24 h-24 object-cover rounded shadow-md bg-gray-200"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      console.log('Artist image failed to load:', target.src);
-                      // Replace with a better fallback
-                      target.style.display = 'none';
-                      const placeholder = target.parentElement?.querySelector('.fallback-placeholder');
-                      if (placeholder) {
-                        (placeholder as HTMLElement).style.display = 'flex';
-                      }
-                    }}
-                  />
-                  );
+                  const imageUrl = data.image;
+                  console.log('[SimpleItemDetails] Rendering music artwork. Data:', JSON.stringify(data, null, 2));
+                  console.log('[SimpleItemDetails] Image URL:', imageUrl);
+
+                  if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== '') {
+                    return (
+                      <>
+                        <img
+                          src={imageUrl}
+                          alt={data.name || itemName}
+                          className="w-24 h-24 object-cover rounded shadow-md bg-gray-200"
+                          onLoad={() => {
+                            console.log('[SimpleItemDetails] Image loaded successfully:', imageUrl);
+                          }}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            console.error('[SimpleItemDetails] Image failed to load:', target.src);
+                            target.style.display = 'none';
+                            const placeholder = target.parentElement?.querySelector('.music-placeholder');
+                            if (placeholder) {
+                              (placeholder as HTMLElement).style.display = 'flex';
+                            }
+                          }}
+                        />
+                        <div className="music-placeholder w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded shadow-md flex items-center justify-center text-white font-bold text-lg absolute top-0 left-0" style={{display: 'none'}}>
+                          {(data.name || itemName).substring(0, 2).toUpperCase()}
+                        </div>
+                      </>
+                    );
+                  } else {
+                    console.log('[SimpleItemDetails] No valid image URL, showing placeholder');
+                    return (
+                      <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded shadow-md flex items-center justify-center text-white font-bold text-lg">
+                        {(data.name || itemName).substring(0, 2).toUpperCase()}
+                      </div>
+                    );
+                  }
                 })()}
-                <div className="fallback-placeholder w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded shadow-md flex items-center justify-center text-white font-bold text-lg" style={{display: (data.image || data.artwork || (data.images && data.images[0]?.url)) ? 'none' : 'flex'}}>
-                  {data.name.substring(0, 2).toUpperCase()}
-                </div>
               </div>
 
               {/* Details on the right */}
@@ -339,11 +509,24 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                       Type: {data.type.charAt(0).toUpperCase() + data.type.slice(1)}
                     </p>
                   )}
-                  {data.genres && data.genres.length > 0 && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Genres: {data.genres.slice(0, 3).join(', ')}
-                    </p>
-                  )}
+                  {(() => {
+                    if (!data.genres) return null;
+                    if (Array.isArray(data.genres) && data.genres.length > 0) {
+                      return (
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Genres: {data.genres.slice(0, 3).join(', ')}
+                        </p>
+                      );
+                    }
+                    if (typeof data.genres === 'string' && data.genres.trim().length > 0) {
+                      return (
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Genres: {data.genres}
+                        </p>
+                      );
+                    }
+                    return null;
+                  })()}
                   {data.popularity && data.popularity > 0 && (
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       Popularity: {data.popularity}/100

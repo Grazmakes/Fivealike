@@ -20,6 +20,7 @@ interface RejectListsProps {
   savedLists: number[];
   setSavedLists: (lists: number[]) => void;
   onBackClick?: () => void;
+  antiSocialMode?: boolean;
 }
 
 type SortOption = 'mostDownvotes' | 'worstRatio' | 'recent';
@@ -37,7 +38,8 @@ export default function RejectLists({
   bookmarkState = {},
   savedLists,
   setSavedLists,
-  onBackClick
+  onBackClick,
+  antiSocialMode = false
 }: RejectListsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -235,6 +237,7 @@ export default function RejectLists({
                 bookmarkState={bookmarkState}
                 onSaveList={handleSaveList}
                 isSaved={savedLists.includes(list.id)}
+                antiSocialMode={antiSocialMode}
               />
             </div>
           ))

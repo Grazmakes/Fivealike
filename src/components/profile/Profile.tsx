@@ -36,6 +36,7 @@ interface ProfileProps {
   onAuthorClick?: (author: string) => void;
   viewingProfile?: string;
   onBack?: () => void;
+  antiSocialMode?: boolean;
 }
 
 const avatarOptions = ['⭐', '🎵', '📚', '🎬', '🎮', '💻', '🎨', '⚽', '🍕', '✈️'];
@@ -60,7 +61,8 @@ export default function Profile({
   onOpenMessage,
   onAuthorClick,
   viewingProfile,
-  onBack
+  onBack,
+  antiSocialMode = false
 }: ProfileProps) {
   // All hooks must be declared before any early returns
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -999,6 +1001,7 @@ export default function Profile({
                   onTitleClick={onTitleClick}
                   onSaveList={handleSaveList}
                   isSaved={savedLists.includes(list.id)}
+                  antiSocialMode={antiSocialMode}
                 />
               ))}
             </div>

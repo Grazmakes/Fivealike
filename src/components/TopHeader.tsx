@@ -218,17 +218,24 @@ export default function TopHeader({
                   )}
                   
                   {onToggleAntiSocialMode && (
-                    <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300">
+                    <div
+                      className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        onToggleAntiSocialMode(!userProfile?.antiSocialMode);
+                      }}
+                    >
                       <div className="flex items-center space-x-2 relative">
                         <User size={20} />
-                        <span 
+                        <span
                           className="cursor-help"
                           onMouseEnter={() => setShowAntiSocialTooltip(true)}
                           onMouseLeave={() => setShowAntiSocialTooltip(false)}
                         >
                           Anti-Social Mode
                         </span>
-                        
+
                         {/* Anti-Social Mode Tooltip */}
                         {showAntiSocialTooltip && (
                           <div className="absolute left-0 top-full mt-2 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 text-xs rounded-lg py-2 px-3 shadow-lg w-64">
@@ -240,15 +247,17 @@ export default function TopHeader({
                           </div>
                         )}
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={userProfile?.antiSocialMode || false}
-                          onChange={(e) => onToggleAntiSocialMode(e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
-                      </label>
+                      <div className={`w-11 h-6 rounded-full relative transition-all duration-200 cursor-pointer ${
+                        userProfile?.antiSocialMode
+                          ? 'bg-primary-600 shadow-sm'
+                          : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      }`}>
+                        <div className={`absolute top-[2px] left-[2px] bg-white border border-gray-300 dark:border-gray-600 rounded-full h-5 w-5 transition-all duration-200 shadow-sm ${
+                          userProfile?.antiSocialMode
+                            ? 'translate-x-full border-white'
+                            : ''
+                        }`}></div>
+                      </div>
                     </div>
                   )}
                   

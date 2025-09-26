@@ -266,19 +266,20 @@ export interface Achievement {
   earned?: boolean;
 }
 
-export type ViewType = 
-  | 'home' 
-  | 'discover' 
+export type ViewType =
+  | 'home'
+  | 'discover'
   | 'local'
-  | 'favorites' 
-  | 'messages' 
-  | 'community' 
+  | 'favorites'
+  | 'messages'
+  | 'community'
   | 'profile'
   | 'rejected'
   | 'events'
   | 'groups'
   | 'podcast'
-  | 'leaderboard';
+  | 'leaderboard'
+  | 'history';
 
 export type FeedTab = 
   | 'yourfeed' 
@@ -373,6 +374,21 @@ export interface BookmarkedItem {
   listCategory: string;
   bookmarkedAt: string;
   notes?: string;
+}
+
+export interface HistoryItem {
+  id: string;
+  type: 'item' | 'list';
+  itemName?: string; // Only for item type
+  listTitle: string;
+  listAuthor: string;
+  listCategory: string;
+  rating?: 'up' | 'down'; // Only for item type
+  action: 'saved' | 'tried' | 'unsaved'; // Action taken
+  savedAt: string;
+  triedAt?: string; // Only for item type
+  listId: number;
+  itemIndex?: number; // Only for item type
 }
 
 export interface BookmarkState {

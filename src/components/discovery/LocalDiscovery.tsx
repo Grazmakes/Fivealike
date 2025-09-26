@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { MapPin, Compass, TrendingUp, Users, Star, Filter, Settings, Navigation, ArrowLeft } from 'lucide-react';
+import { MapPin, Compass, TrendingUp, Star, Filter, Settings, ArrowLeft } from 'lucide-react';
 import { List, ItemVotes, User } from '@/types';
 import ListCard from '@/components/lists/ListCard';
 
@@ -25,6 +25,7 @@ interface LocalDiscoveryProps {
   onJoinEvent?: (eventId: string, status: 'going' | 'maybe' | 'not_going') => void;
   onBack?: () => void;
 }
+
 
 type LocalTab = 'nearby' | 'trending' | 'featured' | 'creators';
 type DistanceFilter = 'city' | 'metro' | 'state' | 'region';
@@ -53,6 +54,7 @@ export default function LocalDiscovery({
   const [distanceFilter, setDistanceFilter] = useState<DistanceFilter>('city');
   const [showLocationSettings, setShowLocationSettings] = useState(true);
   const [userLocation, setUserLocation] = useState<string>(userProfile.homeCity || '');
+  const [locationEnabled, setLocationEnabled] = useState<boolean>(false);
   const [locationUpdateMessage, setLocationUpdateMessage] = useState<string>('');
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState<string>('');
@@ -108,6 +110,8 @@ export default function LocalDiscovery({
                   homeCity: locationString
                 }));
               }
+
+              setLocationEnabled(true);
               
               setLocationUpdateMessage(`Location detected: ${locationString}`);
               setTimeout(() => setLocationUpdateMessage(''), 3000);
@@ -205,7 +209,7 @@ export default function LocalDiscovery({
 
   // Filter lists based on location proximity and genre
   const getLocationFilteredLists = useMemo(() => {
-    if (!userLocation) return []; // Show no lists until location is set
+    if (!userLocation || !locationEnabled) return []; // Show no lists until location is enabled
 
     let filtered = allLists.filter(list => {
       const authorLocation = mockUserLocations[list.author] || '';
@@ -260,7 +264,7 @@ export default function LocalDiscovery({
     }
 
     return filtered;
-  }, [allLists, userLocation, userCity, userState, distanceFilter, selectedGenre, mockUserLocations]);
+  }, [allLists, userLocation, userCity, userState, distanceFilter, selectedGenre, mockUserLocations, locationEnabled]);
 
   // Get trending local lists (most votes/saves in last week)
   const getTrendingLists = useMemo(() => {
@@ -299,6 +303,27 @@ export default function LocalDiscovery({
         : [...savedLists, listId]
     );
   };
+
+  const handleManualLocationSave = useCallback(() => {
+    const trimmedLocation = userLocation.trim();
+    if (!trimmedLocation) {
+      return;
+    }
+
+    const currentLocation = userProfile.homeCity || '';
+
+    if (setUserProfile && trimmedLocation !== currentLocation) {
+      setUserProfile(prev => ({
+        ...prev,
+        homeCity: trimmedLocation
+      }));
+      setLocationUpdateMessage(`Location updated to ${trimmedLocation}`);
+      setTimeout(() => setLocationUpdateMessage(''), 3000);
+    }
+
+    setShowLocationSettings(false);
+    setLocationEnabled(true);
+  }, [setUserProfile, userLocation, userProfile.homeCity]);
 
 
   const distanceLabels = {
@@ -349,6 +374,7 @@ export default function LocalDiscovery({
                       bookmarkState={bookmarkState}
                       onSaveList={handleSaveList}
                       isSaved={savedLists.includes(list.id)}
+                      antiSocialMode={userProfile.antiSocialMode}
                     />
                   </div>
                 ))}
@@ -357,15 +383,15 @@ export default function LocalDiscovery({
               <div className="text-center py-12">
                 <MapPin size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  {!userLocation ? 'Set your location to discover local lists' : 'No local lists found'}
+                  {!locationEnabled ? 'Enable your location to discover local lists' : 'No local lists found'}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  {!userLocation
-                    ? 'Enter your city in the location settings above to see lists from people near you'
-                    : 'Try expanding your search radius or check back later'
+                  {!locationEnabled
+                    ? 'Turn on location detection or save your city above to unlock nearby lists.'
+                    : 'Try expanding your search radius or check back later.'
                   }
                 </p>
-                {!userLocation ? (
+                {!locationEnabled ? (
                   <button
                     onClick={() => setShowLocationSettings(true)}
                     className="btn-primary bg-green-600 hover:bg-green-700"
@@ -413,6 +439,7 @@ export default function LocalDiscovery({
                     bookmarkState={bookmarkState}
                     onSaveList={handleSaveList}
                     isSaved={savedLists.includes(list.id)}
+                    antiSocialMode={userProfile.antiSocialMode}
                   />
                 </div>
               ))}
@@ -567,17 +594,17 @@ export default function LocalDiscovery({
             </button>
           )}
           <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center space-x-2">
-            <Compass className="text-green-500" />
-            <span>Local Discovery</span>
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 flex items-center space-x-1">
-            <MapPin size={16} />
-            <span>Discover great lists from people near {userLocation || 'you'}</span>
-          </p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center space-x-2">
+              <Compass className="text-green-500" />
+              <span>Local Discovery</span>
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 flex items-center space-x-1">
+              <MapPin size={16} />
+              <span>Discover great lists from people near {locationEnabled ? userLocation : 'you'}</span>
+            </p>
           </div>
         </div>
-        
+
         <button
           onClick={() => setShowLocationSettings(!showLocationSettings)}
           className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -619,18 +646,7 @@ export default function LocalDiscovery({
               className="flex-1 px-3 py-2 border border-green-300 dark:border-green-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm"
             />
             <button
-              onClick={() => {
-                // Update the user profile with new location
-                if (setUserProfile && userLocation !== userProfile.homeCity) {
-                  setUserProfile(prev => ({
-                    ...prev,
-                    homeCity: userLocation
-                  }));
-                  setLocationUpdateMessage(`Location updated to ${userLocation}`);
-                  setTimeout(() => setLocationUpdateMessage(''), 3000);
-                }
-                setShowLocationSettings(false);
-              }}
+              onClick={handleManualLocationSave}
               className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
             >
               Save

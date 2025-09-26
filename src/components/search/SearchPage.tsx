@@ -24,6 +24,7 @@ interface SearchPageProps {
   initialQuery?: string;
   onRejectListsClick?: () => void;
   onClearSearch?: () => void;
+  antiSocialMode?: boolean;
 }
 
 type SortOption = 'mostLikes' | 'bestOverall' | 'mostHighFives' | 'mostComments' | 'recent';
@@ -45,7 +46,8 @@ export default function SearchPage({
   initialCategory = '',
   initialQuery = '',
   onRejectListsClick,
-  onClearSearch
+  onClearSearch,
+  antiSocialMode = false
 }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
@@ -59,49 +61,67 @@ export default function SearchPage({
       setSelectedCategory(initialCategory);
     }
   }, [initialCategory, selectedCategory]);
+
+  // Clear forceRandomList when user starts typing or selects category
+  useEffect(() => {
+    if ((searchQuery.trim() || selectedCategory) && forceRandomList) {
+      console.log('🔄 Clearing forceRandomList because user is searching:', {
+        searchQuery: searchQuery.trim(),
+        selectedCategory,
+        forceRandomList: forceRandomList?.title
+      });
+      setForceRandomList(null);
+    }
+  }, [searchQuery, selectedCategory, forceRandomList]);
+
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
 
   const filteredLists = useMemo(() => {
-    if (forceRandomList) return [forceRandomList];
-
-    let filtered = allLists.filter(list => !list.isRejected);
-
     const activeQuery = searchQuery.trim() || initialQuery.trim();
-    if (activeQuery) {
-      filtered = filtered.filter(list =>
-        list.title.toLowerCase().includes(activeQuery.toLowerCase()) ||
-        list.author.toLowerCase().includes(activeQuery.toLowerCase()) ||
-        list.items.some(item => item.toLowerCase().includes(activeQuery.toLowerCase())) ||
-        list.description.toLowerCase().includes(activeQuery.toLowerCase())
-      );
-    }
 
-    if (selectedCategory) {
-      filtered = filtered.filter(list => list.category === selectedCategory);
-    }
+    // SEARCH ALWAYS WINS - if there's any search, completely ignore random list
+    if (activeQuery || selectedCategory) {
+      let results = allLists.filter(list => !list.isRejected);
 
-    return [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case 'mostLikes':
-          return b.votes - a.votes;
-        case 'bestOverall':
-          const scoreA = a.votes + (a.highFives * 2) + (a.saves * 1.5);
-          const scoreB = b.votes + (b.highFives * 2) + (b.saves * 1.5);
-          return scoreB - scoreA;
-        case 'mostHighFives':
-          return b.highFives - a.highFives;
-        case 'mostComments':
-          return b.comments.length - a.comments.length;
-        case 'recent':
-        default:
-          const dateA = new Date(a.date).getTime();
-          const dateB = new Date(b.date).getTime();
-          return dateB - dateA;
+      if (activeQuery) {
+        results = results.filter(list =>
+          list.title.toLowerCase().includes(activeQuery.toLowerCase()) ||
+          list.author.toLowerCase().includes(activeQuery.toLowerCase()) ||
+          list.items.some(item => item.toLowerCase().includes(activeQuery.toLowerCase())) ||
+          list.description.toLowerCase().includes(activeQuery.toLowerCase())
+        );
       }
-    });
+
+      if (selectedCategory) {
+        results = results.filter(list => list.category === selectedCategory);
+      }
+
+      return results.sort((a, b) => {
+        switch (sortBy) {
+          case 'mostLikes': return b.votes - a.votes;
+          case 'bestOverall':
+            const scoreA = a.votes + (a.highFives * 2) + (a.saves * 1.5);
+            const scoreB = b.votes + (b.highFives * 2) + (b.saves * 1.5);
+            return scoreB - scoreA;
+          case 'mostHighFives': return b.highFives - a.highFives;
+          case 'mostComments': return b.comments.length - a.comments.length;
+          case 'recent':
+          default:
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+        }
+      });
+    }
+
+    // Only show random list when NO search is active
+    if (forceRandomList && !activeQuery && !selectedCategory) {
+      return [forceRandomList];
+    }
+
+    // Empty state
+    return [];
   }, [allLists, selectedCategory, searchQuery, initialQuery, sortBy, forceRandomList]);
 
   const handleSaveList = (listId: number) => {
@@ -193,7 +213,16 @@ export default function SearchPage({
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              console.log('🔍 Search input changed:', value);
+              setSearchQuery(value);
+              // Clear forceRandomList immediately when user starts typing
+              if (value.trim() && forceRandomList) {
+                console.log('⚡ Immediately clearing forceRandomList on input change');
+                setForceRandomList(null);
+              }
+            }}
             placeholder="Search lists, authors, or recommendations..."
             className="w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-lg"
           />
@@ -263,7 +292,7 @@ export default function SearchPage({
                 {selectedCategory && ` in ${selectedCategory}`}
               </>
             ) : (
-              `Showing all ${filteredLists.length} lists`
+              <>Enter a search term or select a category to see results</>
             )}
           </p>
           
@@ -279,28 +308,11 @@ export default function SearchPage({
       </div>
 
       {/* Results */}
-      <div className="space-y-6 pb-12">
-        {forceRandomList ? (
-          <ListCard
-            key={`force-${forceRandomList.id}-${Math.random()}`}
-            list={forceRandomList}
-            itemVotes={itemVotes[forceRandomList.id.toString()] || {}}
-            onListVote={onListVote}
-            onItemVote={onItemVote}
-            onHighFive={onHighFive}
-            onTitleClick={onTitleClick}
-            onAddComment={onAddComment}
-            onAuthorClick={onAuthorClick}
-            onMessage={onMessage}
-            onItemBookmark={onItemBookmark}
-            bookmarkState={bookmarkState}
-            onSaveList={handleSaveList}
-            isSaved={savedLists.includes(forceRandomList.id)}
-          />
-        ) : filteredLists.length > 0 ? (
-          filteredLists.map(list => (
+      <div className="space-y-6 pb-12" key={`results-${searchQuery}-${selectedCategory}-${filteredLists.length}`}>
+        {filteredLists.length > 0 ? (
+          filteredLists.map((list, index) => (
             <ListCard
-              key={list.id}
+              key={`${list.id}-${searchQuery}-${selectedCategory}`}
               list={list}
               itemVotes={itemVotes[list.id.toString()] || {}}
               onListVote={onListVote}
@@ -314,19 +326,20 @@ export default function SearchPage({
               bookmarkState={bookmarkState}
               onSaveList={handleSaveList}
               isSaved={savedLists.includes(list.id)}
+              antiSocialMode={antiSocialMode}
             />
           ))
         ) : (
           <div className="text-center py-12">
             <Search size={64} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
             <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
-              No lists found
+              {searchQuery || initialQuery || selectedCategory ? 'No lists found' : 'Ready to search'}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">
-              {searchQuery || selectedCategory ? (
+              {searchQuery || initialQuery || selectedCategory ? (
                 <>Try adjusting your search terms or category filters</>
               ) : (
-                <>No lists available at the moment</>
+                <>Start typing to search through lists, authors, or recommendations</>
               )}
             </p>
             {(searchQuery || selectedCategory) && (

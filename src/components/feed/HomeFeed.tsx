@@ -168,24 +168,27 @@ export default function HomeFeed({
       {/* Lists */}
       <div className="space-y-6">
         {filteredLists.length > 0 ? (
-          filteredLists.map(list => (
+          filteredLists.map((list, index) => (
             <ListErrorBoundary key={list.id} listTitle={list.title}>
-              <ListCard
-                list={list}
-                itemVotes={itemVotes[list.id.toString()] || {}}
-                onListVote={onListVote}
-                onItemVote={onItemVote}
-                onHighFive={onHighFive}
-                onCategoryClick={onCategoryClick}
-                onTitleClick={onTitleClick}
-                onAddComment={onAddComment}
-                onAuthorClick={onAuthorClick}
-                onMessage={onMessage}
-                onItemBookmark={onItemBookmark}
-                bookmarkState={bookmarkState}
-                onSaveList={handleSaveList}
-                isSaved={savedLists.includes(list.id)}
-              />
+              <div className={index === filteredLists.length - 1 ? 'pb-12' : ''}>
+                <ListCard
+                  list={list}
+                  itemVotes={itemVotes[list.id.toString()] || {}}
+                  onListVote={onListVote}
+                  onItemVote={onItemVote}
+                  onHighFive={onHighFive}
+                  onCategoryClick={onCategoryClick}
+                  onTitleClick={onTitleClick}
+                  onAddComment={onAddComment}
+                  onAuthorClick={onAuthorClick}
+                  onMessage={onMessage}
+                  onItemBookmark={onItemBookmark}
+                  bookmarkState={bookmarkState}
+                  onSaveList={handleSaveList}
+                  isSaved={savedLists.includes(list.id)}
+                  antiSocialMode={userProfile.antiSocialMode}
+                />
+              </div>
             </ListErrorBoundary>
           ))
         ) : (

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
-import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState } from '@/types';
+import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState, HistoryItem } from '@/types';
 import { mockLists, mockNotifications } from '@/data/mockData';
 
 import TopHeader from '@/components/TopHeader';
@@ -30,6 +30,7 @@ import { RealTimeVotesProvider, useRealTimeVotesContext } from '@/context/RealTi
 import SimpleAuth from '@/components/auth/SimpleAuth';
 import { db } from '@/lib/supabase';
 import { ProfileErrorBoundary } from '@/components/ui/ErrorBoundaries';
+import History from '@/components/history/History';
 
 const debugLog = (...args: unknown[]) => {
   if (process.env.NODE_ENV !== 'production') {
@@ -246,6 +247,7 @@ function HomeContent() {
   const [itemVotes, setItemVotes] = useState<ItemVotes>({});
   const [bookmarkedItems, setBookmarkedItems] = useState<BookmarkedItem[]>([]);
   const [bookmarkState, setBookmarkState] = useState<BookmarkState>({});
+  const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(3); // Mock unread messages
   const [events, setEvents] = useState<SocialEvent[]>([
     {
@@ -985,7 +987,7 @@ function HomeContent() {
   // Handle anti-social mode toggle
   const handleToggleAntiSocialMode = (enabled: boolean) => {
     setUserProfile(prev => ({ ...prev, antiSocialMode: enabled }));
-    
+
     // If enabling anti-social mode and currently on a social view, redirect to home
     if (enabled && ['community', 'messages', 'groups', 'events'].includes(currentView)) {
       setCurrentView('home');
@@ -1486,6 +1488,94 @@ function HomeContent() {
     }
   };
 
+  // Handle trying an item (when user rates a bookmarked item)
+  const handleTryItem = (listId: number, itemIndex: number, rating: 'up' | 'down') => {
+    const list = allLists.find(l => l.id === listId);
+    if (!list) return;
+
+    // Create history item
+    const historyItem = {
+      id: `${listId}-${itemIndex}-${Date.now()}`,
+      listId,
+      itemIndex,
+      itemName: list.items[itemIndex],
+      listTitle: list.title,
+      listAuthor: list.author,
+      listCategory: list.category,
+      rating,
+      savedAt: new Date().toISOString(),
+      triedAt: new Date().toISOString()
+    };
+
+    // Add to history
+    setHistoryItems(prev => [...prev, historyItem]);
+
+    // Remove from bookmarks
+    const bookmarkKey = `${listId}-${itemIndex}`;
+    setBookmarkedItems(prev => prev.filter(item => item.id !== bookmarkKey));
+    setBookmarkState(prev => ({ ...prev, [bookmarkKey]: false }));
+
+  };
+
+  // Handle adding item to history
+  const handleAddToHistory = (listId: number, itemIndex: number) => {
+    const list = allLists.find(l => l.id === listId);
+    if (!list) return;
+
+    // Create history item for item interaction
+    const historyItem: HistoryItem = {
+      id: `${listId}-${itemIndex}-${Date.now()}`,
+      type: 'item',
+      listId,
+      itemIndex,
+      itemName: list.items[itemIndex],
+      listTitle: list.title,
+      listAuthor: list.author,
+      listCategory: list.category,
+      action: 'tried',
+      savedAt: new Date().toISOString(),
+      triedAt: new Date().toISOString()
+    };
+
+    // Add to history
+    setHistoryItems(prev => [...prev, historyItem]);
+
+    // Remove from bookmarks
+    const bookmarkKey = `${listId}-${itemIndex}`;
+    setBookmarkedItems(prev => prev.filter(item => item.id !== bookmarkKey));
+    setBookmarkState(prev => ({ ...prev, [bookmarkKey]: false }));
+  };
+
+  // Enhanced handler for list saves that also tracks in history
+  const handleSaveListToHistory = (listId: number, isCurrentlySaved: boolean) => {
+    const list = allLists.find(l => l.id === listId);
+    if (!list) return;
+
+    const action = isCurrentlySaved ? 'unsaved' : 'saved';
+
+    // Create history item for list save/unsave
+    const historyItem: HistoryItem = {
+      id: `list-${listId}-${Date.now()}`,
+      type: 'list',
+      listId,
+      listTitle: list.title,
+      listAuthor: list.author,
+      listCategory: list.category,
+      action,
+      savedAt: new Date().toISOString()
+    };
+
+    // Add to history
+    setHistoryItems(prev => [...prev, historyItem]);
+
+    // Update saved lists
+    setSavedLists(prev =>
+      isCurrentlySaved
+        ? prev.filter(id => id !== listId)
+        : [...prev, listId]
+    );
+  };
+
   // Handle claiming early adopter rewards
   const handleClaimReward = (rewardId: string) => {
     debugLog('Claiming reward:', rewardId);
@@ -1725,7 +1815,7 @@ function HomeContent() {
                 }));
               }
             }} />
-            <HomeFeed 
+            <HomeFeed
               selectedFeedTab={selectedFeedTab}
               setSelectedFeedTab={setSelectedFeedTab}
               allLists={allLists}
@@ -1779,6 +1869,7 @@ function HomeContent() {
             events={events}
             onJoinEvent={handleJoinEvent}
             onBack={() => setCurrentView('home')}
+            antiSocialMode={userProfile.antiSocialMode}
           />
         );
       case 'local':
@@ -1806,13 +1897,13 @@ function HomeContent() {
         );
       case 'favorites':
         return (
-          <Favorites 
+          <Favorites
             allLists={allLists}
             savedLists={savedLists}
             setSavedLists={setSavedLists}
+            onSaveListToHistory={handleSaveListToHistory}
             itemVotes={itemVotes}
             onListVote={handleListVote}
-            onItemVote={handleItemVote}
             onHighFive={handleHighFive}
             onCategoryClick={handleCategoryClick}
             onTitleClick={handleTitleClick}
@@ -1823,7 +1914,11 @@ function HomeContent() {
             bookmarkedItems={bookmarkedItems}
             onRemoveBookmark={handleItemBookmark}
             onItemClick={handleItemClick}
+            onTryItem={handleTryItem}
+            onAddToHistory={handleAddToHistory}
+            historyItems={historyItems}
             onBack={() => setCurrentView('home')}
+            antiSocialMode={userProfile.antiSocialMode}
           />
         );
       case 'messages':
@@ -1897,6 +1992,7 @@ function HomeContent() {
               onAuthorClick={handleAuthorClick}
               viewingProfile={viewingProfile}
               onBack={() => setCurrentView('home')}
+              antiSocialMode={profileToShow.antiSocialMode}
             />
           </ProfileErrorBoundary>
         );
@@ -1916,6 +2012,7 @@ function HomeContent() {
             savedLists={savedLists}
             setSavedLists={setSavedLists}
             onBackClick={handleBackFromRejected}
+            antiSocialMode={userProfile.antiSocialMode}
           />
         );
       case 'events':
@@ -1930,12 +2027,21 @@ function HomeContent() {
           />
         );
       case 'leaderboard':
-        return <LeaderboardPage 
-          onBack={() => setCurrentView('home')} 
+        return <LeaderboardPage
+          onBack={() => setCurrentView('home')}
           onAuthorClick={handleAuthorClick}
           onTitleClick={handleTitleClick}
           onCategoryClick={handleCategoryClick}
         />
+      case 'history':
+        return (
+          <History
+            historyItems={historyItems}
+            onItemClick={handleItemClick}
+            onTitleClick={handleTitleClick}
+            onAuthorClick={handleAuthorClick}
+          />
+        );
       default:
         return <div className="p-8 text-center">View not implemented yet</div>;
     }
@@ -2060,12 +2166,13 @@ function HomeContent() {
       )}
 
       {/* Reddit-style Chat */}
-      <RedditChat 
+      <RedditChat
         isOpen={showRedditChat}
         onClose={() => setShowRedditChat(false)}
         openChatWithUser={chatTargetUser}
         onAuthorClick={handleAuthorClick}
       />
+
 
       </div>
     </>

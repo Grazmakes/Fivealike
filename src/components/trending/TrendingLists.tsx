@@ -20,6 +20,7 @@ interface TrendingListsProps {
   bookmarkState?: { [key: string]: boolean };
   savedLists: number[];
   setSavedLists: (lists: number[]) => void;
+  antiSocialMode?: boolean;
 }
 
 const trendingTabs = [
@@ -43,7 +44,8 @@ export default function TrendingLists({
   onItemBookmark,
   bookmarkState = {},
   savedLists,
-  setSavedLists
+  setSavedLists,
+  antiSocialMode = false
 }: TrendingListsProps) {
   
   const getFilteredLists = () => {
@@ -119,6 +121,7 @@ export default function TrendingLists({
             bookmarkState={bookmarkState}
             onSaveList={handleSaveList}
             isSaved={savedLists.includes(list.id)}
+            antiSocialMode={antiSocialMode}
           />
         ))}
       </div>

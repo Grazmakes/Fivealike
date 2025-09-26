@@ -1,6 +1,21 @@
 const TMDB_API_KEY = process.env.TMDB_API_KEY || 'your_tmdb_api_key';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+const TMDB_DISABLED = !process.env.TMDB_API_KEY || process.env.TMDB_API_KEY === 'your_tmdb_api_key';
+const DEFAULT_TIMEOUT = 2000;
+
+const fetchWithTimeout = async (url: string) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    return response;
+  } catch (error) {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+};
 
 export interface TMDBSearchResult {
   id: number;
@@ -41,12 +56,15 @@ export interface TMDBTVDetails {
 
 // Search for movies and TV shows
 export async function searchTMDB(query: string): Promise<TMDBSearchResult[]> {
+  if (TMDB_DISABLED) {
+    return [];
+  }
   try {
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `${TMDB_BASE_URL}/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&include_adult=false`
     );
     
-    if (!response.ok) {
+    if (!response || !response.ok) {
       throw new Error('Failed to search TMDB');
     }
     
@@ -59,18 +77,21 @@ export async function searchTMDB(query: string): Promise<TMDBSearchResult[]> {
 
 // Get detailed movie information
 export async function getMovieDetails(movieId: number): Promise<TMDBMovieDetails | null> {
+  if (TMDB_DISABLED) {
+    return null;
+  }
   try {
     const [movieResponse, creditsResponse] = await Promise.all([
-      fetch(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}`),
-      fetch(`${TMDB_BASE_URL}/movie/${movieId}/credits?api_key=${TMDB_API_KEY}`)
+      fetchWithTimeout(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}`),
+      fetchWithTimeout(`${TMDB_BASE_URL}/movie/${movieId}/credits?api_key=${TMDB_API_KEY}`)
     ]);
     
-    if (!movieResponse.ok) {
+    if (!movieResponse || !movieResponse.ok) {
       throw new Error('Failed to fetch movie details');
     }
-    
+
     const movie = await movieResponse.json();
-    const credits = creditsResponse.ok ? await creditsResponse.json() : null;
+    const credits = creditsResponse && creditsResponse.ok ? await creditsResponse.json() : null;
     
     // Find director
     const director = credits?.crew?.find((person: any) => person.job === 'Director')?.name;
@@ -86,10 +107,13 @@ export async function getMovieDetails(movieId: number): Promise<TMDBMovieDetails
 
 // Get detailed TV show information
 export async function getTVDetails(tvId: number): Promise<TMDBTVDetails | null> {
+  if (TMDB_DISABLED) {
+    return null;
+  }
   try {
-    const response = await fetch(`${TMDB_BASE_URL}/tv/${tvId}?api_key=${TMDB_API_KEY}`);
+    const response = await fetchWithTimeout(`${TMDB_BASE_URL}/tv/${tvId}?api_key=${TMDB_API_KEY}`);
     
-    if (!response.ok) {
+    if (!response || !response.ok) {
       throw new Error('Failed to fetch TV details');
     }
     

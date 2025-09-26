@@ -46,6 +46,9 @@ interface UnifiedDiscoveryProps {
   
   // Navigation
   onBack?: () => void;
+
+  // Anti-social mode
+  antiSocialMode?: boolean;
 }
 
 type DiscoveryTab = 'search' | 'trending';
@@ -76,7 +79,8 @@ export default function UnifiedDiscovery({
   onCategoryClick,
   events = [],
   onJoinEvent,
-  onBack
+  onBack,
+  antiSocialMode = false
 }: UnifiedDiscoveryProps) {
   const [selectedTab, setSelectedTab] = useState<DiscoveryTab>('search');
 
@@ -111,13 +115,14 @@ export default function UnifiedDiscovery({
             initialQuery={initialQuery}
             onRejectListsClick={onRejectListsClick}
             onClearSearch={onClearSearch}
+            antiSocialMode={antiSocialMode}
           />
         );
       
       
       case 'trending':
         return (
-          <TrendingLists 
+          <TrendingLists
             selectedTrendingTab={selectedTrendingTab}
             setSelectedTrendingTab={setSelectedTrendingTab || (() => {})}
             allLists={allLists}
@@ -133,6 +138,7 @@ export default function UnifiedDiscovery({
             bookmarkState={bookmarkState}
             savedLists={savedLists}
             setSavedLists={setSavedLists}
+            antiSocialMode={antiSocialMode}
           />
         );
       

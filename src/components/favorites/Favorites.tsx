@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { Bookmark as BookmarkIcon, List, Bookmark, Search, Filter, X, ArrowLeft } from 'lucide-react';
-import { List as ListType, ItemVotes, BookmarkedItem } from '@/types';
+import { Bookmark as BookmarkIcon, List, Bookmark, Search, Filter, X, ArrowLeft, History as HistoryIcon } from 'lucide-react';
+import { List as ListType, ItemVotes, BookmarkedItem, HistoryItem } from '@/types';
 import ListCard from '@/components/lists/ListCard';
+import BookmarkedItems from '@/components/bookmarks/BookmarkedItems';
+import History from '@/components/history/History';
 
 interface FavoritesProps {
   // Saved Lists props
   allLists: ListType[];
   savedLists: number[];
   setSavedLists: (lists: number[]) => void;
+  onSaveListToHistory?: (listId: number, isCurrentlySaved: boolean) => void;
   itemVotes: ItemVotes;
   onListVote: (listId: number, voteType: 'up' | 'down') => void;
-  onItemVote: (listId: number, itemIndex: number, voteType: 'up' | 'down') => void;
   onHighFive: (listId: number) => void;
   onCategoryClick?: (category: string) => void;
   onTitleClick?: (title: string) => void;
@@ -25,20 +27,28 @@ interface FavoritesProps {
   bookmarkedItems: BookmarkedItem[];
   onRemoveBookmark: (listId: number, itemIndex: number) => void;
   onItemClick?: (itemName: string) => void;
+  onTryItem?: (listId: number, itemIndex: number, rating: 'up' | 'down') => void;
+  onAddToHistory?: (listId: number, itemIndex: number) => void;
+
+  // History props
+  historyItems: HistoryItem[];
   
   // Navigation
   onBack?: () => void;
+
+  // Antisocial mode
+  antiSocialMode?: boolean;
 }
 
-type FavoritesTab = 'lists' | 'items';
+type FavoritesTab = 'lists' | 'items' | 'history';
 
 export default function Favorites({
   allLists,
   savedLists,
   setSavedLists,
+  onSaveListToHistory,
   itemVotes,
   onListVote,
-  onItemVote,
   onHighFive,
   onCategoryClick,
   onTitleClick,
@@ -49,7 +59,11 @@ export default function Favorites({
   bookmarkedItems,
   onRemoveBookmark,
   onItemClick,
-  onBack
+  onTryItem,
+  onAddToHistory,
+  historyItems,
+  onBack,
+  antiSocialMode = false
 }: FavoritesProps) {
   const [selectedTab, setSelectedTab] = useState<FavoritesTab>('lists');
   const [searchQuery, setSearchQuery] = useState('');
@@ -89,11 +103,19 @@ export default function Favorites({
   ])).sort();
 
   const handleSaveList = (listId: number) => {
-    setSavedLists(
-      savedLists.includes(listId) 
-        ? savedLists.filter(id => id !== listId)
-        : [...savedLists, listId]
-    );
+    const isCurrentlySaved = savedLists.includes(listId);
+
+    if (onSaveListToHistory) {
+      // Use the enhanced handler that tracks in history
+      onSaveListToHistory(listId, isCurrentlySaved);
+    } else {
+      // Fallback to direct state update
+      setSavedLists(
+        isCurrentlySaved
+          ? savedLists.filter(id => id !== listId)
+          : [...savedLists, listId]
+      );
+    }
   };
 
   const clearFilters = () => {
@@ -199,11 +221,30 @@ export default function Favorites({
           <Bookmark size={16} />
           <span className="truncate">Bookmarked Items</span>
           <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 ${
-            selectedTab === 'items' 
+            selectedTab === 'items'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
           }`}>
             {filteredBookmarkedItems.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedTab('history')}
+          className={`flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
+            selectedTab === 'history'
+              ? 'bg-white dark:bg-gray-700 text-green-600 dark:text-green-400 shadow-sm'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+          }`}
+        >
+          <HistoryIcon size={16} />
+          <span className="truncate">History</span>
+          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 ${
+            selectedTab === 'history'
+              ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+              : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+          }`}>
+            {historyItems.length}
           </span>
         </button>
       </div>
@@ -222,17 +263,17 @@ export default function Favorites({
                   </div>
                   <ListCard
                     list={list}
-                    itemVotes={itemVotes[list.id.toString()] || {}}
                     onListVote={onListVote}
-                    onItemVote={onItemVote}
                     onHighFive={onHighFive}
                     onTitleClick={onTitleClick}
                     onAuthorClick={onAuthorClick}
                     onMessage={onMessage}
                     onItemBookmark={onItemBookmark}
+                    onAddToHistory={onAddToHistory}
                     bookmarkState={bookmarkState}
                     onSaveList={handleSaveList}
                     isSaved={true}
+                    antiSocialMode={antiSocialMode}
                   />
                 </div>
               ))
@@ -243,7 +284,7 @@ export default function Favorites({
                   {searchQuery || selectedCategory ? 'No matching saved lists' : 'No saved lists yet'}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  {searchQuery || selectedCategory 
+                  {searchQuery || selectedCategory
                     ? 'Try adjusting your search terms or filters'
                     : 'Start saving lists you love and they\'ll appear here'
                   }
@@ -259,85 +300,25 @@ export default function Favorites({
               </div>
             )}
           </div>
-        ) : (
+        ) : selectedTab === 'items' ? (
           // Bookmarked Items Content
-          <div className="space-y-4">
-            {filteredBookmarkedItems.length > 0 ? (
-              <div className="grid gap-4">
-                {filteredBookmarkedItems.map(item => (
-                  <div key={item.id} className="event-card-custom border border-gray-200 dark:border-gray-600 rounded-xl p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <button
-                            onClick={() => onItemClick?.(item.itemName)}
-                            className="font-semibold text-lg text-gray-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 transition-colors"
-                          >
-                            {item.itemName}
-                          </button>
-                          <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs rounded-full">
-                            Bookmarked
-                          </span>
-                        </div>
-                        
-                        <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                          From{' '}
-                          <button
-                            onClick={() => onTitleClick?.(item.listTitle)}
-                            className="text-green-600 dark:text-green-400 hover:underline"
-                          >
-                            {item.listTitle}
-                          </button>
-                          {' '}by{' '}
-                          <button
-                            onClick={() => onAuthorClick?.(item.listAuthor)}
-                            className="text-green-600 dark:text-green-400 hover:underline"
-                          >
-                            {item.listAuthor}
-                          </button>
-                        </div>
-                        
-                        <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
-                          <span>{item.listCategory}</span>
-                          <span>•</span>
-                          <span>Bookmarked {new Date(item.bookmarkedAt).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                      
-                      <button
-                        onClick={() => onRemoveBookmark(item.listId, item.itemIndex)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                        title="Remove bookmark"
-                      >
-                        <X size={16} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <Bookmark size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                  {searchQuery || selectedCategory ? 'No matching bookmarked items' : 'No bookmarked items yet'}
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  {searchQuery || selectedCategory 
-                    ? 'Try adjusting your search terms or filters'
-                    : 'Bookmark individual items from lists and they\'ll appear here'
-                  }
-                </p>
-                {(searchQuery || selectedCategory) && (
-                  <button
-                    onClick={clearFilters}
-                    className="btn-primary bg-green-600 hover:bg-green-700"
-                  >
-                    Clear filters
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
+          <BookmarkedItems
+            bookmarkedItems={bookmarkedItems}
+            onRemoveBookmark={onRemoveBookmark}
+            onTitleClick={onTitleClick}
+            onAuthorClick={onAuthorClick}
+            onItemClick={onItemClick}
+            onTryItem={onTryItem}
+            onAddToHistory={onAddToHistory}
+          />
+        ) : (
+          // History Content - Full component with ratings
+          <History
+            historyItems={historyItems}
+            onItemClick={onItemClick}
+            onTitleClick={onTitleClick}
+            onAuthorClick={onAuthorClick}
+          />
         )}
       </div>
     </div>

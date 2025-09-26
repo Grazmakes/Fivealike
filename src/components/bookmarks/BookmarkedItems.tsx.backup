@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bookmark, Search, X, Calendar, ThumbsUp, ThumbsDown, History, CheckCircle } from 'lucide-react';
+import { Bookmark, Search, ExternalLink, X, Calendar, ThumbsUp, ThumbsDown, Archive, CheckCircle, TrendingUp } from 'lucide-react';
 import { BookmarkedItem } from '@/types';
 
 interface BookmarkedItemsProps {
@@ -11,7 +11,7 @@ interface BookmarkedItemsProps {
   onAuthorClick?: (author: string) => void;
   onItemClick?: (itemName: string) => void;
   onTryItem?: (listId: number, itemIndex: number, rating: 'up' | 'down') => void;
-  onAddToHistory?: (listId: number, itemIndex: number) => void;
+  onArchiveItem?: (listId: number, itemIndex: number) => void;
 }
 
 export default function BookmarkedItems({
@@ -21,10 +21,11 @@ export default function BookmarkedItems({
   onAuthorClick,
   onItemClick,
   onTryItem,
-  onAddToHistory
+  onArchiveItem
 }: BookmarkedItemsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [viewMode, setViewMode] = useState<'items' | 'lists'>('items');
 
   const filteredBookmarks = bookmarkedItems.filter(bookmark => {
     const matchesSearch = !searchQuery ||
@@ -38,6 +39,29 @@ export default function BookmarkedItems({
   });
 
   const categories = Array.from(new Set(bookmarkedItems.map(item => item.listCategory)));
+
+  // Group bookmarks by list for progress tracking
+  const bookmarksByList = bookmarkedItems.reduce((acc, bookmark) => {
+    const key = `${bookmark.listId}-${bookmark.listTitle}`;
+    if (!acc[key]) {
+      acc[key] = {
+        listId: bookmark.listId,
+        listTitle: bookmark.listTitle,
+        listAuthor: bookmark.listAuthor,
+        listCategory: bookmark.listCategory,
+        items: [],
+        totalItems: 5, // Assuming 5 items per list
+        bookmarkedCount: 0,
+        triedCount: 0
+      };
+    }
+    acc[key].items.push(bookmark);
+    acc[key].bookmarkedCount++;
+    // TODO: Add triedCount when we have that data
+    return acc;
+  }, {} as any);
+
+  const listsWithProgress = Object.values(bookmarksByList);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -62,6 +86,7 @@ export default function BookmarkedItems({
       {/* Search and Filter */}
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
         <div className="flex flex-col sm:flex-row gap-4">
+          {/* Search */}
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400" />
@@ -75,6 +100,7 @@ export default function BookmarkedItems({
             />
           </div>
 
+          {/* Category Filter */}
           <div className="sm:w-48">
             <select
               value={selectedCategory}
@@ -89,14 +115,164 @@ export default function BookmarkedItems({
           </div>
         </div>
 
-        <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-          {filteredBookmarks.length} of {bookmarkedItems.length} bookmarked items
+        <div className="mt-3 flex items-center justify-between">
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            {viewMode === 'items' ? (
+              `${filteredBookmarks.length} of ${bookmarkedItems.length} bookmarked items`
+            ) : (
+              `${listsWithProgress.length} lists with bookmarks`
+            )}
+          </div>
+
+          {/* View Toggle */}
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setViewMode('items')}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                viewMode === 'items'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300'
+              }`}
+            >
+              Items
+            </button>
+            <button
+              onClick={() => setViewMode('lists')}
+              className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                viewMode === 'lists'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-300'
+              }`}
+            >
+              Progress
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Bookmarked Items */}
       <div className="space-y-4">
-        {filteredBookmarks.length > 0 ? (
+        {viewMode === 'lists' ? (
+          /* Progress View */
+          listsWithProgress.length > 0 ? (
+            listsWithProgress.map((list: any) => {
+              const progress = Math.round((list.bookmarkedCount / list.totalItems) * 100);
+              const isNearCompletion = list.bookmarkedCount >= 4;
+
+              return (
+                <div
+                  key={`${list.listId}-${list.listTitle}`}
+                  className={`bg-white dark:bg-gray-800 rounded-xl border p-6 hover:shadow-md transition-all duration-200 ${
+                    isNearCompletion
+                      ? 'border-yellow-300 dark:border-yellow-600 bg-yellow-50 dark:bg-yellow-900/10'
+                      : 'border-gray-200 dark:border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          <button
+                            onClick={() => onTitleClick?.(list.listTitle)}
+                            className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer"
+                          >
+                            {list.listTitle}
+                          </button>
+                        </h3>
+                        {isNearCompletion && (
+                          <div className="flex items-center text-sm text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded-full">
+                            <TrendingUp size={14} className="mr-1" />
+                            Almost there!
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                          <span>By:</span>
+                          <button
+                            onClick={() => onAuthorClick?.(list.listAuthor)}
+                            className="ml-2 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
+                          >
+                            {list.listAuthor}
+                          </button>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <span className="inline-block px-2 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium">
+                            {list.listCategory}
+                          </span>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-gray-600 dark:text-gray-400">
+                              Progress: {list.bookmarkedCount} of {list.totalItems} items saved
+                            </span>
+                            <span className="font-medium text-gray-900 dark:text-white">
+                              {progress}%
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full transition-all duration-300 ${
+                                isNearCompletion ? 'bg-yellow-500' : 'bg-blue-500'
+                              }`}
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Progress Indicators */}
+                        <div className="flex items-center space-x-1 mt-3">
+                          {Array.from({ length: list.totalItems }).map((_, index) => (
+                            <div
+                              key={index}
+                              className={`w-3 h-3 rounded-full ${
+                                index < list.bookmarkedCount
+                                  ? isNearCompletion ? 'bg-yellow-400' : 'bg-blue-400'
+                                  : 'bg-gray-300 dark:bg-gray-600'
+                              }`}
+                            />
+                          ))}
+                        </div>
+
+                        {isNearCompletion && (
+                          <div className="mt-4 p-3 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                            <div className="flex items-start">
+                              <CheckCircle className="text-yellow-500 mt-0.5 mr-2 flex-shrink-0" size={16} />
+                              <div className="text-sm">
+                                <p className="font-medium text-yellow-800 dark:text-yellow-200 mb-1">
+                                  You're almost done with this list!
+                                </p>
+                                <p className="text-yellow-700 dark:text-yellow-300">
+                                  Complete all 5 items and give the creator a Gold High Five! 🖐️✨
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-12">
+              <TrendingUp size={64} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">
+                No progress to show yet
+              </h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                Start bookmarking items from lists to track your progress!
+              </p>
+            </div>
+          )
+        ) : (
+          /* Items View */
+          filteredBookmarks.length > 0 ? (
           filteredBookmarks.map((bookmark) => (
             <div
               key={bookmark.id}
@@ -104,6 +280,7 @@ export default function BookmarkedItems({
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
+                  {/* Item Name */}
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
                     <Bookmark className="mr-2 text-yellow-500 fill-current" size={16} />
                     <button
@@ -114,14 +291,16 @@ export default function BookmarkedItems({
                     </button>
                   </h3>
 
+                  {/* List Info */}
                   <div className="space-y-2">
                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <span>From:</span>
                       <button
                         onClick={() => onTitleClick?.(bookmark.listTitle)}
-                        className="ml-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+                        className="ml-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium flex items-center"
                       >
                         {bookmark.listTitle}
+                        <ExternalLink size={12} className="ml-1" />
                       </button>
                     </div>
 
@@ -188,14 +367,14 @@ export default function BookmarkedItems({
                             </>
                           )}
 
-                          {onAddToHistory && (
+                          {onArchiveItem && (
                             <button
-                              onClick={() => onAddToHistory(bookmark.listId, bookmark.itemIndex)}
+                              onClick={() => onArchiveItem(bookmark.listId, bookmark.itemIndex)}
                               className="flex items-center space-x-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 rounded-full text-sm font-medium transition-colors"
-                              title="Add to history"
+                              title="Archive this item"
                             >
-                              <History size={14} />
-                              <span>Add to History</span>
+                              <Archive size={14} />
+                              <span>Archive</span>
                             </button>
                           )}
                         </div>

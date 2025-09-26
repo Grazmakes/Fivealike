@@ -231,10 +231,16 @@ export function HighFivedBadge({
     lg: 16
   };
 
+  const countClasses = {
+    sm: 'text-xs font-semibold',
+    md: 'text-sm font-semibold',
+    lg: 'text-base font-semibold'
+  };
+
   return (
     <div className="relative inline-block">
       <div
-        className={`inline-flex items-center space-x-1 bg-gradient-to-r from-yellow-400 to-amber-500 text-yellow-900 rounded-full font-bold cursor-help ${sizeClasses[size]}`}
+        className={`inline-flex items-center space-x-1 bg-yellow-400 text-yellow-900 rounded-full font-bold cursor-help ${sizeClasses[size]}`}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         title="🖐️ High Fived Badge - This list is popular! It means 10+ people have tried all 5 items and loved most of them, earning the creator a 'High Five' achievement."
@@ -242,9 +248,7 @@ export function HighFivedBadge({
         <Hand size={iconSizes[size]} />
         <span>High Fived</span>
         {showCount && count > 1 && (
-          <span className="bg-yellow-600 text-yellow-100 rounded-full px-1.5 py-0.5 text-xs ml-1">
-            {count}
-          </span>
+          <span className={`${countClasses[size]} ml-1`}>{count}</span>
         )}
       </div>
 

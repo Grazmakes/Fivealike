@@ -8,11 +8,20 @@ export const categories = [
 ];
 
 export const mockTMDbData: Record<string, TMDbItem> = {
+  'Good Will Hunting': {
+    id: 175,
+    title: 'Good Will Hunting',
+    overview: 'Will Hunting, a janitor at MIT, has a gift for mathematics but needs help from a psychologist to find direction in his life. A touching story about genius, friendship, and self-discovery.',
+    poster_path: '/bABCBKYBK7A5G1x0FzoeoNfuj2.jpg',
+    release_date: '1997-12-05',
+    vote_average: 8.3,
+    genre_ids: [18, 10749]
+  },
   'The Matrix': {
     id: 603,
     title: 'The Matrix',
     overview: 'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.',
-    poster_path: 'https://via.placeholder.com/200x300/1a1a1a/ffffff?text=The+Matrix',
+    poster_path: '/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg',
     release_date: '1999-03-30',
     vote_average: 8.7,
     genre_ids: [28, 878]
@@ -21,7 +30,7 @@ export const mockTMDbData: Record<string, TMDbItem> = {
     id: 335984,
     title: 'Blade Runner 2049',
     overview: 'Thirty years after the events of the first film, a new blade runner, LAPD Officer K, unearths a long-buried secret that has the potential to plunge what\'s left of society into chaos.',
-    poster_path: 'https://via.placeholder.com/200x300/2a2a2a/ffffff?text=Blade+Runner+2049',
+    poster_path: '/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg',
     release_date: '2017-10-04',
     vote_average: 8.0,
     genre_ids: [878, 18]
@@ -30,7 +39,7 @@ export const mockTMDbData: Record<string, TMDbItem> = {
     id: 27205,
     title: 'Inception',
     overview: 'Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep within the subconscious during the dream state.',
-    poster_path: 'https://via.placeholder.com/200x300/3a3a3a/ffffff?text=Inception',
+    poster_path: '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
     release_date: '2010-07-16',
     vote_average: 8.8,
     genre_ids: [28, 878, 53]
@@ -39,7 +48,7 @@ export const mockTMDbData: Record<string, TMDbItem> = {
     id: 157336,
     title: 'Interstellar',
     overview: 'The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.',
-    poster_path: 'https://via.placeholder.com/200x300/4a4a4a/ffffff?text=Interstellar',
+    poster_path: '/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
     release_date: '2014-11-05',
     vote_average: 8.6,
     genre_ids: [18, 878]
@@ -48,7 +57,7 @@ export const mockTMDbData: Record<string, TMDbItem> = {
     id: 1124,
     title: 'The Prestige',
     overview: 'A mysterious story of two magicians whose intense rivalry leads them on a life-long battle for supremacy -- full of obsession, deceit and jealousy.',
-    poster_path: 'https://via.placeholder.com/200x300/5a5a5a/ffffff?text=The+Prestige',
+    poster_path: '/tRNlZbgNCNOpLpbPEz5L8G8A0JN.jpg',
     release_date: '2006-10-17',
     vote_average: 8.5,
     genre_ids: [18, 9648, 878]
@@ -57,7 +66,7 @@ export const mockTMDbData: Record<string, TMDbItem> = {
     id: 60059,
     title: 'Better Call Saul',
     overview: 'Six years before Saul Goodman meets Walter White. We meet him when the man who will become Saul Goodman is known as Jimmy McGill, a small-time lawyer searching for his destiny.',
-    poster_path: 'https://via.placeholder.com/200x300/6a6a6a/ffffff?text=Better+Call+Saul',
+    poster_path: '/fC2HDm5t0kHl7mTm7jxMR31b7by.jpg',
     first_air_date: '2015-02-08',
     vote_average: 8.9,
     genre_ids: [80, 18]
@@ -66,19 +75,73 @@ export const mockTMDbData: Record<string, TMDbItem> = {
     id: 1438,
     title: 'The Wire',
     overview: 'Told from the points of view of both the Baltimore homicide and narcotics detectives and their targets, the series captures a universe in which the national war on drugs has become a permanent, self-sustaining bureaucracy.',
-    poster_path: 'https://via.placeholder.com/200x300/7a7a7a/ffffff?text=The+Wire',
+    poster_path: '/4lbclFySvugI51fwsyxBTOm4DqK.jpg',
     first_air_date: '2002-06-02',
     vote_average: 9.3,
     genre_ids: [80, 18]
+  },
+  'The Departed': {
+    id: 1422,
+    title: 'The Departed',
+    overview: 'To take down South Boston\'s Irish Mafia, the police send in one of their own to infiltrate the underworld, not realizing the syndicate has done likewise. A gripping crime thriller from Martin Scorsese.',
+    poster_path: '/nT97ifVT2J1yMQmeq20Qblg61T.jpg',
+    release_date: '2006-10-06',
+    vote_average: 8.5,
+    genre_ids: [80, 18, 53]
+  },
+  'The Town': {
+    id: 36669,
+    title: 'The Town',
+    overview: 'A longtime thief, planning his next job, tries to balance his feelings for a bank manager connected to an earlier heist and a hell-bent FBI agent looking to bring him and his crew down.',
+    poster_path: '/3NIe7BPWysOCJ9VSwCthmKfQwGr.jpg',
+    release_date: '2010-09-17',
+    vote_average: 7.4,
+    genre_ids: [80, 18, 53]
+  },
+  'Mystic River': {
+    id: 1995,
+    title: 'Mystic River',
+    overview: 'The lives of three men who were childhood friends are shattered when one of them has a family tragedy. A powerful drama about friendship, loss, and the secrets we keep.',
+    poster_path: '/hCY4Yf5GvKr6qs1es4XQFe3xDGX.jpg',
+    release_date: '2003-10-08',
+    vote_average: 7.9,
+    genre_ids: [80, 18, 53]
+  },
+  'Fever Pitch': {
+    id: 9603,
+    title: 'Fever Pitch',
+    overview: 'A romantic comedy about a man\'s obsession with the Boston Red Sox and how it affects his relationship with his girlfriend. Can love triumph over baseball?',
+    poster_path: '/xdyJ6VF6SgPPKEKhZW5I5ANlMZ.jpg',
+    release_date: '2005-04-08',
+    vote_average: 6.2,
+    genre_ids: [35, 10749]
+  },
+  'Ted': {
+    id: 72190,
+    title: 'Ted',
+    overview: 'John Bennett, a man whose childhood wish of bringing his teddy bear to life came true, now must decide between keeping the relationship with the bear or his girlfriend, Lori.',
+    poster_path: '/vNBIPr0TYVZVHiNw9iMJhZoyCzW.jpg',
+    release_date: '2012-06-29',
+    vote_average: 6.4,
+    genre_ids: [35, 14]
   }
 };
 
 export const mockArtistData: Record<string, Artist> = {
+  'The Beatles': {
+    id: 0,
+    name: 'The Beatles',
+    biography: 'The Beatles were an English rock band formed in Liverpool in 1960. Regarded as the most influential band of all time, they were integral to pop music\'s evolution into an art form and to popular culture\'s evolution into a counterculture.',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/The_Fabs.JPG/440px-The_Fabs.JPG',
+    formed: '1960',
+    genres: ['Rock', 'Pop Rock', 'Psychedelic Rock'],
+    members: ['John Lennon', 'Paul McCartney', 'George Harrison', 'Ringo Starr']
+  },
   'The Rolling Stones': {
     id: 1,
     name: 'The Rolling Stones',
     biography: 'The Rolling Stones are an English rock band formed in London in 1962. Active for six decades, they are one of the most popular and enduring bands of the rock era.',
-    image: 'https://via.placeholder.com/200x200/2a2a2a/ffffff?text=Rolling+Stones',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Rolling_Stones_1964.jpg/440px-Rolling_Stones_1964.jpg',
     formed: '1962',
     genres: ['Rock', 'Blues Rock', 'Hard Rock'],
     members: ['Mick Jagger', 'Keith Richards', 'Charlie Watts', 'Ronnie Wood']
@@ -87,7 +150,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 2,
     name: 'The Kinks',
     biography: 'The Kinks were an English rock band formed in Muswell Hill, north London, in 1963 by brothers Ray and Dave Davies.',
-    image: 'https://via.placeholder.com/200x200/3a3a3a/ffffff?text=The+Kinks',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb2fead84e3dfc96c5db3cd337',
     formed: '1963',
     genres: ['Rock', 'Pop Rock', 'British Invasion'],
     members: ['Ray Davies', 'Dave Davies', 'Mick Avory', 'Pete Quaife']
@@ -95,8 +158,8 @@ export const mockArtistData: Record<string, Artist> = {
   'The Who': {
     id: 3,
     name: 'The Who',
-    biography: 'The Who are an English rock band formed in London in 1964. Known for powerful live performances.',
-    image: 'https://via.placeholder.com/200x200/4a4a4a/ffffff?text=The+Who',
+    biography: 'The Who are an English rock band formed in London in 1964. Known for explosive live performances and rock operas.',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/The_Who_1975.jpg/440px-The_Who_1975.jpg',
     formed: '1964',
     genres: ['Rock', 'Hard Rock', 'Art Rock'],
     members: ['Roger Daltrey', 'Pete Townshend', 'John Entwistle', 'Keith Moon']
@@ -105,7 +168,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 4,
     name: 'Led Zeppelin',
     biography: 'Led Zeppelin were an English rock band formed in London in 1968. Pioneers of heavy metal and hard rock.',
-    image: 'https://via.placeholder.com/200x200/5a5a5a/ffffff?text=Led+Zeppelin',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb4416aac22560dbb93f886f8c',
     formed: '1968',
     genres: ['Rock', 'Hard Rock', 'Heavy Metal', 'Blues Rock'],
     members: ['Robert Plant', 'Jimmy Page', 'John Paul Jones', 'John Bonham']
@@ -114,7 +177,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 5,
     name: 'Pink Floyd',
     biography: 'Pink Floyd were an English rock band formed in London in 1965. Known for their progressive and psychedelic music.',
-    image: 'https://via.placeholder.com/200x200/6a6a6a/ffffff?text=Pink+Floyd',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Pink_Floyd_1971.jpg/440px-Pink_Floyd_1971.jpg',
     formed: '1965',
     genres: ['Progressive Rock', 'Psychedelic Rock', 'Art Rock'],
     members: ['David Gilmour', 'Roger Waters', 'Richard Wright', 'Nick Mason']
@@ -123,7 +186,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 6,
     name: 'Lorde',
     biography: 'Ella Marija Lani Yelich-O\'Connor, known professionally as Lorde, is a New Zealand singer-songwriter.',
-    image: 'https://via.placeholder.com/200x200/7a7a7a/ffffff?text=Lorde',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Lorde_Primavera19_%281%29_%28cropped%29.jpg/440px-Lorde_Primavera19_%281%29_%28cropped%29.jpg',
     formed: '2011',
     genres: ['Electropop', 'Art Pop', 'Dream Pop'],
     members: ['Lorde']
@@ -132,7 +195,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 7,
     name: 'Phoebe Bridgers',
     biography: 'Phoebe Lucille Bridgers is an American singer-songwriter known for her indie rock and indie folk sound.',
-    image: 'https://via.placeholder.com/200x200/8a8a8a/ffffff?text=Phoebe+Bridgers',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Phoebe_Bridgers_-_Green_Man_Festival_2022_%2852335%29_%28cropped%29.jpg/440px-Phoebe_Bridgers_-_Green_Man_Festival_2022_%2852335%29_%28cropped%29.jpg',
     formed: '2017',
     genres: ['Indie Rock', 'Indie Folk', 'Alternative Rock'],
     members: ['Phoebe Bridgers']
@@ -141,7 +204,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 8,
     name: 'Clairo',
     biography: 'Claire Elizabeth Cottrill, known professionally as Clairo, is an American singer-songwriter.',
-    image: 'https://via.placeholder.com/200x200/9a9a9a/ffffff?text=Clairo',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Clairo_-_Primavera_Sound_2019_%28cropped%29.jpg/440px-Clairo_-_Primavera_Sound_2019_%28cropped%29.jpg',
     formed: '2017',
     genres: ['Bedroom Pop', 'Indie Pop', 'Lo-fi'],
     members: ['Clairo']
@@ -150,7 +213,7 @@ export const mockArtistData: Record<string, Artist> = {
     id: 9,
     name: 'Olivia Rodrigo',
     biography: 'Olivia Isabel Rodrigo is an American singer-songwriter and actress.',
-    image: 'https://via.placeholder.com/200x200/aa9a9a/ffffff?text=Olivia+Rodrigo',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Olivia_Rodrigo_VMA_2023.png/440px-Olivia_Rodrigo_VMA_2023.png',
     formed: '2020',
     genres: ['Pop', 'Alternative Rock', 'Pop Rock'],
     members: ['Olivia Rodrigo']
@@ -342,7 +405,7 @@ const rawMockLists: List[] = [
     upvotes: 1000,
     downvotes: 108,
     userVote: null,
-    highFives: 23,
+    highFives: 9,
     userHighFived: false,
     items: ['Lorde', 'Phoebe Bridgers', 'Clairo', 'Olivia Rodrigo', 'Conan Gray'],
     description: 'These artists share Taylor Swift\'s gift for turning personal experiences into universal anthems that hit you right in the feels! Lorde captures that same raw honesty about growing up and finding yourself, Phoebe Bridgers writes devastatingly beautiful songs about heartbreak and healing, Clairo creates dreamy indie-pop perfect for late-night introspection, Olivia Rodrigo channels teenage emotions with the intensity Taylor perfected, and Conan Gray tells stories of youth and longing with cinematic detail. Each artist masters the art of making you feel understood through their vulnerability and storytelling genius.',
@@ -376,7 +439,7 @@ const rawMockLists: List[] = [
     upvotes: 520,
     downvotes: 75,
     userVote: null,
-    highFives: 15,
+    highFives: 8,
     userHighFived: false,
     items: ['Dark', 'The OA', 'Twin Peaks', 'X-Files', 'Supernatural'],
     description: 'Get ready for more supernatural mysteries that blend sci-fi thrills with incredible ensemble storytelling! Dark is a German masterpiece that makes Stranger Things look simple - it\'s a time-travel puzzle that will have you drawing diagrams, The OA creates one of the most unique and controversial supernatural narratives ever filmed, Twin Peaks pioneered the "small town with dark secrets" genre that Stranger Things perfected, X-Files gives you that classic "monster of the week" format with an overarching alien conspiracy, and Supernatural delivers 15 seasons of brotherhood, monsters, and mythology. Each show captures that perfect blend of supernatural terror and character-driven storytelling that makes you binge entire seasons.',
@@ -384,58 +447,9 @@ const rawMockLists: List[] = [
     saves: 334
   },
 
-  // Twin lists - intentional duplicates to showcase the feature
-  {
-    id: 6,
-    title: 'If you like "The Beatles", try these 5...',
-    author: '@indievibes',  // Different author, same list as id: 1
-    category: 'Music',
-    date: '8/18/2025',
-    votes: 89,
-    upvotes: 120,
-    downvotes: 31,
-    userVote: null,
-    highFives: 8,
-    userHighFived: false,
-    items: ['The Rolling Stones', 'The Kinks', 'The Who', 'Led Zeppelin', 'Pink Floyd'], // Exact same items
-    description: 'These classic rock legends share The Beatles\' revolutionary spirit and musical innovation.',
-    comments: [],
-    saves: 67
-  },
-  {
-    id: 7,
-    title: 'If you like "Taylor Swift", try these 5...',
-    author: '@readingcorner',  // Different author, same list as id: 3
-    category: 'Music',
-    date: '8/21/2025',
-    votes: 445,
-    upvotes: 556,
-    downvotes: 111,
-    userVote: null,
-    highFives: 19,
-    userHighFived: false,
-    items: ['Lorde', 'Phoebe Bridgers', 'Clairo', 'Olivia Rodrigo', 'Conan Gray'], // Exact same items
-    description: 'Perfect artists for Swifties looking to expand their playlists with similar emotional depth.',
-    comments: [],
-    saves: 389
-  },
-  {
-    id: 8,
-    title: 'If you like "The Beatles", try these 5...',
-    author: '@artlover',  // Third person with same Beatles list
-    category: 'Music',
-    date: '8/22/2025',
-    votes: 156,
-    upvotes: 198,
-    downvotes: 42,
-    userVote: null,
-    highFives: 12,
-    userHighFived: false,
-    items: ['The Rolling Stones', 'The Kinks', 'The Who', 'Led Zeppelin', 'Pink Floyd'], // Exact same items again
-    description: 'Iconic bands that defined rock music alongside The Beatles.',
-    comments: [],
-    saves: 134
-  },
+  // Removed duplicate Beatles list (was ID 6)
+  // Removed duplicate Taylor Swift list (was ID 7)
+  // Removed duplicate Beatles list (was ID 8)
 
   // 92 additional lists (reduced since we added 3 twins)
   ...Array.from({ length: 92 }, (_, i) => {
@@ -821,7 +835,7 @@ const rawMockLists: List[] = [
 
   // Boston-themed lists
   {
-    id: 101,
+    id: 201,
     title: 'If you like "Boston Common", try these 5 parks...',
     author: '@bostonexplorer',
     category: 'Travel',
@@ -838,7 +852,7 @@ const rawMockLists: List[] = [
     saves: 23
   },
   {
-    id: 102,
+    id: 202,
     title: 'If you like "North End", try these 5 Boston neighborhoods...',
     author: '@bostonfoodie',
     category: 'Travel',
@@ -855,7 +869,7 @@ const rawMockLists: List[] = [
     saves: 34
   },
   {
-    id: 103,
+    id: 203,
     title: 'If you like "Fenway Park", try these 5 Boston sports experiences...',
     author: '@redsoxfan',
     category: 'Sports',
@@ -864,7 +878,7 @@ const rawMockLists: List[] = [
     upvotes: 95,
     downvotes: 6,
     userVote: null,
-    highFives: 15,
+    highFives: 12, // Keep this one as High Fived
     userHighFived: false,
     items: ['TD Garden (Celtics/Bruins)', 'Gillette Stadium (Patriots)', 'Harvard Stadium', 'Boston Marathon Route', 'Head of the Charles Regatta'],
     description: 'Iconic Boston sports venues and events that capture the city\'s athletic spirit.',
@@ -872,7 +886,7 @@ const rawMockLists: List[] = [
     saves: 41
   },
   {
-    id: 104,
+    id: 204,
     title: 'If you like "Clam Chowder", try these 5 Boston foods...',
     author: '@bostoneats',
     category: 'Food',
@@ -889,7 +903,7 @@ const rawMockLists: List[] = [
     saves: 52
   },
   {
-    id: 105,
+    id: 205,
     title: 'If you like "Freedom Trail", try these 5 Boston historic sites...',
     author: '@historyboston',
     category: 'History',
@@ -898,7 +912,7 @@ const rawMockLists: List[] = [
     upvotes: 65,
     downvotes: 9,
     userVote: null,
-    highFives: 11,
+    highFives: 7,
     userHighFived: false,
     items: ['USS Constitution', 'Boston Tea Party Ships', 'Paul Revere House', 'Old South Meeting House', 'Bunker Hill Monument'],
     description: 'Revolutionary War sites that shaped American history.',
@@ -906,7 +920,7 @@ const rawMockLists: List[] = [
     saves: 29
   },
   {
-    id: 106,
+    id: 206,
     title: 'If you like "Harvard Square", try these 5 Boston student areas...',
     author: '@cambridgestudent',
     category: 'Travel',
@@ -923,7 +937,7 @@ const rawMockLists: List[] = [
     saves: 38
   },
   {
-    id: 107,
+    id: 207,
     title: 'If you like "Good Will Hunting", try these 5 Boston movies...',
     author: '@bostonfilmbuff',
     category: 'Movies',
@@ -932,7 +946,7 @@ const rawMockLists: List[] = [
     upvotes: 90,
     downvotes: 6,
     userVote: null,
-    highFives: 16,
+    highFives: 8,
     userHighFived: false,
     items: ['The Departed', 'The Town', 'Mystic River', 'Fever Pitch', 'Ted'],
     description: 'Films that perfectly capture Boston\'s spirit and character.',
@@ -940,7 +954,7 @@ const rawMockLists: List[] = [
     saves: 47
   },
   {
-    id: 108,
+    id: 208,
     title: 'If you like "Newbury Street", try these 5 Boston shopping areas...',
     author: '@bostonshopper',
     category: 'Fashion',
@@ -957,7 +971,7 @@ const rawMockLists: List[] = [
     saves: 25
   },
   {
-    id: 109,
+    id: 209,
     title: 'If you like "Boston Symphony Orchestra", try these 5 music venues...',
     author: '@bostonmusic',
     category: 'Music',
@@ -974,7 +988,7 @@ const rawMockLists: List[] = [
     saves: 21
   },
   {
-    id: 110,
+    id: 210,
     title: 'If you like "Sam Adams", try these 5 Boston breweries...',
     author: '@beerboston',
     category: 'Food',
@@ -983,7 +997,7 @@ const rawMockLists: List[] = [
     upvotes: 80,
     downvotes: 9,
     userVote: null,
-    highFives: 14,
+    highFives: 8,
     userHighFived: false,
     items: ['Harpoon Brewery', 'Trillium Brewing', 'Night Shift Brewing', 'Aeronaut Brewing', 'Lamplighter Brewing'],
     description: 'Local Boston breweries making incredible craft beer.',
@@ -991,7 +1005,7 @@ const rawMockLists: List[] = [
     saves: 45
   },
   {
-    id: 111,
+    id: 211,
     title: 'If you like "MIT", try these 5 Boston tech companies...',
     author: '@bostontechie',
     category: 'Technology',
@@ -1000,7 +1014,7 @@ const rawMockLists: List[] = [
     upvotes: 100,
     downvotes: 8,
     userVote: null,
-    highFives: 19,
+    highFives: 9,
     userHighFived: false,
     items: ['HubSpot', 'Wayfair', 'Toast', 'DraftKings', 'TripAdvisor'],
     description: 'Innovative tech companies that call Boston home.',
@@ -1008,7 +1022,7 @@ const rawMockLists: List[] = [
     saves: 58
   },
   {
-    id: 112,
+    id: 212,
     title: 'If you like "Boston Marathon", try these 5 running routes...',
     author: '@bostonrunner',
     category: 'Fitness',
@@ -1017,7 +1031,7 @@ const rawMockLists: List[] = [
     upvotes: 70,
     downvotes: 6,
     userVote: null,
-    highFives: 13,
+    highFives: 7,
     userHighFived: false,
     items: ['Charles River Esplanade', 'Minuteman Bikeway', 'Emerald Necklace', 'Harbour Walk', 'Fresh Pond Loop'],
     description: 'Best running and walking paths around Boston.',
@@ -1025,7 +1039,7 @@ const rawMockLists: List[] = [
     saves: 36
   },
   {
-    id: 113,
+    id: 213,
     title: 'If you like "Cheers", try these 5 Boston TV shows...',
     author: '@bostontv',
     category: 'TV Shows',
@@ -1042,7 +1056,7 @@ const rawMockLists: List[] = [
     saves: 27
   },
   {
-    id: 114,
+    id: 214,
     title: 'If you like "Isabella Stewart Gardner Museum", try these 5 Boston museums...',
     author: '@bostonart',
     category: 'Art',
@@ -1051,7 +1065,7 @@ const rawMockLists: List[] = [
     upvotes: 55,
     downvotes: 6,
     userVote: null,
-    highFives: 10,
+    highFives: 8,
     userHighFived: false,
     items: ['Museum of Fine Arts', 'Institute of Contemporary Art', 'Harvard Art Museums', 'Museum of Science', 'Boston Children\'s Museum'],
     description: 'World-class museums showcasing art, science, and culture in Boston.',
@@ -1059,7 +1073,7 @@ const rawMockLists: List[] = [
     saves: 31
   },
   {
-    id: 115,
+    id: 215,
     title: 'If you like "Boston University", try these 5 college towns...',
     author: '@collegeboston',
     category: 'Travel',
@@ -1076,7 +1090,7 @@ const rawMockLists: List[] = [
     saves: 22
   },
   {
-    id: 116,
+    id: 216,
     title: 'If you like "Dunkin\' Donuts", try these 5 Boston coffee shops...',
     author: '@bostoncoffee',
     category: 'Food',
@@ -1085,7 +1099,7 @@ const rawMockLists: List[] = [
     upvotes: 85,
     downvotes: 7,
     userVote: null,
-    highFives: 17,
+    highFives: 8,
     userHighFived: false,
     items: ['Blue Bottle Coffee', 'George Howell Coffee', 'Thinking Cup', 'Pavement Coffeehouse', 'Render Coffee'],
     description: 'Local Boston coffee roasters and cafes beyond the chains.',
@@ -1093,7 +1107,7 @@ const rawMockLists: List[] = [
     saves: 43
   },
   {
-    id: 117,
+    id: 217,
     title: 'If you like "Boston Harbor", try these 5 waterfront activities...',
     author: '@bostonwater',
     category: 'Travel',
@@ -1110,7 +1124,7 @@ const rawMockLists: List[] = [
     saves: 28
   },
   {
-    id: 118,
+    id: 218,
     title: 'If you like "Dropkick Murphys", try these 5 Boston bands...',
     author: '@bostonpunk',
     category: 'Music',
@@ -1119,7 +1133,7 @@ const rawMockLists: List[] = [
     upvotes: 75,
     downvotes: 6,
     userVote: null,
-    highFives: 12,
+    highFives: 9,
     userHighFived: false,
     items: ['The Mighty Mighty Bosstones', 'Street Dogs', 'The Bruisers', 'Blood for Blood', 'Gang Green'],
     description: 'Boston punk and ska bands that rock as hard as the Dropkicks.',
@@ -1127,7 +1141,7 @@ const rawMockLists: List[] = [
     saves: 37
   },
   {
-    id: 119,
+    id: 219,
     title: 'If you like "Boston Public Library", try these 5 study spots...',
     author: '@bostonstudent',
     category: 'Travel',
@@ -1171,7 +1185,7 @@ const rawMockLists: List[] = [
     upvotes: 95,
     downvotes: 6,
     userVote: null,
-    highFives: 15,
+    highFives: 8,
     userHighFived: false,
     items: ['Trillium Brewing Company', 'Night Shift Brewing', 'Harpoon Brewery', 'Samuel Adams Boston Brewery', 'Cambridge Brewing Company'],
     description: 'The best local breweries and beer bars in Boston and Cambridge.',
@@ -1180,7 +1194,7 @@ const rawMockLists: List[] = [
   },
   // Boston Restaurants
   {
-    id: 103,
+    id: 303,
     title: 'If you like "Giacomo\'s Ristorante", try these 5 North End Italian restaurants...',
     author: '@south_end_local',
     category: 'Food',
@@ -1189,7 +1203,7 @@ const rawMockLists: List[] = [
     upvotes: 165,
     downvotes: 9,
     userVote: null,
-    highFives: 28,
+    highFives: 8, // Keep this one as High Fived
     userHighFived: false,
     items: ['Giacomo\'s Ristorante', 'Bricco', 'Neptune Oyster', 'Regina Pizzeria', 'Modern Pastry'],
     description: 'Authentic Italian dining experiences in Boston\'s historic North End.',
@@ -1198,7 +1212,7 @@ const rawMockLists: List[] = [
   },
   // Boston Colleges
   {
-    id: 104,
+    id: 304,
     title: 'If you like "Harvard University", try these 5 Boston area universities...',
     author: '@harvard_grad',
     category: 'Travel',
@@ -1207,7 +1221,7 @@ const rawMockLists: List[] = [
     upvotes: 142,
     downvotes: 8,
     userVote: null,
-    highFives: 22,
+    highFives: 8,
     userHighFived: false,
     items: ['Harvard University', 'MIT', 'Boston University', 'Northeastern University', 'Emerson College'],
     description: 'Beautiful campuses and student life in the Boston area.',
@@ -1216,7 +1230,7 @@ const rawMockLists: List[] = [
   },
   // Boston Shopping
   {
-    id: 105,
+    id: 305,
     title: 'If you like "Newbury Street", try these 5 Boston shopping districts...',
     author: '@beacon_hill_guide',
     category: 'Travel',
@@ -1225,7 +1239,7 @@ const rawMockLists: List[] = [
     upvotes: 107,
     downvotes: 9,
     userVote: null,
-    highFives: 18,
+    highFives: 7,
     userHighFived: false,
     items: ['Newbury Street', 'Faneuil Hall Marketplace', 'Prudential Center', 'Harvard Square', 'Legacy Place'],
     description: 'From high-end boutiques to local markets in Boston.',
@@ -1234,7 +1248,7 @@ const rawMockLists: List[] = [
   },
   // Boston Sightseeing
   {
-    id: 106,
+    id: 306,
     title: 'If you like "Paul Revere House", try these 5 Freedom Trail must-sees...',
     author: '@bostonexplorer',
     category: 'Travel',
@@ -1243,7 +1257,7 @@ const rawMockLists: List[] = [
     upvotes: 215,
     downvotes: 14,
     userVote: null,
-    highFives: 35,
+    highFives: 25, // Keep this one as High Fived
     userHighFived: false,
     items: ['Boston Common', 'Faneuil Hall', 'Paul Revere House', 'Old North Church', 'USS Constitution'],
     description: 'Historic landmarks along Boston\'s famous Freedom Trail.',
@@ -1252,7 +1266,7 @@ const rawMockLists: List[] = [
   },
   // Boston Museums
   {
-    id: 107,
+    id: 307,
     title: 'If you like "Museum of Fine Arts", try these 5 Boston museums...',
     author: '@patriots_fan',
     category: 'Art',
@@ -1261,12 +1275,191 @@ const rawMockLists: List[] = [
     upvotes: 178,
     downvotes: 11,
     userVote: null,
-    highFives: 31,
+    highFives: 18, // Keep this one as High Fived
     userHighFived: false,
     items: ['Museum of Fine Arts', 'Boston Tea Party Ships', 'MIT Museum', 'Isabella Stewart Gardner Museum', 'Boston Children\'s Museum'],
     description: 'World-class museums and cultural attractions in Boston.',
     comments: [],
     saves: 72
+  },
+
+  // DUPLICATE LISTS TO TEST STACKED EFFECT
+  // These identical lists will be detected by detectTwins() and merged with twinCount
+
+  // First duplicate set - Marvel Movies
+  {
+    id: 1001,
+    title: 'If you like "Iron Man", try these 5...',
+    author: '@marvel_fan',
+    category: 'Movies',
+    date: '8/15/2025',
+    votes: 95,
+    upvotes: 120,
+    downvotes: 25,
+    userVote: null,
+    highFives: 15,
+    userHighFived: false,
+    items: ['The Dark Knight', 'Spider-Man: Into the Spider-Verse', 'Wonder Woman', 'Guardians of the Galaxy', 'Captain America: The Winter Soldier'],
+    description: 'If you love Iron Man\'s mix of tech, humor, and heroics, these superhero films deliver the same energy with their own unique twists.',
+    comments: [],
+    saves: 45
+  },
+  {
+    id: 1002,
+    title: 'If you like "Iron Man", try these 5...',
+    author: '@superhero_guru',
+    category: 'Movies',
+    date: '8/14/2025',
+    votes: 88,
+    upvotes: 115,
+    downvotes: 27,
+    userVote: null,
+    highFives: 12,
+    userHighFived: false,
+    items: ['The Dark Knight', 'Spider-Man: Into the Spider-Verse', 'Wonder Woman', 'Guardians of the Galaxy', 'Captain America: The Winter Soldier'],
+    description: 'If you love Iron Man\'s mix of tech, humor, and heroics, these superhero films deliver the same energy with their own unique twists.',
+    comments: [],
+    saves: 38
+  },
+  {
+    id: 1003,
+    title: 'If you like "Iron Man", try these 5...',
+    author: '@comic_book_lover',
+    category: 'Movies',
+    date: '8/13/2025',
+    votes: 102,
+    upvotes: 125,
+    downvotes: 23,
+    userVote: null,
+    highFives: 18,
+    userHighFived: false,
+    items: ['The Dark Knight', 'Spider-Man: Into the Spider-Verse', 'Wonder Woman', 'Guardians of the Galaxy', 'Captain America: The Winter Soldier'],
+    description: 'If you love Iron Man\'s mix of tech, humor, and heroics, these superhero films deliver the same energy with their own unique twists.',
+    comments: [],
+    saves: 52
+  },
+
+  // Second duplicate set - Coding Music
+  {
+    id: 1004,
+    title: 'If you like "Lo-Fi Hip Hop", try these 5...',
+    author: '@coder_vibes',
+    category: 'Music',
+    date: '8/12/2025',
+    votes: 67,
+    upvotes: 82,
+    downvotes: 15,
+    userVote: null,
+    highFives: 9,
+    userHighFived: false,
+    items: ['Chillhop Essentials', 'Jazz Vibes', 'Ambient Study Music', 'Piano Collections', 'Synthwave Chill'],
+    description: 'Perfect background music for coding, studying, or just relaxing. These genres complement lo-fi hip hop\'s peaceful, focused energy.',
+    comments: [],
+    saves: 34
+  },
+  {
+    id: 1005,
+    title: 'If you like "Lo-Fi Hip Hop", try these 5...',
+    author: '@study_beats',
+    category: 'Music',
+    date: '8/11/2025',
+    votes: 73,
+    upvotes: 89,
+    downvotes: 16,
+    userVote: null,
+    highFives: 11,
+    userHighFived: false,
+    items: ['Chillhop Essentials', 'Jazz Vibes', 'Ambient Study Music', 'Piano Collections', 'Synthwave Chill'],
+    description: 'Perfect background music for coding, studying, or just relaxing. These genres complement lo-fi hip hop\'s peaceful, focused energy.',
+    comments: [],
+    saves: 41
+  },
+
+  // Third duplicate set - Fantasy Books (5 duplicates!)
+  {
+    id: 1006,
+    title: 'If you like "Harry Potter", try these 5...',
+    author: '@fantasy_reader',
+    category: 'Books',
+    date: '8/10/2025',
+    votes: 134,
+    upvotes: 156,
+    downvotes: 22,
+    userVote: null,
+    highFives: 25,
+    userHighFived: false,
+    items: ['Percy Jackson & The Olympians', 'The Chronicles of Narnia', 'His Dark Materials', 'Artemis Fowl', 'The Inheritance Cycle'],
+    description: 'These magical adventures capture the wonder, friendship, and coming-of-age themes that make Harry Potter so beloved.',
+    comments: [],
+    saves: 78
+  },
+  {
+    id: 1007,
+    title: 'If you like "Harry Potter", try these 5...',
+    author: '@bookworm_magic',
+    category: 'Books',
+    date: '8/9/2025',
+    votes: 128,
+    upvotes: 149,
+    downvotes: 21,
+    userVote: null,
+    highFives: 22,
+    userHighFived: false,
+    items: ['Percy Jackson & The Olympians', 'The Chronicles of Narnia', 'His Dark Materials', 'Artemis Fowl', 'The Inheritance Cycle'],
+    description: 'These magical adventures capture the wonder, friendship, and coming-of-age themes that make Harry Potter so beloved.',
+    comments: [],
+    saves: 71
+  },
+  {
+    id: 1008,
+    title: 'If you like "Harry Potter", try these 5...',
+    author: '@young_adult_novels',
+    category: 'Books',
+    date: '8/8/2025',
+    votes: 145,
+    upvotes: 167,
+    downvotes: 22,
+    userVote: null,
+    highFives: 28,
+    userHighFived: false,
+    items: ['Percy Jackson & The Olympians', 'The Chronicles of Narnia', 'His Dark Materials', 'Artemis Fowl', 'The Inheritance Cycle'],
+    description: 'These magical adventures capture the wonder, friendship, and coming-of-age themes that make Harry Potter so beloved.',
+    comments: [],
+    saves: 85
+  },
+  {
+    id: 1009,
+    title: 'If you like "Harry Potter", try these 5...',
+    author: '@library_lover',
+    category: 'Books',
+    date: '8/7/2025',
+    votes: 139,
+    upvotes: 162,
+    downvotes: 23,
+    userVote: null,
+    highFives: 26,
+    userHighFived: false,
+    items: ['Percy Jackson & The Olympians', 'The Chronicles of Narnia', 'His Dark Materials', 'Artemis Fowl', 'The Inheritance Cycle'],
+    description: 'These magical adventures capture the wonder, friendship, and coming-of-age themes that make Harry Potter so beloved.',
+    comments: [],
+    saves: 82
+  },
+  {
+    id: 1010,
+    title: 'If you like "Harry Potter", try these 5...',
+    author: '@fantasy_enthusiast',
+    category: 'Books',
+    date: '8/6/2025',
+    votes: 142,
+    upvotes: 165,
+    downvotes: 23,
+    userVote: null,
+    highFives: 29,
+    userHighFived: false,
+    items: ['Percy Jackson & The Olympians', 'The Chronicles of Narnia', 'His Dark Materials', 'Artemis Fowl', 'The Inheritance Cycle'],
+    description: 'These magical adventures capture the wonder, friendship, and coming-of-age themes that make Harry Potter so beloved.',
+    comments: [],
+    saves: 88
   }
 ];
 

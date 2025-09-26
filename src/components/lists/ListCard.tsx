@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
-import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, Archive } from 'lucide-react';
+import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, History, ExternalLink, RefreshCw } from 'lucide-react';
 import { List, ItemVotes as ItemVoteData, Comment, UserBadge } from '@/types';
 import { mockTMDbData, mockArtistData } from '@/data/mockData';
+import { subjectFallbacks, normalizeSubjectKey } from '@/data/subjectFallbacks';
 import { getItemDetailsByName } from '@/utils/tmdbApi';
 import { BadgeList } from '@/components/badges/Badge';
 import { exportToPDF, exportToCSV, exportToText } from '@/utils/exportUtils';
@@ -15,7 +16,9 @@ import { HighFivedBadge } from '@/components/achievements/GoldHighFiveNotificati
 
 interface ListCardProps {
   list: List;
+  itemVotes?: { [itemIndex: number]: { upvotes: number; downvotes: number; userVote: 'up' | 'down' | null; } };
   onListVote: (listId: number, voteType: 'up' | 'down') => void;
+  onItemVote?: (listId: number, itemIndex: number, voteType: 'up' | 'down') => void;
   onSaveList: (listId: number) => void;
   onHighFive: (listId: number) => void;
   onCategoryClick?: (category: string) => void;
@@ -27,7 +30,7 @@ interface ListCardProps {
   onSetReminder?: (listId: number, reminderDate: string, reminderType: string, message?: string) => void;
   onItemBookmark?: (listId: number, itemIndex: number) => void;
   onMessage?: (username: string) => void;
-  onArchiveItem?: (listId: number, itemIndex: number) => void;
+  onAddToHistory?: (listId: number, itemIndex: number) => void;
   bookmarkState?: { [key: string]: boolean };
   isSaved: boolean;
   antiSocialMode?: boolean;
@@ -66,6 +69,42 @@ const getUserBadges = (username: string): UserBadge[] => {
   return badgeMap[username] || [];
 };
 
+const normalizeName = (value: string): string => {
+  return value.toLowerCase().replace(/[^a-z0-9]/g, '');
+};
+
+interface SubjectInfo {
+  description: string;
+  image?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+}
+
+const subjectInfoCache = new Map<string, SubjectInfo>();
+
+const generateAlternativeSuggestion = (subjectName: string, category: string): string => {
+  const base = subjectName.replace(/"/g, '');
+  const normalizedCategory = category.toLowerCase();
+
+  if (['movies', 'movie', 'film', 'films', 'cinema'].includes(normalizedCategory)) {
+    return `${base} (Extended Marathon)`;
+  }
+
+  if (['tv shows', 'tv', 'television', 'series', 'show', 'shows'].includes(normalizedCategory)) {
+    return `${base} (Series Deep Dive)`;
+  }
+
+  if (['books', 'book', 'novels', 'literature'].includes(normalizedCategory)) {
+    return `${base} Companion Stories`;
+  }
+
+  if (['music', 'artist', 'song', 'songs', 'album', 'albums'].includes(normalizedCategory)) {
+    return `${base} Essentials Playlist`;
+  }
+
+  return `${base} Fan Favorites`;
+};
+
 function ListCard({
   list,
   onListVote,
@@ -80,7 +119,7 @@ function ListCard({
   onSetReminder,
   onItemBookmark,
   onMessage,
-  onArchiveItem,
+  onAddToHistory,
   bookmarkState = {},
   isSaved,
   antiSocialMode = false
@@ -94,6 +133,9 @@ function ListCard({
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
   const [tmdbCache, setTmdbCache] = useState<{[key: string]: any}>({});
   const [loadingItems, setLoadingItems] = useState<{[key: number]: boolean}>({});
+  const [mainSubjectData, setMainSubjectData] = useState<SubjectInfo | null>(null);
+  const [loadingMainSubject, setLoadingMainSubject] = useState(true);
+  const [mainSubjectError, setMainSubjectError] = useState<string | null>(null);
   const [showAuthorTooltip, setShowAuthorTooltip] = useState(false);
   const [tooltipHoverTimeout, setTooltipHoverTimeout] = useState<NodeJS.Timeout | null>(null);
   const [showApprovalTooltip, setShowApprovalTooltip] = useState(false);
@@ -114,7 +156,29 @@ function ListCard({
   const [messageMentions, setMessageMentions] = useState<string[]>([]);
   const [messageHashtags, setMessageHashtags] = useState<string[]>([]);
   const exportMenuRef = useRef<HTMLDivElement>(null);
+  const mainSubjectAbortRef = useRef(false);
   const authorTooltipRef = useRef<HTMLDivElement>(null);
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  // Extract main subject from title
+  const mainSubjectName = useMemo(() => {
+    return list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || 'Various Items';
+  }, [list.title]);
+
+  const mainSubjectNormalized = useMemo(() => normalizeName(mainSubjectName), [mainSubjectName]);
+
+  const mainSubjectFallback = useMemo(() => {
+    if (!mainSubjectName || mainSubjectName === 'Various Items') {
+      return null;
+    }
+    return subjectFallbacks[normalizeSubjectKey(mainSubjectName, list.category)];
+  }, [list.category, mainSubjectName]);
+
+  const mainSubjectCacheKey = useMemo(() => {
+    if (!mainSubjectName) return null;
+    const normalizedCategory = list.category ? list.category.toLowerCase() : 'general';
+    return `${mainSubjectName.toLowerCase()}|${normalizedCategory}`;
+  }, [mainSubjectName, list.category]);
 
   // Memoized expensive calculations
   const userBadges = useMemo(() => getUserBadges(list.author), [list.author]);
@@ -159,6 +223,79 @@ function ListCard({
     }
   }, [onAuthorClick, list.author]);
 
+  const fetchMainSubjectInfo = useCallback(async (options?: { force?: boolean }) => {
+    mainSubjectAbortRef.current = false;
+
+    if (!mainSubjectName || mainSubjectName === 'Various Items' || !mainSubjectCacheKey) {
+      setMainSubjectData(null);
+      setMainSubjectError(null);
+      setLoadingMainSubject(false);
+      return;
+    }
+
+    if (mainSubjectFallback) {
+      setMainSubjectData(mainSubjectFallback);
+      setMainSubjectError(null);
+      setLoadingMainSubject(false);
+      return;
+    }
+
+    if (!options?.force && subjectInfoCache.has(mainSubjectCacheKey)) {
+      const cached = subjectInfoCache.get(mainSubjectCacheKey)!;
+      const normalizedCategory = (list.category || '').toLowerCase();
+      const needsArtworkRefresh = ['movies', 'movie', 'tv shows', 'tv', 'music', 'books'].includes(normalizedCategory);
+
+      if (!needsArtworkRefresh || cached.image) {
+        setMainSubjectData(cached);
+        setMainSubjectError(null);
+        setLoadingMainSubject(false);
+        return;
+      }
+    }
+
+    setLoadingMainSubject(true);
+    setMainSubjectError(null);
+
+    try {
+      const response = await fetch('/api/subject-info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: mainSubjectName, category: list.category }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Subject info request failed: ${response.status}`);
+      }
+
+      const payload: SubjectInfo = await response.json();
+
+      if (mainSubjectAbortRef.current) {
+        return;
+      }
+
+      if ((payload.description && payload.description.trim()) || payload.image) {
+        subjectInfoCache.set(mainSubjectCacheKey, payload);
+      }
+
+      setMainSubjectData(payload);
+      setMainSubjectError(null);
+    } catch (error) {
+      if (mainSubjectAbortRef.current) {
+        return;
+      }
+      setMainSubjectError('We couldn\'t fetch details for this main subject right now.');
+      setMainSubjectData(null);
+    } finally {
+      if (!mainSubjectAbortRef.current) {
+        setLoadingMainSubject(false);
+      }
+    }
+  }, [list.category, list.id, mainSubjectCacheKey, mainSubjectName, mainSubjectFallback]);
+
+  const handleRefreshMainSubject = useCallback(() => {
+    fetchMainSubjectInfo({ force: true });
+  }, [fetchMainSubjectInfo]);
+
   // Handle clicks outside tooltip to close it
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -187,6 +324,33 @@ function ListCard({
     };
   }, [tooltipHoverTimeout]);
 
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) {
+      return;
+    }
+
+    mainSubjectAbortRef.current = false;
+
+    if (!mainSubjectName || mainSubjectName === 'Various Items' || !mainSubjectCacheKey) {
+      setMainSubjectData(null);
+      setMainSubjectError(null);
+      setLoadingMainSubject(false);
+      return () => {
+        mainSubjectAbortRef.current = true;
+      };
+    }
+
+    fetchMainSubjectInfo();
+
+    return () => {
+      mainSubjectAbortRef.current = true;
+    };
+  }, [fetchMainSubjectInfo, hasHydrated, mainSubjectCacheKey, mainSubjectName, mainSubjectFallback]);
+
   // Get real-time vote updates
   const { getVoteUpdate } = useRealTimeVotesContext();
   const realtimeUpdate = getVoteUpdate(list.id);
@@ -209,6 +373,8 @@ function ListCard({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+
   const displayVotes = currentVotes;
 
 
@@ -298,12 +464,37 @@ function ListCard({
       // Only use TMDB API for Movies and TV Shows categories
       if (list.category === 'Movies' || list.category === 'TV Shows') {
         const tmdbResult = await getItemDetailsByName(itemName);
-        
+
         if (tmdbResult) {
           // Cache the result
           setTmdbCache(prev => ({ ...prev, [itemName]: tmdbResult }));
           setLoadingItems(prev => ({ ...prev, [itemIndex]: false }));
           return tmdbResult;
+        }
+      }
+
+      // Use subject-info API for Music category
+      if (list.category === 'Music') {
+        const response = await fetch('/api/subject-info', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject: itemName, category: list.category }),
+        });
+
+        if (response.ok) {
+          const subjectData = await response.json();
+          const result = {
+            type: 'music',
+            name: itemName,
+            description: subjectData.description || '',
+            image: subjectData.image,
+            sourceName: subjectData.sourceName,
+            sourceUrl: subjectData.sourceUrl
+          };
+          // Cache the result
+          setTmdbCache(prev => ({ ...prev, [itemName]: result }));
+          setLoadingItems(prev => ({ ...prev, [itemIndex]: false }));
+          return result;
         }
       }
 
@@ -414,7 +605,11 @@ function ListCard({
   };
 
   return (
-    <div id={`list-${list.id}`} className={`list-card relative mb-6 border-l-4 ${getCategoryBorderColor(list.category)}`}>
+    <div
+      id={`list-${list.id}`}
+      className={`list-card relative mb-10 rounded-3xl border border-gray-200/80 dark:border-gray-700/70 bg-white/95 dark:bg-gray-900/80 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow hover:shadow-[0_35px_65px_-30px_rgba(15,23,42,0.85)] border-l-4 ${getCategoryBorderColor(list.category)}`}
+    >
+
       {/* Genre Bubble */}
       <button
         onClick={() => onCategoryClick?.(list.category)}
@@ -633,10 +828,11 @@ function ListCard({
             <span>{list.date}</span>
             {list.twinCount && list.twinCount > 1 && (
               <span
-                className="ml-2 text-xs text-gray-500 dark:text-gray-400 cursor-help"
+                className="ml-2 text-xs text-gray-500 dark:text-gray-400 cursor-help inline-flex items-center space-x-1"
                 title={`${list.twinCount} users independently created this exact same list`}
               >
-                ({list.twinCount} creators)
+                <span>•</span>
+                <span>{list.twinCount} people also made this list</span>
               </span>
             )}
           </div>
@@ -706,26 +902,115 @@ function ListCard({
         </div>
       </div>
 
+      {/* Main Subject Overview */}
+      {hasHydrated && mainSubjectName && mainSubjectName !== 'Various Items' && (
+        <div className="mb-6">
+          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4 space-y-4 sm:space-y-0">
+              <div className="flex-shrink-0">
+                <div className="w-28 h-40 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
+                  {loadingMainSubject ? (
+                    <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" aria-label="Loading main subject" />
+                  ) : mainSubjectData?.image ? (
+                    <img
+                      src={mainSubjectData.image}
+                      alt={mainSubjectName}
+                      className="w-full h-full object-contain bg-white dark:bg-gray-900"
+                      onError={(event) => {
+                        const target = event.currentTarget as HTMLImageElement;
+                        target.onerror = null;
+                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(mainSubjectName)}&background=0f766e&color=ffffff&size=256&bold=true`;
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(mainSubjectName)}&background=0f766e&color=ffffff&size=256&bold=true`}
+                      alt={mainSubjectName}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="flex-1 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{mainSubjectName}</h3>
+                    {mainSubjectData?.sourceName && (
+                      <div className="mt-1 flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
+                        <span>Source:</span>
+                        {mainSubjectData.sourceUrl ? (
+                          <a
+                            href={mainSubjectData.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center space-x-1 text-green-600 dark:text-green-400 hover:underline"
+                          >
+                            <span>{mainSubjectData.sourceName}</span>
+                            <ExternalLink size={12} />
+                          </a>
+                        ) : (
+                          <span>{mainSubjectData.sourceName}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRefreshMainSubject}
+                    disabled={loadingMainSubject}
+                    className="inline-flex items-center space-x-2 self-start px-3 py-1.5 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:border-green-300 dark:hover:border-green-400 transition-colors disabled:opacity-60"
+                  >
+                    <RefreshCw size={14} className={loadingMainSubject ? 'animate-spin' : ''} />
+                    <span>{loadingMainSubject ? 'Refreshing' : 'Refresh'}</span>
+                  </button>
+                </div>
+                <div className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  {loadingMainSubject ? (
+                    <div className="space-y-2">
+                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded" />
+                      <div className="h-3 w-3/4 bg-gray-200 dark:bg-gray-700 rounded" />
+                      <div className="h-3 w-2/3 bg-gray-200 dark:bg-gray-700 rounded" />
+                    </div>
+                  ) : mainSubjectError ? (
+                    <p className="text-sm text-amber-600 dark:text-amber-400">{mainSubjectError}</p>
+                  ) : mainSubjectData?.description ? (
+                    <p>{mainSubjectData.description}</p>
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      We couldn’t find a quick description yet. We’ll keep looking for fresh sources.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Items */}
       <div className="space-y-3 mb-6">
         {list.items.map((item, index) => {
+          const normalizedItem = normalizeName(item);
+          const isMainSubjectItem = normalizedItem && normalizedItem === mainSubjectNormalized;
+          const displayLabel = hasHydrated && isMainSubjectItem
+            ? generateAlternativeSuggestion(mainSubjectName, list.category)
+            : item;
+
           const isExpanded = expandedItem === index;
           const isLoading = loadingItems[index];
           const cachedDetails = tmdbCache[item];
-          
+
           const handleExpandClick = async () => {
             if (isExpanded) {
               setExpandedItem(null);
             } else {
               setExpandedItem(index);
-              // Only call legacy getItemDetails for Movies and TV Shows
-              // EnhancedItemDetails handles Books, Games, Music, etc. directly
-              if ((list.category === 'Movies' || list.category === 'TV Shows') && !cachedDetails) {
+              if ((list.category === 'Movies' || list.category === 'TV Shows' || list.category === 'Music') && !cachedDetails) {
                 await getItemDetails(item, index);
               }
             }
           };
-          
+
           return (
             <div key={index} className="rounded-lg bg-gray-200 dark:bg-gray-500 transition-colors">
               <div className="flex items-center justify-between p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
@@ -736,10 +1021,10 @@ function ListCard({
                         <span className="inline-flex items-center justify-center w-6 h-6 mr-3 rounded-full text-xs font-bold text-white bg-green-600">
                           {index + 1}
                         </span>
-                        {item}
+                        {displayLabel}
                       </>
                     ) : (
-                      item
+                      displayLabel
                     )}
                   </span>
                   <button 
@@ -775,14 +1060,14 @@ function ListCard({
                     </button>
                   )}
 
-                  {onArchiveItem && (
+                  {onAddToHistory && (
                     <button
-                      onClick={() => onArchiveItem(list.id, index)}
+                      onClick={() => onAddToHistory(list.id, index)}
                       className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-purple-100 hover:text-purple-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900 dark:hover:text-purple-300 transition-colors"
-                      title="Archive this item"
+                      title="Add to history"
                     >
-                      <Archive size={14} />
-                      <span>Archive</span>
+                      <History size={14} />
+                      <span>Add to History</span>
                     </button>
                   )}
                 </div>
