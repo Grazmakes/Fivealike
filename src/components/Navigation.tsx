@@ -43,7 +43,7 @@ export default function Navigation({ currentView, setCurrentView, unreadMessages
           className="flex items-center w-full px-4 py-3 rounded-lg transition-all duration-200 bg-green-600 text-white hover:bg-green-700 font-medium"
         >
           <Plus size={22} className="mr-4" />
-          <span className="text-base">Create List</span>
+          <span className="text-lg">Create List</span>
         </button>
         
         {filteredItems.map(({ id, icon: Icon, label }) => (

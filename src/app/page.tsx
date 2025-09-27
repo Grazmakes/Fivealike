@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, ChevronUp } from 'lucide-react';
 import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState, HistoryItem } from '@/types';
 import { mockLists, mockNotifications } from '@/data/mockData';
 
 import TopHeader from '@/components/TopHeader';
 import Navigation from '@/components/Navigation';
-import LoginForm from '@/components/auth/LoginForm';
 import HomeFeed from '@/components/feed/HomeFeed';
 import Community from '@/components/community/Community';
 import Groups from '@/components/groups/Groups';
@@ -44,8 +43,7 @@ function HomeContent() {
   const { broadcastVote, getVoteUpdate } = useRealTimeVotesContext();
   
   // Auth State
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [showAuth, setShowAuth] = useState('login');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // UI State
   const [currentView, setCurrentView] = useState<ViewType>('home');
@@ -56,6 +54,7 @@ function HomeContent() {
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [showCommunityGuidelines, setShowCommunityGuidelines] = useState(false);
   const [showRedditChat, setShowRedditChat] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   
   // State to track which item to highlight when navigating from mention notifications
   const [highlightedItem, setHighlightedItem] = useState<{type: 'list' | 'message' | 'comment', id: string} | null>(null);
@@ -673,17 +672,53 @@ function HomeContent() {
   //   }
   // }, [isLoggedIn, userProfile.hasSeenTutorial, showTutorial]);
 
-  // Scroll to top when viewing profile changes
+  // Scroll to top when view changes
   useEffect(() => {
-    if (currentView === 'profile') {
-      // Immediate scroll to top (instant)
-      window.scrollTo(0, 0);
-      // Also try smooth scroll after a delay as backup
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 50);
+    const mainContent = document.querySelector('[data-main-content]');
+    if (mainContent) {
+      mainContent.scrollTo(0, 0);
     }
   }, [currentView, viewingProfile]);
+
+  // Back to top button scroll detection - show when first list is out of view
+  useEffect(() => {
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        // Button appears when first list is NOT intersecting (out of view)
+        setShowBackToTop(!entry.isIntersecting);
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      root: document.querySelector('[data-main-content]'),
+      rootMargin: '0px',
+      threshold: 0
+    });
+
+    // Wait a bit for the content to render, then find the first list
+    const timeoutId = setTimeout(() => {
+      const firstList = document.querySelector('[data-list-card]');
+      if (firstList) {
+        observer.observe(firstList);
+        console.log('Observing first list element');
+      } else {
+        console.log('First list element not found');
+      }
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
+  }, [currentView]);
+
+  // Handle scroll to top
+  const scrollToTop = () => {
+    const mainContent = document.querySelector('[data-main-content]');
+    if (mainContent) {
+      mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Handle list voting - NOW SAVES TO DATABASE! 🎉
   const handleListVote = async (listId: number, voteType: 'up' | 'down') => {
@@ -1731,8 +1766,73 @@ function HomeContent() {
   };
 
   const handleLogout = () => {
+    // Clear user data from localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('five-alike-user');
+    }
+
+    // Reset authentication state
     setIsLoggedIn(false);
-    setShowAuth('login');
+
+    // Reset user profile to default
+    const generateUserId = () => {
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+      return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
+    };
+
+    setUserProfile({
+      id: generateUserId(),
+      username: 'guest',
+      bio: 'Exploring life through recommendations and discoveries!',
+      avatar: '⭐',
+      avatarImage: null,
+      favoriteTopics: ['music', 'games'],
+      selectedGenres: ['Music', 'Games'],
+      achievements: [],
+      antiSocialMode: false,
+      badges: [],
+      selectedBadge: null,
+      goals: [],
+      seasonalReminders: [],
+      followers: 0,
+      following: 0,
+      joinDate: new Date().toISOString(),
+      isEarlyAdopter: false,
+      hasSeenTutorial: false,
+      claimedRewards: [],
+      earlyAdopterRewards: [],
+      stats: {
+        listsCreated: 0,
+        totalVotes: 0,
+        followers: 0,
+        listsSaved: 0,
+        commentsPosted: 0,
+        highFivesGiven: 0,
+        highFivesReceived: 0,
+        trendsStarted: 0,
+        firstToSave: 0
+      },
+      analytics: {
+        tasteProfile: {
+          categoryBreakdown: {},
+          genrePreferences: {},
+          votingPatterns: {
+            upvotesByCategory: {},
+            downvotesByCategory: {}
+          },
+          discoveryHistory: []
+        },
+        influence: {
+          totalSavesReceived: 0,
+          totalHighFivesReceived: 0,
+          listImpact: [],
+          trendsettingScore: 0,
+          firstDiscoveries: 0
+        }
+      }
+    });
   };
 
   const handleNavigateToHome = () => {
@@ -1776,11 +1876,20 @@ function HomeContent() {
 
   if (!isLoggedIn) {
     return (
-      <LoginForm 
-        showAuth={showAuth}
-        setShowAuth={setShowAuth}
-        setIsLoggedIn={setIsLoggedIn}
-        darkMode={darkMode}
+      <SimpleAuth
+        onUserChange={(user) => {
+          if (user) {
+            setUserProfile(prevProfile => ({
+              ...prevProfile,
+              ...user,
+              analytics: user.analytics || prevProfile.analytics,
+              stats: user.stats || prevProfile.stats
+            }));
+            setIsLoggedIn(true);
+          } else {
+            setIsLoggedIn(false);
+          }
+        }}
       />
     );
   }
@@ -1789,35 +1898,7 @@ function HomeContent() {
     switch (currentView) {
       case 'home':
         return (
-          <div>
-            <SimpleAuth onUserChange={(user) => {
-              if (user) {
-                // Merge auth user data with existing profile data to preserve stats and analytics
-                setUserProfile(prevProfile => ({
-                  ...prevProfile,
-                  ...user,
-                  // Preserve existing analytics and stats if they exist in the current profile
-                  analytics: user.analytics || prevProfile.analytics,
-                  stats: user.stats || prevProfile.stats
-                }));
-                setIsLoggedIn(true);
-              } else {
-                setIsLoggedIn(false);
-                // Reset to default user when logged out
-                const generateUserId = () => {
-                  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-                    return crypto.randomUUID();
-                  }
-                  return 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
-                };
-                
-                setUserProfile(prev => ({
-                  ...prev,
-                  id: generateUserId()
-                }));
-              }
-            }} />
-            <HomeFeed
+          <HomeFeed
               selectedFeedTab={selectedFeedTab}
               setSelectedFeedTab={setSelectedFeedTab}
               allLists={allLists}
@@ -1839,7 +1920,6 @@ function HomeContent() {
               setSavedLists={setSavedLists}
               userProfile={userProfile}
           />
-          </div>
         );
       case 'discover':
         return (
@@ -2109,7 +2189,19 @@ function HomeContent() {
         <div className="w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed left-64 top-0 h-screen"></div>
         
         {/* Main Content Area - Fixed width to prevent expansion */}
-        <div className="fixed left-80 top-20 right-64 bottom-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-4 z-30">
+        <div data-main-content className="fixed left-80 top-20 right-64 bottom-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-4 z-30">
+          {/* Back to Top Button */}
+          <button
+            onClick={scrollToTop}
+            className={`fixed top-28 right-72 w-12 h-12 flex items-center justify-center transition-all duration-300 z-50 ${
+              showBackToTop
+                ? 'opacity-100 pointer-events-auto'
+                : 'opacity-0 pointer-events-none'
+            }`}
+            title="Back to Top"
+          >
+            <ChevronUp size={32} className="text-black hover:text-gray-700 transition-colors" />
+          </button>
           <div className="max-w-4xl mx-auto bg-transparent" style={{ paddingLeft: '2rem', paddingRight: '6rem' }}>
             <main className="bg-transparent">
               {renderCurrentView()}

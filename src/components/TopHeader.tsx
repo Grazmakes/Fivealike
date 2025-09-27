@@ -158,7 +158,7 @@ export default function TopHeader({
                 className="flex items-center space-x-2 p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 aria-label="User menu"
               >
-                <span className="text-sm font-medium">
+                <span className="text-base font-medium">
                   @{userProfile?.username || 'guest'}
                 </span>
                 <ChevronDown size={16} className={`transition-transform ${showUserDropdown ? 'rotate-180' : ''}`} />

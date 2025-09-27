@@ -607,6 +607,7 @@ function ListCard({
   return (
     <div
       id={`list-${list.id}`}
+      data-list-card
       className={`list-card relative mb-10 rounded-3xl border border-gray-200/80 dark:border-gray-700/70 bg-white/95 dark:bg-gray-900/80 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow hover:shadow-[0_35px_65px_-30px_rgba(15,23,42,0.85)] border-l-4 ${getCategoryBorderColor(list.category)}`}
     >
 
@@ -1053,7 +1054,7 @@ function ListCard({
                           ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800'
                           : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-blue-900 dark:hover:text-blue-300'
                       }`}
-                      title={bookmarkState[`${list.id}-${index}`] ? 'Saved to your bookmarks' : 'Save to bookmarks'}
+                      title={bookmarkState[`${list.id}-${index}`] ? 'Saved to your bookmarks' : 'Save Item'}
                     >
                       <Bookmark size={14} className={bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''} />
                       <span>{bookmarkState[`${list.id}-${index}`] ? 'Saved' : 'Save Item'}</span>
@@ -1117,6 +1118,7 @@ function ListCard({
             <button
               onClick={() => onListVote(list.id, 'up')}
               className={`vote-button min-w-[44px] min-h-[44px] ${list.userVote === 'up' ? 'upvoted' : ''}`}
+              title="Upvote this list - Click to add +1 to the score if you think this is a great recommendation list"
             >
               <ArrowUp size={20} className="sm:w-[22px] sm:h-[22px]" />
             </button>
@@ -1181,6 +1183,7 @@ function ListCard({
             <button
               onClick={() => onListVote(list.id, 'down')}
               className={`vote-button min-w-[44px] min-h-[44px] ${list.userVote === 'down' ? 'downvoted' : ''}`}
+              title="Downvote this list - Click to subtract -1 from the score if you don't think this is a good recommendation list"
             >
               <ArrowDown size={20} className="sm:w-[22px] sm:h-[22px]" />
             </button>

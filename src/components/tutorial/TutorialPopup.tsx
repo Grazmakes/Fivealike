@@ -21,11 +21,12 @@ interface TutorialPopupProps {
 const tutorialSteps: TutorialStep[] = [
   {
     title: 'Welcome to Five Alike!',
-    description: 'The social platform where "if you like this, you\'ll love that" comes to life. Discover personalized recommendations from a community of tastemakers.',
+    description: 'The social platform where "if you like this, you\'ll love that" comes to life. Create an account or sign in to discover personalized recommendations from a community of tastemakers.',
     icon: <Sparkles size={48} className="text-emerald-600" />,
     color: 'emerald',
     gradient: 'from-emerald-500 to-teal-600',
     features: [
+      'Create your free account with email and password',
       'Browse personalized feed based on your interests',
       'Vote on lists and individual recommendations',
       'Give weekly high-fives to outstanding content',
@@ -33,25 +34,19 @@ const tutorialSteps: TutorialStep[] = [
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-700">
-        <div className="flex items-center space-x-3 mb-3">
-          <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-            <Heart className="w-4 h-4 text-white" />
+        <div className="mb-3">
+          <div className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">Getting Started</div>
+          <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border">
+            <div className="flex space-x-1 p-1 bg-gray-100 dark:bg-gray-700 rounded mb-3">
+              <div className="flex-1 py-1 px-2 bg-white dark:bg-gray-600 text-gray-900 dark:text-white rounded text-xs text-center">Sign In</div>
+              <div className="flex-1 py-1 px-2 text-gray-500 text-xs text-center">Register</div>
+            </div>
+            <div className="space-y-2">
+              <input className="w-full px-2 py-1 text-xs border rounded" placeholder="Email" disabled />
+              <input className="w-full px-2 py-1 text-xs border rounded" placeholder="Password" type="password" disabled />
+              <button className="w-full py-1 bg-emerald-500 text-white rounded text-xs">Sign In</button>
+            </div>
           </div>
-          <div>
-            <div className="font-semibold text-emerald-800 dark:text-emerald-200">Try the interactive demo!</div>
-            <div className="text-sm text-emerald-600 dark:text-emerald-400">Click the vote buttons below</div>
-          </div>
-        </div>
-        <div className="flex space-x-2">
-          <button className="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm transition-all hover:scale-105">
-            ↑ 42
-          </button>
-          <button className="px-3 py-1 bg-gray-300 hover:bg-gray-400 text-gray-700 rounded-lg text-sm transition-all hover:scale-105">
-            ↓ 3
-          </button>
-          <button className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg text-sm transition-all hover:scale-105">
-            🙌 High Five
-          </button>
         </div>
       </div>
     )
@@ -256,32 +251,36 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
   const step = tutorialSteps[currentStep];
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300"
-      // Disabled background click to close - only X button closes tutorial
-      // onClick={onClose}
+      onClick={onClose}
     >
-      <div 
-        className={`bg-white dark:bg-gray-800 rounded-3xl max-w-4xl w-full shadow-2xl transform transition-all duration-300 ${
+      <div
+        className={`bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full shadow-2xl transform transition-all duration-300 ${
           isAnimating ? 'scale-95 opacity-50' : 'scale-100 opacity-100'
         } overflow-hidden`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Gradient Header */}
-        <div className={`bg-gradient-to-r ${step.gradient} p-6 text-white relative overflow-hidden`}>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+        {/* Flat Header */}
+        <div className={`${
+          step.color === 'emerald' ? 'bg-emerald-600' :
+          step.color === 'blue' ? 'bg-blue-600' :
+          step.color === 'purple' ? 'bg-purple-600' :
+          step.color === 'green' ? 'bg-green-600' :
+          step.color === 'yellow' ? 'bg-yellow-600' :
+          'bg-red-600'
+        } p-4 text-white relative`}>
           
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                {step.icon}
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
+                <div className="scale-75">{step.icon}</div>
               </div>
               <div>
-                <h2 className="text-2xl font-bold">
+                <h2 className="text-xl font-bold">
                   {step.title}
                 </h2>
-                <p className="text-white/80 text-lg">
+                <p className="text-white/80 text-sm">
                   Step {currentStep + 1} of {tutorialSteps.length}
                 </p>
               </div>
@@ -291,7 +290,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
                 console.log('❌ Tutorial X button clicked - closing tutorial');
                 onClose();
               }}
-              className="p-3 text-white/70 hover:text-white hover:bg-white/20 rounded-xl transition-all duration-200 hover:scale-110"
+              className="p-3 text-white/70 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-110"
             >
               <X size={24} />
             </button>
@@ -299,26 +298,26 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
         </div>
 
         {/* Content */}
-        <div className="p-8">
+        <div className="p-6">
           {/* Description */}
-          <div className="text-center mb-8">
-            <p className="text-gray-600 dark:text-gray-400 text-xl leading-relaxed max-w-3xl mx-auto">
+          <div className="text-center mb-6">
+            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto">
               {step.description}
             </p>
           </div>
 
           {/* Two Column Layout */}
-          <div className="grid lg:grid-cols-2 gap-8 mb-8">
+          <div className="grid lg:grid-cols-2 gap-6 mb-6">
             {/* Features List */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Play className="w-5 h-5 mr-2 text-blue-600" />
+            <div className="space-y-3">
+              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+                <Play className="w-4 h-4 mr-2 text-blue-600" />
                 Key Features
               </h4>
               {step.features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`flex items-start space-x-3 p-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] ${
+                  className={`flex items-start space-x-3 p-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] ${
                     showDemo ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
                   }`}
                   style={{
@@ -347,9 +346,9 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
             </div>
 
             {/* Interactive Demo */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                <Zap className="w-5 h-5 mr-2 text-purple-600" />
+            <div className="space-y-3">
+              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+                <Zap className="w-4 h-4 mr-2 text-purple-600" />
                 Interactive Demo
               </h4>
               <div className={`transition-all duration-500 transform ${
@@ -361,14 +360,21 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
           </div>
 
           {/* Enhanced Progress Indicators */}
-          <div className="flex justify-center items-center space-x-3 mb-8">
+          <div className="flex justify-center items-center space-x-3 mb-6">
             {tutorialSteps.map((tutorialStep, index) => (
               <div key={index} className="flex flex-col items-center">
                 <button
                   onClick={() => goToStep(index)}
-                  className={`relative w-12 h-12 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 flex items-center justify-center group ${
+                  className={`relative w-10 h-10 rounded-lg transition-all duration-300 cursor-pointer hover:scale-110 flex items-center justify-center group ${
                     index === currentStep
-                      ? `bg-gradient-to-r ${step.gradient} text-white shadow-lg`
+                      ? `${
+                        step.color === 'emerald' ? 'bg-emerald-600' :
+                        step.color === 'blue' ? 'bg-blue-600' :
+                        step.color === 'purple' ? 'bg-purple-600' :
+                        step.color === 'green' ? 'bg-green-600' :
+                        step.color === 'yellow' ? 'bg-yellow-600' :
+                        'bg-red-600'
+                      } text-white shadow-lg`
                       : index < currentStep
                       ? 'bg-green-100 text-green-600 hover:bg-green-200 dark:bg-green-900 dark:text-green-400'
                       : 'bg-gray-100 text-gray-400 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-500 dark:hover:bg-gray-600'
@@ -394,7 +400,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
         </div>
 
         {/* Enhanced Footer */}
-        <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-gray-800/50">
+        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => {
@@ -415,7 +421,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
               <button
                 onClick={prevStep}
                 disabled={isAnimating}
-                className="flex items-center space-x-2 px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ArrowLeft size={18} />
                 <span className="font-medium">Back</span>
@@ -425,7 +431,14 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
             <button
               onClick={nextStep}
               disabled={isAnimating}
-              className={`flex items-center space-x-2 px-8 py-3 bg-gradient-to-r ${step.gradient} hover:shadow-lg text-white rounded-xl transition-all duration-200 hover:scale-105 font-medium disabled:opacity-50 disabled:cursor-not-allowed transform-gpu`}
+              className={`flex items-center space-x-2 px-6 py-2 ${
+                step.color === 'emerald' ? 'bg-emerald-600 hover:bg-emerald-700' :
+                step.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
+                step.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
+                step.color === 'green' ? 'bg-green-600 hover:bg-green-700' :
+                step.color === 'yellow' ? 'bg-yellow-600 hover:bg-yellow-700' :
+                'bg-red-600 hover:bg-red-700'
+              } hover:shadow-lg text-white rounded-lg transition-all duration-200 hover:scale-105 font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <span>{currentStep === tutorialSteps.length - 1 ? 'Get Started! 🚀' : 'Continue'}</span>
               {currentStep < tutorialSteps.length - 1 && <ArrowRight size={18} />}
