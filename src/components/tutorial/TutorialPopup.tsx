@@ -29,7 +29,6 @@ const tutorialSteps: TutorialStep[] = [
       'Create your free account with email and password',
       'Browse personalized feed based on your interests',
       'Vote on lists and individual recommendations',
-      'Give weekly high-fives to outstanding content',
       'Real-time activity updates and notifications'
     ],
     demoElement: (

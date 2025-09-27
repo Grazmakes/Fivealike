@@ -656,21 +656,22 @@ function HomeContent() {
     };
   }, []);
 
-  // Tutorial auto-show disabled - users can manually open it from settings
-  // useEffect(() => {
-  //   if (isLoggedIn && !userProfile.hasSeenTutorial && !showTutorial) {
-  //     const hasShownTutorialThisSession = sessionStorage.getItem('tutorial-shown');
-  //     
-  //     if (!hasShownTutorialThisSession) {
-  //       const timer = setTimeout(() => {
-  //         setShowTutorial(true);
-  //         sessionStorage.setItem('tutorial-shown', 'true');
-  //       }, 1000); // Show tutorial 1 second after login
-  //       
-  //       return () => clearTimeout(timer);
-  //     }
-  //   }
-  // }, [isLoggedIn, userProfile.hasSeenTutorial, showTutorial]);
+  // Tutorial auto-show for new signups
+  useEffect(() => {
+    if (isLoggedIn && !userProfile.hasSeenTutorial && !showTutorial) {
+      const hasShownTutorialThisSession = sessionStorage.getItem('tutorial-shown');
+
+      if (!hasShownTutorialThisSession) {
+        const timer = setTimeout(() => {
+          debugLog('🎓 Auto-opening tutorial for new user');
+          setShowTutorial(true);
+          sessionStorage.setItem('tutorial-shown', 'true');
+        }, 1500); // Show tutorial 1.5 seconds after signup
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [isLoggedIn, userProfile.hasSeenTutorial, showTutorial]);
 
   // Scroll to top when view changes
   useEffect(() => {
