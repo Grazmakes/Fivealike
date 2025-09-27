@@ -81,7 +81,7 @@ export default function Community({ followedUsers, setFollowedUsers, onAuthorCli
 
   const renderUserCard = (user: any, isFollower = false) => {
     const isFollowing = followedUsers.includes(user.username);
-    
+
     return (
       <div key={user.username} className="flex items-center justify-between p-4 hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors">
         <div className="flex items-center space-x-4 flex-1">
@@ -90,9 +90,9 @@ export default function Community({ followedUsers, setFollowedUsers, onAuthorCli
               {user.avatar}
             </span>
           </div>
-          
+
           <div className="flex-1">
-            <h3 
+            <h3
               className="font-semibold text-gray-900 dark:text-white hover:text-green-600 dark:hover:text-green-400 cursor-pointer"
               onClick={() => onAuthorClick?.(user.username)}
             >
@@ -103,7 +103,7 @@ export default function Community({ followedUsers, setFollowedUsers, onAuthorCli
             </p>
           </div>
         </div>
-        
+
         {!isFollower && (
           <div className="flex items-center space-x-2">
             <button

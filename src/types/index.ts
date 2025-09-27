@@ -146,6 +146,7 @@ export interface List {
   isOrdered?: boolean; // Whether this list should be displayed with ranking numbers
   twins?: string[]; // Array of all authors who created this exact same list
   twinCount?: number; // Number of users who independently created this identical list
+  subjectImage?: string; // URL or base64 string for uploaded subject image
 }
 
 export interface Notification {

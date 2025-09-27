@@ -264,7 +264,7 @@ export const exportToPDF = (list: List) => {
             <div class="meta-item">
               <div class="meta-icon">⭐</div>
               <span class="meta-label">Votes:</span>
-              <span class="meta-value">${list.upvotes} • ${list.highFives} high fives</span>
+              <span class="meta-value">${list.upvotes} • ${list.highFives} Certi-fives</span>
             </div>
           </div>
           
@@ -347,7 +347,7 @@ ${'='.repeat(list.title.length)}
 By: ${list.author}
 Category: ${list.category}
 Created: ${new Date(list.date).toLocaleDateString()}
-Votes: ${list.upvotes} | High Fives: ${list.highFives}
+Votes: ${list.upvotes} | Certi-fives: ${list.highFives}
 ${list.isOrdered ? 'Type: Ranked List' : 'Type: Collection'}
 
 ${list.description ? `Description:\n${list.description}\n\n` : ''}${list.isOrdered ? 'Rankings:' : 'Recommendations:'}

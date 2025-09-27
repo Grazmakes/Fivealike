@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { X, Search, MapPin, Loader2 } from 'lucide-react';
+import { X, Search, MapPin, Loader2, Upload, Image as ImageIcon } from 'lucide-react';
 import { List } from '@/types';
 import { categories, categoryEmojis } from '@/data/mockData';
 import { secureApiService } from '@/services/secureApiService';
@@ -53,6 +53,12 @@ export default function CreateListModal({
   const [showWikipediaSuggestions, setShowWikipediaSuggestions] = useState(false);
   const [wikipediaSearchTimeout, setWikipediaSearchTimeout] = useState<NodeJS.Timeout | null>(null);
   const [loadingWikipediaSuggestions, setLoadingWikipediaSuggestions] = useState(false);
+
+  // Subject image upload states
+  const [subjectImage, setSubjectImage] = useState<string | null>(null);
+  const [subjectImageFile, setSubjectImageFile] = useState<File | null>(null);
+  const [showImagePreview, setShowImagePreview] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   
   // Check if category is location-related
   const isLocationCategory = (category: string) => {
@@ -217,6 +223,44 @@ export default function CreateListModal({
     setSubjectSuggestions([]);
   };
 
+  // Handle image upload
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file.');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image size must be less than 5MB.');
+      return;
+    }
+
+    // Convert to base64 for preview and storage
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      setSubjectImage(result);
+      setSubjectImageFile(file);
+      setShowImagePreview(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Remove uploaded image
+  const removeImage = () => {
+    setSubjectImage(null);
+    setSubjectImageFile(null);
+    setShowImagePreview(false);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = '';
+    }
+  };
+
   const handleWikipediaSuggestionSelect = (suggestion: any) => {
     setNewListTitle(suggestion.title);
     setShowWikipediaSuggestions(false);
@@ -283,7 +327,8 @@ export default function CreateListModal({
       saves: 0,
       isRejected: false,
       isNSFW: isNSFW,
-      isOrdered: isOrdered
+      isOrdered: isOrdered,
+      subjectImage: subjectImage || undefined
     };
 
     setAllLists([newList, ...allLists]);
@@ -299,6 +344,7 @@ export default function CreateListModal({
     setLocation('');
     setShowLocationField(false);
     setIsCreatingList(false);
+    removeImage();
   };
 
   const handleClose = () => {
@@ -517,6 +563,61 @@ export default function CreateListModal({
                 </div>
               </div>
 
+            {/* Subject Image Upload */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Subject Image (Optional)
+              </label>
+              <div className="space-y-3">
+                {/* Upload button */}
+                <div className="flex items-center space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => imageInputRef.current?.click()}
+                    className="flex items-center space-x-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Upload size={16} />
+                    <span className="text-sm">Upload Image</span>
+                  </button>
+                  <input
+                    ref={imageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    Max 5MB, JPG/PNG
+                  </span>
+                </div>
+
+                {/* Image preview */}
+                {showImagePreview && subjectImage && (
+                  <div className="relative inline-block">
+                    <div className="w-24 h-24 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+                      <Image
+                        src={subjectImage}
+                        alt="Subject preview"
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Add an image to represent your subject (movie poster, book cover, etc.)
+              </p>
+            </div>
+
             {/* Location Field (for location-based categories) */}
             {showLocationField && (
               <div>
@@ -657,7 +758,7 @@ export default function CreateListModal({
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Why you&apos;ll love these (Optional)
               </label>
               <textarea

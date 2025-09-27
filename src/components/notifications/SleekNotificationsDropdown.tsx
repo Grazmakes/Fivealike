@@ -243,7 +243,7 @@ export default function SleekNotificationsDropdown({
                         title={notification.type === 'like' ? 'Like notification' : 
                                notification.type === 'follow' ? 'New follower' :
                                notification.type === 'comment' ? 'Comment notification' :
-                               notification.type === 'high_five' ? 'High five notification' :
+                               notification.type === 'high_five' ? 'Certi-fived notification' :
                                notification.type === 'mention' ? 'Mention notification' : 
                                'Notification'}
                       >
@@ -279,7 +279,7 @@ export default function SleekNotificationsDropdown({
                           notification.type === 'high_five' ? 'bg-white text-gray-900 dark:bg-gray-600 dark:text-gray-100 border border-gray-200 dark:border-gray-500' :
                           'bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200'
                         }`}>
-                          {notification.type === 'high_five' ? '🙏 High Five' : 
+                          {notification.type === 'high_five' ? '🙏 Certi-fived' : 
                            notification.type === 'mention' ? '⚡ Mention' :
                            notification.type === 'like' ? '💚 Like' :
                            notification.type === 'comment' ? '💬 Comment' :

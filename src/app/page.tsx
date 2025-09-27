@@ -129,7 +129,7 @@ function HomeContent() {
       },
       {
         id: 'goal_2',
-        title: 'Give 100 High Fives',
+        title: 'Give 100 Certi-fives',
         description: 'Show appreciation for great lists',
         targetValue: 100,
         currentValue: 12,
@@ -659,19 +659,21 @@ function HomeContent() {
   // Tutorial auto-show for new signups
   useEffect(() => {
     if (isLoggedIn && !userProfile.hasSeenTutorial && !showTutorial) {
-      const hasShownTutorialThisSession = sessionStorage.getItem('tutorial-shown');
+      // Check if tutorial was shown for THIS specific user (not just any user)
+      const userSpecificKey = `tutorial-shown-${userProfile.id || userProfile.username}`;
+      const hasShownTutorialForThisUser = sessionStorage.getItem(userSpecificKey);
 
-      if (!hasShownTutorialThisSession) {
+      if (!hasShownTutorialForThisUser) {
         const timer = setTimeout(() => {
-          debugLog('🎓 Auto-opening tutorial for new user');
+          debugLog('🎓 Auto-opening tutorial for new user:', userProfile.username);
           setShowTutorial(true);
-          sessionStorage.setItem('tutorial-shown', 'true');
+          sessionStorage.setItem(userSpecificKey, 'true');
         }, 1500); // Show tutorial 1.5 seconds after signup
 
         return () => clearTimeout(timer);
       }
     }
-  }, [isLoggedIn, userProfile.hasSeenTutorial, showTutorial]);
+  }, [isLoggedIn, userProfile.hasSeenTutorial, showTutorial, userProfile.id, userProfile.username]);
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -871,7 +873,7 @@ function HomeContent() {
       
       // Check weekly limit before proceeding (re-enabled)
       if (!targetList.userHighFived && highFiveData.weeklyUsed >= highFiveData.weeklyLimit) {
-        alert(`You've used all ${highFiveData.weeklyLimit} high fives this week! High fives reset weekly to keep them special. Come back next week!`);
+        alert(`You've used all ${highFiveData.weeklyLimit} Certi-fives this week! Certi-fives reset weekly to keep them special. Come back next week!`);
         return;
       }
       debugLog('✅ Weekly limit check passed');
@@ -1672,9 +1674,10 @@ function HomeContent() {
     debugLog('🎓 Tutorial completed - closing permanently');
     setShowTutorial(false);
     setUserProfile(prev => ({ ...prev, hasSeenTutorial: true }));
-    // Clear any session flags
-    sessionStorage.removeItem('tutorial-shown');
-    sessionStorage.setItem('tutorial-completed', 'true');
+    // Clear user-specific session flags
+    const userSpecificKey = `tutorial-shown-${userProfile.id || userProfile.username}`;
+    sessionStorage.removeItem(userSpecificKey);
+    sessionStorage.setItem(`tutorial-completed-${userProfile.id || userProfile.username}`, 'true');
   };
 
   // Handle event RSVP
@@ -1770,6 +1773,9 @@ function HomeContent() {
     // Clear user data from localStorage
     if (typeof window !== 'undefined') {
       localStorage.removeItem('five-alike-user');
+      // Clear old generic tutorial session flags
+      sessionStorage.removeItem('tutorial-shown');
+      sessionStorage.removeItem('tutorial-completed');
     }
 
     // Reset authentication state
@@ -2190,18 +2196,18 @@ function HomeContent() {
         <div className="w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed left-64 top-0 h-screen"></div>
         
         {/* Main Content Area - Fixed width to prevent expansion */}
-        <div data-main-content className="fixed left-80 top-20 right-64 bottom-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-4 z-30">
+        <div data-main-content className="fixed left-80 top-20 right-64 bottom-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-8 z-30">
           {/* Back to Top Button */}
           <button
             onClick={scrollToTop}
-            className={`fixed top-28 right-72 w-12 h-12 flex items-center justify-center transition-all duration-300 z-50 ${
+            className={`fixed top-28 right-72 w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-600 hover:shadow-xl transition-all duration-300 z-50 ${
               showBackToTop
                 ? 'opacity-100 pointer-events-auto'
                 : 'opacity-0 pointer-events-none'
             }`}
             title="Back to Top"
           >
-            <ChevronUp size={32} className="text-black hover:text-gray-700 transition-colors" />
+            <ChevronUp size={24} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" />
           </button>
           <div className="max-w-4xl mx-auto bg-transparent" style={{ paddingLeft: '2rem', paddingRight: '6rem' }}>
             <main className="bg-transparent">

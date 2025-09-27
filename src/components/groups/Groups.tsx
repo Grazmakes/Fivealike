@@ -349,7 +349,7 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           {onBack && (
             <button
@@ -371,10 +371,10 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors font-medium"
+          className="flex items-center px-4 py-3 rounded-lg transition-all duration-200 bg-green-600 text-white hover:bg-green-700 font-medium whitespace-nowrap"
         >
-          <Plus size={18} />
-          <span>Create Group</span>
+          <Plus size={22} className="mr-2" />
+          <span className="text-lg">Create Group</span>
         </button>
       </div>
 

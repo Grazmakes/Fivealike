@@ -162,13 +162,31 @@ function ListCard({
 
   // Extract main subject from title
   const mainSubjectName = useMemo(() => {
-    return list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || 'Various Items';
-  }, [list.title]);
+    // Try to extract quoted content first
+    const quotedMatch = list.title.match(/\"([^"]+)\"/)?.[1];
+    if (quotedMatch) return quotedMatch;
+
+    // Try single quotes
+    const singleQuoteMatch = list.title.split("'")[1]?.split("'")[0];
+    if (singleQuoteMatch) return singleQuoteMatch;
+
+    // Try to extract from "If you like X, try these" pattern
+    const ifYouLikeMatch = list.title.match(/If you like ([^,]+),/)?.[1];
+    if (ifYouLikeMatch) return ifYouLikeMatch.trim();
+
+    // Extract first item from the items array as fallback
+    if (list.items && list.items.length > 0) {
+      return list.items[0];
+    }
+
+    // Final fallback to category
+    return list.category || 'Unknown';
+  }, [list.title, list.items, list.category]);
 
   const mainSubjectNormalized = useMemo(() => normalizeName(mainSubjectName), [mainSubjectName]);
 
   const mainSubjectFallback = useMemo(() => {
-    if (!mainSubjectName || mainSubjectName === 'Various Items') {
+    if (!mainSubjectName || mainSubjectName === 'Unknown') {
       return null;
     }
     return subjectFallbacks[normalizeSubjectKey(mainSubjectName, list.category)];
@@ -226,7 +244,7 @@ function ListCard({
   const fetchMainSubjectInfo = useCallback(async (options?: { force?: boolean }) => {
     mainSubjectAbortRef.current = false;
 
-    if (!mainSubjectName || mainSubjectName === 'Various Items' || !mainSubjectCacheKey) {
+    if (!mainSubjectName || mainSubjectName === 'Unknown' || !mainSubjectCacheKey) {
       setMainSubjectData(null);
       setMainSubjectError(null);
       setLoadingMainSubject(false);
@@ -335,7 +353,7 @@ function ListCard({
 
     mainSubjectAbortRef.current = false;
 
-    if (!mainSubjectName || mainSubjectName === 'Various Items' || !mainSubjectCacheKey) {
+    if (!mainSubjectName || mainSubjectName === 'Unknown' || !mainSubjectCacheKey) {
       setMainSubjectData(null);
       setMainSubjectError(null);
       setLoadingMainSubject(false);
@@ -644,10 +662,10 @@ function ListCard({
                 onClick={() => onTitleClick(list.title.match(/\"([^"]+)\"/)?.[1] || list.title)}
                 className="text-primary-600 dark:text-primary-400 underline decoration-2 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
               >
-                &quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || 'Various Items'}&quot;
+                &quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}&quot;
               </button>
             ) : (
-              <span className="text-primary-600 dark:text-primary-400 underline decoration-2">&quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || 'Various Items'}&quot;</span>
+              <span className="text-primary-600 dark:text-primary-400 underline decoration-2">&quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}&quot;</span>
             )}, try these 5...
             {list.isOrdered && (
               <span className="inline-flex items-center px-2 py-1 ml-2 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 rounded-full">
@@ -904,7 +922,7 @@ function ListCard({
       </div>
 
       {/* Main Subject Overview */}
-      {hasHydrated && mainSubjectName && mainSubjectName !== 'Various Items' && (
+      {hasHydrated && mainSubjectName && mainSubjectName !== 'Unknown' && (
         <div className="mb-6">
           <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4 space-y-4 sm:space-y-0">
@@ -912,6 +930,12 @@ function ListCard({
                 <div className="w-28 h-40 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
                   {loadingMainSubject ? (
                     <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" aria-label="Loading main subject" />
+                  ) : list.subjectImage ? (
+                    <img
+                      src={list.subjectImage}
+                      alt={mainSubjectName}
+                      className="w-full h-full object-cover"
+                    />
                   ) : mainSubjectData?.image ? (
                     <img
                       src={mainSubjectData.image}
@@ -1095,7 +1119,7 @@ function ListCard({
           onClick={() => setShowDescription(!showDescription)}
           className="flex items-center space-x-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
         >
-          <span className="font-medium">Why you&apos;ll love these</span>
+          <span className="font-medium text-lg">Why you&apos;ll love these</span>
           {showDescription ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
         

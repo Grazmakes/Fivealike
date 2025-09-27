@@ -119,7 +119,7 @@ export default function NotificationsDropdown({
                           notification.type === 'comment' ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300' :
                           'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300'
                         }`}>
-                          {notification.type === 'high_five' ? 'High Five' : notification.type}
+                          {notification.type === 'high_five' ? 'Certi-fived' : notification.type}
                         </span>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {notification.time}

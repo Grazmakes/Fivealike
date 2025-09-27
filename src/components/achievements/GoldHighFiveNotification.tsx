@@ -51,7 +51,7 @@ export default function GoldHighFiveNotification({
           bgColor: 'from-yellow-400 to-amber-500',
           textColor: 'text-yellow-900',
           icon: Award,
-          title: 'Gold High Five! 🖐️✨',
+          title: 'Gold Certi-five! 🖐️✨',
           subtitle: 'Perfect taste match!',
           description: 'You loved all 5 items!'
         };
@@ -60,7 +60,7 @@ export default function GoldHighFiveNotification({
           bgColor: 'from-slate-300 to-slate-400',
           textColor: 'text-slate-900',
           icon: Award,
-          title: 'Silver High Five! 🖐️💎',
+          title: 'Silver Certi-five! 🖐️💎',
           subtitle: 'Excellent choices!',
           description: 'You loved most items!'
         };
@@ -69,7 +69,7 @@ export default function GoldHighFiveNotification({
           bgColor: 'from-amber-600 to-amber-700',
           textColor: 'text-amber-100',
           icon: Award,
-          title: 'Bronze High Five! 🖐️🏆',
+          title: 'Bronze Certi-five! 🖐️🏆',
           subtitle: 'Great completion!',
           description: 'You tried everything!'
         };
@@ -163,13 +163,13 @@ export default function GoldHighFiveNotification({
 
           <div className="space-y-2 text-sm">
             <div className="flex items-center justify-between">
-              <span className="text-purple-600 dark:text-purple-400">High Five Points:</span>
+              <span className="text-purple-600 dark:text-purple-400">Certi-five Points:</span>
               <span className="font-bold text-purple-700 dark:text-purple-300">+{goldHighFive.rating === 'gold' ? 100 : goldHighFive.rating === 'silver' ? 75 : 50}</span>
             </div>
 
             <div className="flex items-center justify-between">
               <span className="text-purple-600 dark:text-purple-400">Creator Reward:</span>
-              <span className="font-bold text-purple-700 dark:text-purple-300">Gold High Five! 🖐️</span>
+              <span className="font-bold text-purple-700 dark:text-purple-300">Gold Certi-five! 🖐️</span>
             </div>
           </div>
         </div>
@@ -205,7 +205,7 @@ export default function GoldHighFiveNotification({
   );
 }
 
-// Component for showing "High Fived" badge on popular lists (10+ high fives)
+// Component for showing "Certi-fived" badge on popular lists (10+ high fives)
 export function HighFivedBadge({
   count,
   size = 'sm',
@@ -243,10 +243,10 @@ export function HighFivedBadge({
         className={`inline-flex items-center space-x-1 bg-yellow-400 text-yellow-900 rounded-full font-bold cursor-help ${sizeClasses[size]}`}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        title="🖐️ High Fived Badge - This list is popular! It means 10+ people have tried all 5 items and loved most of them, earning the creator a 'High Five' achievement."
+        title="🖐️ Certi-fived Badge - This list is popular! It means 10+ people have tried all 5 items and loved most of them, earning the creator a 'Certi-five' achievement."
       >
         <Hand size={iconSizes[size]} />
-        <span>High Fived</span>
+        <span>Certi-fived</span>
         {showCount && count > 1 && (
           <span className={`${countClasses[size]} ml-1`}>{count}</span>
         )}
@@ -257,13 +257,13 @@ export function HighFivedBadge({
         <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50 bg-gray-900 text-white text-sm rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
           <div className="flex items-center space-x-1">
             <Hand size={12} />
-            <span className="font-semibold">High Fived Badge</span>
+            <span className="font-semibold">Certi-fived Badge</span>
           </div>
           <div className="text-xs mt-1 text-gray-200">
             This list is popular! 10+ people liked
           </div>
           <div className="text-xs text-gray-200">
-            everything on the list - that&apos;s why they got High Fived!
+            everything on the list - that&apos;s why they got Certi-fived!
           </div>
 
           {/* Tooltip arrow */}
