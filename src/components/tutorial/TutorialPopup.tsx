@@ -38,7 +38,7 @@ const tutorialSteps: TutorialStep[] = [
           <div className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">How it Works</div>
           <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border">
             <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-              If you like "Stranger Things", try these 5...
+              If you like &quot;Stranger Things&quot;, try these 5...
             </div>
             <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
               <div>1. Dark</div>

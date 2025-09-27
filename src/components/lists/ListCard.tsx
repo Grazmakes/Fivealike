@@ -308,7 +308,7 @@ function ListCard({
         setLoadingMainSubject(false);
       }
     }
-  }, [list.category, list.id, mainSubjectCacheKey, mainSubjectName, mainSubjectFallback]);
+  }, [list.category, mainSubjectCacheKey, mainSubjectName, mainSubjectFallback]);
 
   const handleRefreshMainSubject = useCallback(() => {
     fetchMainSubjectInfo({ force: true });
