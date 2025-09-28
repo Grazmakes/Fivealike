@@ -8,6 +8,19 @@ import BrowseGenre from '@/components/browse/BrowseGenre';
 import TrendingLists from '@/components/trending/TrendingLists';
 import { TrendingTab } from '@/types';
 
+type SortOption = 'recent' | 'mostLikes' | 'bestOverall' | 'mostHighFives' | 'mostComments';
+type ViewMode = 'grid' | 'list';
+
+interface SearchSettings {
+  category: string;
+  sortBy: SortOption;
+  viewMode: ViewMode;
+  showRecommended?: boolean;
+  showPopular?: boolean;
+  minVotes?: number;
+  dateRange?: 'all' | 'week' | 'month' | 'year';
+}
+
 interface UnifiedDiscoveryProps {
   // Common props
   userProfile: User;
@@ -31,6 +44,8 @@ interface UnifiedDiscoveryProps {
   onRejectListsClick?: () => void;
   onClearSearch?: () => void;
   onAddComment?: (listId: number, comment: string) => void;
+  searchSettings?: SearchSettings;
+  randomTrigger?: number;
   
   // Browse specific
   onCategorySelect?: (category: string) => void;
@@ -73,6 +88,8 @@ export default function UnifiedDiscovery({
   onRejectListsClick,
   onClearSearch,
   onAddComment,
+  searchSettings,
+  randomTrigger,
   onCategorySelect,
   selectedTrendingTab = 'votes',
   setSelectedTrendingTab,
@@ -116,10 +133,12 @@ export default function UnifiedDiscovery({
             onRejectListsClick={onRejectListsClick}
             onClearSearch={onClearSearch}
             antiSocialMode={antiSocialMode}
+            searchSettings={searchSettings}
+            randomTrigger={randomTrigger}
           />
         );
-      
-      
+
+
       case 'trending':
         return (
           <TrendingLists
@@ -141,7 +160,7 @@ export default function UnifiedDiscovery({
             antiSocialMode={antiSocialMode}
           />
         );
-      
+
       default:
         return null;
     }

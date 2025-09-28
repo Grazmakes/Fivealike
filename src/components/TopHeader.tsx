@@ -1,10 +1,24 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Bell, Sun, Moon, ChevronDown, User, Bookmark, Settings, LogOut, Shield, Search } from 'lucide-react';
+import { Bell, Sun, Moon, ChevronDown, User, Bookmark, Settings, LogOut, Shield, Search, Filter } from 'lucide-react';
 import { NavigationErrorBoundary } from '@/components/ui/ErrorBoundaries';
 import SleekNotificationsDropdown from '@/components/notifications/SleekNotificationsDropdown';
+import SearchSettingsDropdown from '@/components/search/SearchSettingsDropdown';
 import { Notification, User as UserType } from '@/types';
+
+type SortOption = 'recent' | 'mostLikes' | 'bestOverall' | 'mostHighFives' | 'mostComments';
+type ViewMode = 'grid' | 'list';
+
+interface SearchSettings {
+  category: string;
+  sortBy: SortOption;
+  viewMode: ViewMode;
+  showRecommended?: boolean;
+  showPopular?: boolean;
+  minVotes?: number;
+  dateRange?: 'all' | 'week' | 'month' | 'year';
+}
 
 interface TopHeaderProps {
   onNavigateToHome?: () => void;
@@ -26,9 +40,13 @@ interface TopHeaderProps {
   onLogout?: () => void;
   onToggleAntiSocialMode?: (enabled: boolean) => void;
   onSearch?: (query: string) => void;
+  searchSettings?: SearchSettings;
+  onSearchSettingsChange?: (settings: SearchSettings) => void;
+  onRandomList?: () => void;
+  onClearSearch?: () => void;
 }
 
-export default function TopHeader({ 
+export default function TopHeader({
   onNavigateToHome,
   darkMode = false,
   setDarkMode,
@@ -47,13 +65,27 @@ export default function TopHeader({
   onShowCommunityGuidelines,
   onLogout,
   onToggleAntiSocialMode,
-  onSearch
+  onSearch,
+  searchSettings = {
+    category: '',
+    sortBy: 'recent',
+    viewMode: 'grid',
+    showRecommended: false,
+    showPopular: false,
+    minVotes: 0,
+    dateRange: 'all'
+  },
+  onSearchSettingsChange,
+  onRandomList,
+  onClearSearch
 }: TopHeaderProps) {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showAntiSocialTooltip, setShowAntiSocialTooltip] = useState(false);
+  const [showSearchSettings, setShowSearchSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
+  const searchSettingsRef = useRef<HTMLDivElement>(null);
   const unreadCount = notifications.filter(n => n.unread).length;
 
   // Handle click outside to close dropdowns
@@ -64,6 +96,9 @@ export default function TopHeader({
       }
       if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
         setShowNotifications?.(false);
+      }
+      if (searchSettingsRef.current && !searchSettingsRef.current.contains(event.target as Node)) {
+        setShowSearchSettings(false);
       }
     }
 
@@ -89,30 +124,56 @@ export default function TopHeader({
           </button>
 
           {/* Search Bar */}
-          <div className="flex-1 max-w-2xl mx-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search lists, authors, or topics..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && searchQuery.trim()) {
-                    onSearch?.(searchQuery.trim());
-                  }
-                }}
-                className="w-full pl-12 pr-6 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
-              />
-              {searchQuery && (
+          <div className="flex-1 max-w-2xl mx-8 relative" ref={searchSettingsRef}>
+            <div className="relative flex items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+                <input
+                  type="text"
+                  placeholder="Search lists, authors, or topics..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && searchQuery.trim()) {
+                      onSearch?.(searchQuery.trim());
+                    }
+                  }}
+                  className="w-full pl-12 pr-16 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >
+                    ×
+                  </button>
+                )}
+                {/* Search Settings Button */}
                 <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  onClick={() => setShowSearchSettings(!showSearchSettings)}
+                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-md transition-colors ${
+                    showSearchSettings
+                      ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                      : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                  }`}
+                  title="Search Settings"
                 >
-                  ×
+                  <Filter size={16} />
                 </button>
-              )}
+              </div>
             </div>
+
+            {/* Search Settings Dropdown */}
+            {showSearchSettings && onSearchSettingsChange && (
+              <SearchSettingsDropdown
+                isOpen={showSearchSettings}
+                onToggle={() => setShowSearchSettings(false)}
+                settings={searchSettings}
+                onSettingsChange={onSearchSettingsChange}
+                onRandomList={onRandomList}
+                onClearSearch={onClearSearch}
+              />
+            )}
           </div>
 
           {/* Right side Actions */}

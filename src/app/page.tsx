@@ -17,6 +17,7 @@ import SocialEvents from '@/components/events/SocialEvents';
 import Favorites from '@/components/favorites/Favorites';
 import UnifiedDiscovery from '@/components/discovery/UnifiedDiscovery';
 import LocalDiscovery from '@/components/discovery/LocalDiscovery';
+import TrendingLists from '@/components/trending/TrendingLists';
 import CreateListModal from '@/components/modals/CreateListModal';
 import TutorialPopup from '@/components/tutorial/TutorialPopup';
 import AccountSettings from '@/components/settings/AccountSettings';
@@ -64,6 +65,16 @@ function HomeContent() {
   const [selectedTrendingTab, setSelectedTrendingTab] = useState<TrendingTab>('votes');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchSettings, setSearchSettings] = useState({
+    category: '',
+    sortBy: 'recent' as const,
+    viewMode: 'grid' as const,
+    showRecommended: false,
+    showPopular: false,
+    minVotes: 0,
+    dateRange: 'all' as const
+  });
+  const [randomTrigger, setRandomTrigger] = useState(0);
   const [viewingProfile, setViewingProfile] = useState<string>(''); // Track which user's profile we're viewing
   const [chatTargetUser, setChatTargetUser] = useState<string>(''); // Track which user to open chat with
 
@@ -1012,6 +1023,48 @@ function HomeContent() {
     setSelectedCategory('');
   };
 
+  // Handle clear search from dropdown
+  const handleClearSearchDropdown = () => {
+    setSearchQuery('');
+    setSelectedCategory('');
+    // Reset search settings to defaults
+    setSearchSettings({
+      category: '',
+      sortBy: 'recent',
+      viewMode: 'grid',
+      showRecommended: false,
+      showPopular: false,
+      minVotes: 0,
+      dateRange: 'all'
+    });
+  };
+
+  // Handle search settings change
+  const handleSearchSettingsChange = (newSettings: typeof searchSettings) => {
+    setSearchSettings(newSettings);
+    // Sync category with the global category state
+    setSelectedCategory(newSettings.category);
+    // Trigger search/discover view
+    if (newSettings.category || searchQuery) {
+      setCurrentView('discover');
+    }
+  };
+
+  // Handle random list from search settings
+  const handleRandomList = () => {
+    // Clear search to show random list
+    setSearchQuery('');
+    setSelectedCategory('');
+    setSearchSettings(prev => ({
+      ...prev,
+      category: '',
+    }));
+    setCurrentView('discover');
+    // Trigger random list in SearchPage
+    setRandomTrigger(prev => prev + 1);
+  };
+
+
   // Handle reject lists click - navigate to rejected lists view
   const handleRejectListsClick = () => {
     setCurrentView('rejected');
@@ -1952,6 +2005,8 @@ function HomeContent() {
             onClearSearch={handleClearSearch}
             onAddComment={handleAddComment}
             onCategorySelect={handleCategoryClick}
+            searchSettings={searchSettings}
+            randomTrigger={randomTrigger}
             selectedTrendingTab={selectedTrendingTab}
             setSelectedTrendingTab={setSelectedTrendingTab}
             onCategoryClick={handleCategoryClick}
@@ -1959,6 +2014,28 @@ function HomeContent() {
             onJoinEvent={handleJoinEvent}
             onBack={() => setCurrentView('home')}
             antiSocialMode={userProfile.antiSocialMode}
+          />
+        );
+      case 'trending':
+        return (
+          <TrendingLists
+            selectedTrendingTab={selectedTrendingTab}
+            setSelectedTrendingTab={setSelectedTrendingTab}
+            allLists={allLists}
+            itemVotes={itemVotes}
+            onListVote={handleListVote}
+            onItemVote={handleItemVote}
+            onHighFive={handleHighFive}
+            onCategoryClick={handleCategoryClick}
+            onTitleClick={handleTitleClick}
+            onAuthorClick={handleAuthorClick}
+            onMessage={handleOpenMessage}
+            onItemBookmark={handleItemBookmark}
+            bookmarkState={bookmarkState}
+            savedLists={savedLists}
+            setSavedLists={setSavedLists}
+            antiSocialMode={userProfile.antiSocialMode}
+            onBack={() => setCurrentView('home')}
           />
         );
       case 'local':
@@ -2164,6 +2241,10 @@ function HomeContent() {
             setSelectedCategory('');
             setCurrentView('discover');
           }}
+          searchSettings={searchSettings}
+          onSearchSettingsChange={handleSearchSettingsChange}
+          onRandomList={handleRandomList}
+          onClearSearch={handleClearSearchDropdown}
         />
         
         <div className="flex">

@@ -6,6 +6,16 @@ import { List, ItemVotes } from '@/types';
 import { categories, categoryEmojis } from '@/data/mockData';
 import ListCard from '@/components/lists/ListCard';
 
+type SearchSettings = {
+  category: string;
+  sortBy: SortOption;
+  viewMode: 'grid' | 'list';
+  showRecommended?: boolean;
+  showPopular?: boolean;
+  minVotes?: number;
+  dateRange?: 'all' | 'week' | 'month' | 'year';
+};
+
 interface SearchPageProps {
   allLists: List[];
   itemVotes: ItemVotes;
@@ -25,6 +35,8 @@ interface SearchPageProps {
   onRejectListsClick?: () => void;
   onClearSearch?: () => void;
   antiSocialMode?: boolean;
+  searchSettings?: SearchSettings;
+  randomTrigger?: number;
 }
 
 type SortOption = 'mostLikes' | 'bestOverall' | 'mostHighFives' | 'mostComments' | 'recent';
@@ -47,19 +59,21 @@ export default function SearchPage({
   initialQuery = '',
   onRejectListsClick,
   onClearSearch,
-  antiSocialMode = false
+  antiSocialMode = false,
+  searchSettings,
+  randomTrigger
 }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [sortBy, setSortBy] = useState<SortOption>('recent');
   const [forceRandomList, setForceRandomList] = useState<List | null>(null);
+
+  // Use search settings from props or fallback to local state
+  const selectedCategory = searchSettings?.category || initialCategory;
+  const sortBy = searchSettings?.sortBy || 'recent';
 
   // Update selectedCategory when initialCategory changes
   useEffect(() => {
     console.log('SearchPage: initialCategory changed from', selectedCategory, 'to', initialCategory);
-    if (initialCategory !== selectedCategory) {
-      setSelectedCategory(initialCategory);
-    }
+    // Note: selectedCategory is derived from searchSettings or initialCategory, no need to set it
   }, [initialCategory, selectedCategory]);
 
   // Clear forceRandomList when user starts typing or selects category
@@ -74,6 +88,13 @@ export default function SearchPage({
     }
   }, [searchQuery, selectedCategory, forceRandomList]);
 
+  // Handle random list trigger from dropdown
+  useEffect(() => {
+    if (randomTrigger && randomTrigger > 0) {
+      handleRandomClick();
+    }
+  }, [randomTrigger]);
+
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const sortDropdownRef = useRef<HTMLDivElement>(null);
@@ -86,6 +107,7 @@ export default function SearchPage({
     if (activeQuery || selectedCategory) {
       let results = allLists.filter(list => !list.isRejected);
 
+      // Apply search query filter
       if (activeQuery) {
         results = results.filter(list =>
           list.title.toLowerCase().includes(activeQuery.toLowerCase()) ||
@@ -95,10 +117,45 @@ export default function SearchPage({
         );
       }
 
+      // Apply category filter
       if (selectedCategory) {
         results = results.filter(list => list.category === selectedCategory);
       }
 
+      // Apply advanced filters from search settings
+      if (searchSettings?.showRecommended) {
+        results = results.filter(list => list.votes >= 10);
+      }
+
+      if (searchSettings?.showPopular) {
+        results = results.filter(list => list.highFives >= 5);
+      }
+
+      if (searchSettings?.minVotes && searchSettings.minVotes > 0) {
+        results = results.filter(list => list.votes >= searchSettings.minVotes);
+      }
+
+      // Apply date range filter
+      if (searchSettings?.dateRange && searchSettings.dateRange !== 'all') {
+        const now = new Date();
+        const cutoffDate = new Date();
+
+        switch (searchSettings.dateRange) {
+          case 'week':
+            cutoffDate.setDate(now.getDate() - 7);
+            break;
+          case 'month':
+            cutoffDate.setMonth(now.getMonth() - 1);
+            break;
+          case 'year':
+            cutoffDate.setFullYear(now.getFullYear() - 1);
+            break;
+        }
+
+        results = results.filter(list => new Date(list.date) >= cutoffDate);
+      }
+
+      // Apply sorting
       return results.sort((a, b) => {
         switch (sortBy) {
           case 'mostLikes': return b.votes - a.votes;
@@ -122,7 +179,7 @@ export default function SearchPage({
 
     // Empty state
     return [];
-  }, [allLists, selectedCategory, searchQuery, initialQuery, sortBy, forceRandomList]);
+  }, [allLists, selectedCategory, searchQuery, initialQuery, sortBy, forceRandomList, searchSettings]);
 
   const handleSaveList = (listId: number) => {
     setSavedLists(
@@ -151,7 +208,7 @@ export default function SearchPage({
     
     // Clear search state
     setSearchQuery('');
-    setSelectedCategory('');
+    // Note: selectedCategory is controlled by searchSettings prop now
     if (onClearSearch) {
       onClearSearch();
     }
@@ -162,8 +219,7 @@ export default function SearchPage({
 
   const clearSearch = () => {
     setSearchQuery('');
-    setSelectedCategory('');
-    setSortBy('recent');
+    // Note: selectedCategory and sortBy are controlled by searchSettings prop now
     setForceRandomList(null);
     if (onClearSearch) {
       onClearSearch();
@@ -194,7 +250,8 @@ export default function SearchPage({
   ];
 
   const handleSortChange = (newSort: SortOption) => {
-    setSortBy(newSort);
+    // Note: sortBy is now controlled by searchSettings prop
+    // This function may need to be removed or use a callback to parent
     setShowSortDropdown(false);
   };
 

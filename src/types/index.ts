@@ -280,7 +280,8 @@ export type ViewType =
   | 'groups'
   | 'podcast'
   | 'leaderboard'
-  | 'history';
+  | 'history'
+  | 'trending';
 
 export type FeedTab = 
   | 'yourfeed' 

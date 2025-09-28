@@ -1,6 +1,6 @@
 'use client';
 
-import { Home, Search, MapPin, Bookmark, MessageCircle, Users, Calendar, Shapes, Headphones, Trophy, Plus } from 'lucide-react';
+import { Home, Search, MapPin, Bookmark, MessageCircle, Users, Calendar, Shapes, Headphones, Trophy, Plus, TrendingUp } from 'lucide-react';
 import { ViewType } from '@/types';
 import { NavigationErrorBoundary } from '@/components/ui/ErrorBoundaries';
 
@@ -14,7 +14,7 @@ interface NavigationProps {
 
 const navigationItems = [
   { id: 'home' as ViewType, icon: Home, label: 'Home' },
-  { id: 'discover' as ViewType, icon: Search, label: 'Search' },
+  { id: 'trending' as ViewType, icon: TrendingUp, label: 'Trending' },
   { id: 'local' as ViewType, icon: MapPin, label: 'Local Lists' },
   { id: 'favorites' as ViewType, icon: Bookmark, label: 'Saved Lists' },
   { id: 'leaderboard' as ViewType, icon: Trophy, label: 'Leaderboards' },
