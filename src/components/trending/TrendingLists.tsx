@@ -86,7 +86,7 @@ export default function TrendingLists({
         </p>
         
         {/* Trending Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-12">
           {trendingTabs.map(tab => (
             <button
               key={tab.id}

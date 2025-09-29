@@ -311,7 +311,7 @@ export default function CreateListModal({
 
     const newList: List = {
       id: Math.max(...allLists.map(l => l.id), 0) + 1,
-      title: `If you like "${newListTitle}", try these 5...`,
+      title: `If you like "${newListTitle}", try these FIVE ALIKE...`,
       author: '@graz',
       category: newListCategory,
       date: new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }),

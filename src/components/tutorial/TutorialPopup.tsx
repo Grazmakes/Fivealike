@@ -26,7 +26,7 @@ const tutorialSteps: TutorialStep[] = [
     color: 'emerald',
     gradient: 'from-emerald-500 to-teal-600',
     features: [
-      'Browse "If you like X, try these 5..." lists',
+      'Browse "If you like X, try these FIVE ALIKE..." lists',
       'Discover movies, music, books, games & more',
       'Vote on recommendations you like',
       'Create your own recommendation lists',
@@ -38,7 +38,7 @@ const tutorialSteps: TutorialStep[] = [
           <div className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">How it Works</div>
           <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border">
             <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-              If you like &quot;Stranger Things&quot;, try these 5...
+              If you like &quot;Stranger Things&quot;, try these FIVE ALIKE...
             </div>
             <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
               <div>1. Dark</div>
