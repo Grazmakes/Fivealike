@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
-import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, History, ExternalLink, RefreshCw } from 'lucide-react';
+import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, History, ExternalLink, RefreshCw, Edit3 } from 'lucide-react';
 import { List, ItemVotes as ItemVoteData, Comment, UserBadge } from '@/types';
 import { mockTMDbData, mockArtistData } from '@/data/mockData';
 import { subjectFallbacks, normalizeSubjectKey } from '@/data/subjectFallbacks';
@@ -31,9 +31,11 @@ interface ListCardProps {
   onItemBookmark?: (listId: number, itemIndex: number) => void;
   onMessage?: (username: string) => void;
   onAddToHistory?: (listId: number, itemIndex: number) => void;
+  onEditList?: (listId: number) => void;
   bookmarkState?: { [key: string]: boolean };
   isSaved: boolean;
   antiSocialMode?: boolean;
+  currentUser?: string; // Username of the current user to determine edit permissions
 }
 
 // Mock function to get user badges - in a real app this would be an API call
@@ -120,15 +122,40 @@ function ListCard({
   onItemBookmark,
   onMessage,
   onAddToHistory,
+  onEditList,
   bookmarkState = {},
   isSaved,
-  antiSocialMode = false
+  antiSocialMode = false,
+  currentUser = '@graz' // Default to graz for demo purposes
 }: ListCardProps) {
   const [showDescription, setShowDescription] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null); // Changed to string to support "commentId" or "commentId-replyId"
   const [isTyping, setIsTyping] = useState(false);
+
+  // Helper function to determine if the current user can edit this list
+  const canEditList = () => {
+    if (!currentUser || !onEditList) return false;
+
+    // User can edit if they are the author
+    const isAuthor = list.author === currentUser;
+    if (!isAuthor) return false;
+
+    // Check time restrictions (allow edits within 48 hours)
+    const listCreatedDate = new Date(list.date);
+    const now = new Date();
+    const timeDiff = now.getTime() - listCreatedDate.getTime();
+    const hoursDiff = timeDiff / (1000 * 60 * 60);
+    const isWithinTimeLimit = hoursDiff <= 48;
+
+    // Check if list has significant engagement (votes > 10 or comments > 5)
+    const hasSignificantEngagement = Math.abs(list.votes) > 10 || list.comments.length > 5;
+
+    // Allow certain types of edits always (artwork, minor text fixes)
+    // For now, we'll be permissive and allow edits if within time limit OR if no significant engagement
+    return isWithinTimeLimit || !hasSignificantEngagement;
+  };
   const [replyText, setReplyText] = useState('');
   const [expandedItem, setExpandedItem] = useState<number | null>(null);
   const [tmdbCache, setTmdbCache] = useState<{[key: string]: any}>({});
@@ -666,7 +693,7 @@ function ListCard({
               </button>
             ) : (
               <span className="text-primary-600 dark:text-primary-400 underline decoration-2">&quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}&quot;</span>
-            )}, try these 5...
+            )}, try these FIVE&nbsp;ALIKE...
             {list.isOrdered && (
               <span className="inline-flex items-center px-2 py-1 ml-2 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 rounded-full">
                 📊 Ranked List
@@ -870,6 +897,18 @@ function ListCard({
             <Bookmark size={20} fill={isSaved ? 'currentColor' : 'none'} />
             <span className="text-sm font-medium">{isSaved ? 'Saved' : 'Save List'}</span>
           </button>
+
+          {/* Edit Button */}
+          {canEditList() && (
+            <button
+              onClick={() => onEditList!(list.id)}
+              className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-100 dark:hover:bg-orange-900 transition-colors"
+              title="Edit list"
+            >
+              <Edit3 size={20} />
+              <span className="text-sm font-medium">Edit</span>
+            </button>
+          )}
 
           {/* Reminder Button */}
           {onSetReminder && (

@@ -48,7 +48,7 @@ const mockEpisodes: PodcastEpisode[] = [
   {
     id: 'ep-002',
     title: 'Beyond the Algorithm - Decoding Human Curation in Lists',
-    description: 'Dive deep into how human curation differs from algorithmic recommendations and why "If You Like X, Try These 5" lists resonate so strongly with us.',
+    description: 'Dive deep into how human curation differs from algorithmic recommendations and why "If You Like X, Try These FIVE ALIKE" lists resonate so strongly with us.',
     hosts: ['Mike Chen', 'Sarah Rodriguez'],
     featuredList: {
       id: 45,
@@ -68,7 +68,7 @@ const mockEpisodes: PodcastEpisode[] = [
     showNotes: [
       'Human curation vs algorithmic recommendations',
       'The art of list-making and discovery',
-      'Why "Try These 5" format works so well',
+      'Why "Try These FIVE ALIKE" format works so well',
       'Community-driven vs AI-driven recommendations',
       'The future of personalized content discovery'
     ],
@@ -406,7 +406,7 @@ export default function Podcast({ onEpisodeLike, onEpisodePlay, onBack }: Podcas
       </div>
 
       {/* Current Season Info */}
-      <div className="bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl p-6 text-white">
+      <div className="bg-green-600 dark:bg-green-600/40 rounded-2xl p-6 text-white">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center">
             <span className="text-2xl">🎧</span>

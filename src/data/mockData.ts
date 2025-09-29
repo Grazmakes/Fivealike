@@ -362,7 +362,7 @@ const rawMockLists: List[] = [
   // Original lists
   {
     id: 1,
-    title: 'If you like "The Beatles", try these 5...',
+    title: 'If you like "The Beatles", try these FIVE ALIKE...',
     author: '@musiclover',
     category: 'Music',
     date: '8/17/2025',
@@ -379,7 +379,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 2,
-    title: 'If you like "Inception", try these 5...',
+    title: 'If you like "Inception", try these FIVE ALIKE...',
     author: '@cinephile',
     category: 'Movies',
     date: '8/16/2025',
@@ -397,7 +397,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 3,
-    title: 'If you like "Taylor Swift", try these 5...',
+    title: 'If you like "Taylor Swift", try these FIVE ALIKE...',
     author: '@musiclover',
     category: 'Music',
     date: '8/20/2025',
@@ -414,7 +414,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 4,
-    title: 'If you like "Breaking Bad", try these 5...',
+    title: 'If you like "Breaking Bad", try these FIVE ALIKE...',
     author: '@tvfan',
     category: 'TV Shows',
     date: '8/13/2025',
@@ -431,7 +431,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 5,
-    title: 'If you like "Stranger Things", try these 5...',
+    title: 'If you like "Stranger Things", try these FIVE ALIKE...',
     author: '@tvfan',
     category: 'TV Shows',
     date: '8/19/2025',
@@ -637,7 +637,7 @@ const rawMockLists: List[] = [
       baseTitle = defaultItems[0];
     }
 
-    const title = `If you like "${baseTitle}", try these 5...`;
+    const title = `If you like "${baseTitle}", try these FIVE ALIKE...`;
     
     return {
       id,
@@ -662,7 +662,7 @@ const rawMockLists: List[] = [
   // 10 explicit rejected lists
   {
     id: 101,
-    title: 'If you like "Nickelback", try these 5...',
+    title: 'If you like "Nickelback", try these FIVE ALIKE...',
     author: '@musiclover',
     category: 'Music',
     date: '8/5/2025',
@@ -680,7 +680,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 102,
-    title: 'If you like "Cats (2019)", try these 5...',
+    title: 'If you like "Cats (2019)", try these FIVE ALIKE...',
     author: '@cinephile',
     category: 'Movies',
     date: '8/7/2025',
@@ -698,7 +698,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 103,
-    title: 'If you like "Twilight", try these 5...',
+    title: 'If you like "Twilight", try these FIVE ALIKE...',
     author: '@bookworm',
     category: 'Books',
     date: '8/9/2025',
@@ -716,7 +716,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 104,
-    title: 'If you like "The Big Bang Theory", try these 5...',
+    title: 'If you like "The Big Bang Theory", try these FIVE ALIKE...',
     author: '@tvfan',
     category: 'TV Shows',
     date: '8/11/2025',
@@ -734,7 +734,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 105,
-    title: 'If you like "Cyberpunk 2077 (Launch)", try these 5...',
+    title: 'If you like "Cyberpunk 2077 (Launch)", try these FIVE ALIKE...',
     author: '@gamer',
     category: 'Games',
     date: '8/13/2025',
@@ -752,7 +752,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 106,
-    title: 'If you like "Pineapple on Pizza", try these 5...',
+    title: 'If you like "Pineapple on Pizza", try these FIVE ALIKE...',
     author: '@foodie',
     category: 'Food',
     date: '8/15/2025',
@@ -770,7 +770,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 107,
-    title: 'If you like "Crocs", try these 5...',
+    title: 'If you like "Crocs", try these FIVE ALIKE...',
     author: '@fashionista',
     category: 'Fashion',
     date: '8/17/2025',
@@ -788,7 +788,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 108,
-    title: 'If you like "Vertical Phone Videos", try these 5...',
+    title: 'If you like "Vertical Phone Videos", try these FIVE ALIKE...',
     author: '@techie',
     category: 'Technology',
     date: '8/19/2025',
@@ -806,7 +806,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 109,
-    title: 'If you like "CrossFit", try these 5...',
+    title: 'If you like "CrossFit", try these FIVE ALIKE...',
     author: '@fitness_guru',
     category: 'Fitness',
     date: '8/21/2025',
@@ -824,7 +824,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 110,
-    title: 'If you like "Comic Sans", try these 5...',
+    title: 'If you like "Comic Sans", try these FIVE ALIKE...',
     author: '@designer',
     category: 'Art',
     date: '8/23/2025',
@@ -1297,7 +1297,7 @@ const rawMockLists: List[] = [
   // First duplicate set - Marvel Movies
   {
     id: 1001,
-    title: 'If you like "Iron Man", try these 5...',
+    title: 'If you like "Iron Man", try these FIVE ALIKE...',
     author: '@marvel_fan',
     category: 'Movies',
     date: '8/15/2025',
@@ -1314,7 +1314,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1002,
-    title: 'If you like "Iron Man", try these 5...',
+    title: 'If you like "Iron Man", try these FIVE ALIKE...',
     author: '@superhero_guru',
     category: 'Movies',
     date: '8/14/2025',
@@ -1331,7 +1331,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1003,
-    title: 'If you like "Iron Man", try these 5...',
+    title: 'If you like "Iron Man", try these FIVE ALIKE...',
     author: '@comic_book_lover',
     category: 'Movies',
     date: '8/13/2025',
@@ -1350,7 +1350,7 @@ const rawMockLists: List[] = [
   // Second duplicate set - Coding Music
   {
     id: 1004,
-    title: 'If you like "Lo-Fi Hip Hop", try these 5...',
+    title: 'If you like "Lo-Fi Hip Hop", try these FIVE ALIKE...',
     author: '@coder_vibes',
     category: 'Music',
     date: '8/12/2025',
@@ -1367,7 +1367,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1005,
-    title: 'If you like "Lo-Fi Hip Hop", try these 5...',
+    title: 'If you like "Lo-Fi Hip Hop", try these FIVE ALIKE...',
     author: '@study_beats',
     category: 'Music',
     date: '8/11/2025',
@@ -1386,7 +1386,7 @@ const rawMockLists: List[] = [
   // Third duplicate set - Fantasy Books (5 duplicates!)
   {
     id: 1006,
-    title: 'If you like "Harry Potter", try these 5...',
+    title: 'If you like "Harry Potter", try these FIVE ALIKE...',
     author: '@fantasy_reader',
     category: 'Books',
     date: '8/10/2025',
@@ -1403,7 +1403,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1007,
-    title: 'If you like "Harry Potter", try these 5...',
+    title: 'If you like "Harry Potter", try these FIVE ALIKE...',
     author: '@bookworm_magic',
     category: 'Books',
     date: '8/9/2025',
@@ -1420,7 +1420,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1008,
-    title: 'If you like "Harry Potter", try these 5...',
+    title: 'If you like "Harry Potter", try these FIVE ALIKE...',
     author: '@young_adult_novels',
     category: 'Books',
     date: '8/8/2025',
@@ -1437,7 +1437,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1009,
-    title: 'If you like "Harry Potter", try these 5...',
+    title: 'If you like "Harry Potter", try these FIVE ALIKE...',
     author: '@library_lover',
     category: 'Books',
     date: '8/7/2025',
@@ -1454,7 +1454,7 @@ const rawMockLists: List[] = [
   },
   {
     id: 1010,
-    title: 'If you like "Harry Potter", try these 5...',
+    title: 'If you like "Harry Potter", try these FIVE ALIKE...',
     author: '@fantasy_enthusiast',
     category: 'Books',
     date: '8/6/2025',
@@ -2280,6 +2280,443 @@ const rawMockLists: List[] = [
       { id: '150-2', username: '@communitysharing', content: 'Buy Nothing groups are amazing! So much good stuff gets shared instead of thrown away.', timestamp: '2023-12-11T08:30:00Z', avatar: '♻️' }
     ],
     saves: 98
+  },
+  {
+    id: 151,
+    title: 'If you like "The Adventures of Pete & Pete", try these FIVE ALIKE...',
+    author: '@nostalgiatv',
+    category: 'TV Shows',
+    date: '12/15/2024',
+    votes: 89,
+    upvotes: 92,
+    downvotes: 3,
+    userVote: null,
+    highFives: 34,
+    userHighFived: false,
+    items: [
+      'Freaks and Geeks',
+      'The Wonder Years',
+      'Eerie, Indiana',
+      'Are You Afraid of the Dark?',
+      'Hey Dude'
+],
+    description: 'Shows that capture the same surreal, nostalgic childhood magic with quirky characters and coming-of-age themes.',
+    comments: [
+      {
+        id: 1,
+        user: '@90skid',
+        content: 'Eerie, Indiana was so underrated! Same weird small-town vibes.',
+        time: '2 hours ago',
+        avatar: '📺'
+      },
+      {
+        id: 2,
+        user: '@petehead',
+        content: 'Freaks and Geeks is perfect here. Both shows understood teenage awkwardness so well.',
+        time: '4 hours ago',
+        avatar: '🎭'
+      }
+    ],
+    saves: 67,
+    isRejected: false
+  },
+  {
+    id: 152,
+    title: 'If you like "The Office (UK)", try these FIVE ALIKE...',
+    author: '@britcomedy',
+    category: 'TV Shows',
+    date: '12/14/2024',
+    votes: 156,
+    upvotes: 164,
+    downvotes: 8,
+    userVote: null,
+    highFives: 78,
+    userHighFived: false,
+    items: [
+      'Peep Show',
+      'The Thick of It',
+      'Extras',
+      'This Country',
+      'People Just Do Nothing'
+],
+    description: 'Cringe comedies that master the art of uncomfortable humor and brilliant character development, just like Ricky Gervais\'s original masterpiece.',
+    comments: [
+      {
+        id: 1,
+        user: '@cringemaster',
+        content: 'Peep Show is absolutely essential. The secondhand embarrassment is perfect.',
+        time: '3 hours ago',
+        avatar: '😬'
+      },
+      {
+        id: 2,
+        user: '@uktvfan',
+        content: 'This Country is so good! Really captures that small-town British awkwardness.',
+        time: '6 hours ago',
+        avatar: '🇬🇧'
+      }
+    ],
+    saves: 112,
+    isRejected: false
+  },
+  {
+    id: 153,
+    title: 'If you like "The Mighty Boosh", try these FIVE ALIKE...',
+    author: '@surrealist',
+    category: 'TV Shows',
+    date: '12/13/2024',
+    votes: 143,
+    upvotes: 149,
+    downvotes: 6,
+    userVote: null,
+    highFives: 91,
+    userHighFived: false,
+    items: [
+      'Flight of the Conchords',
+      'What We Do in the Shadows',
+      'Toast of London',
+      'Garth Marenghi\'s Darkplace',
+      'The IT Crowd'
+],
+    description: 'Brilliantly absurd British comedies with musical elements, surreal storylines, and unforgettable characters that match Boosh\'s creative madness.',
+    comments: [
+      {
+        id: 1,
+        user: '@crimp',
+        content: 'Toast of London is pure genius! Ray Bloody Purchase!',
+        time: '1 hour ago',
+        avatar: '🍞'
+      },
+      {
+        id: 2,
+        user: '@vintagecomedian',
+        content: 'Garth Marenghi\'s Darkplace is the most underrated show ever. So perfectly bad it\'s good.',
+        time: '5 hours ago',
+        avatar: '📚'
+      },
+      {
+        id: 3,
+        user: '@musiccomedy',
+        content: 'Flight of the Conchords! The musical comedy duo energy is spot on.',
+        time: '7 hours ago',
+        avatar: '🎵'
+      }
+    ],
+    saves: 89,
+    isRejected: false
+  },
+  {
+    id: 154,
+    title: 'If you like "Lost", try these FIVE ALIKE...',
+    author: '@mysterysolver',
+    category: 'TV Shows',
+    date: '12/12/2024',
+    votes: 198,
+    upvotes: 211,
+    downvotes: 13,
+    userVote: null,
+    highFives: 127,
+    userHighFived: false,
+    items: [
+      'Dark',
+      'Westworld',
+      'The Leftovers',
+      'Fringe',
+      'The OA'
+],
+    description: 'Mind-bending shows with complex mysteries, time manipulation, parallel dimensions, and philosophical questions that will leave you theorizing for years.',
+    comments: [
+      {
+        id: 1,
+        user: '@timeloop',
+        content: 'Dark is basically German Lost but somehow even more confusing. In the best way.',
+        time: '2 hours ago',
+        avatar: '🕰️'
+      },
+      {
+        id: 2,
+        user: '@mysterylover',
+        content: 'The Leftovers by the same showrunner as Lost! Damon Lindelof knows how to mess with our heads.',
+        time: '4 hours ago',
+        avatar: '❓'
+      },
+      {
+        id: 3,
+        user: '@scifiaddict',
+        content: 'Fringe has that perfect blend of procedural and mythology that Lost mastered.',
+        time: '6 hours ago',
+        avatar: '🔬'
+      },
+      {
+        id: 4,
+        user: '@philosophytv',
+        content: 'Westworld season 1 gave me the same "what is reality" feelings as Lost.',
+        time: '8 hours ago',
+        avatar: '🤖'
+      }
+    ],
+    saves: 156,
+    isRejected: false
+  },
+  {
+    id: 155,
+    title: 'If you like "Dr. Dog", try these FIVE ALIKE...',
+    author: '@indiefolkfan',
+    category: 'Music',
+    date: '12/11/2024',
+    votes: 127,
+    upvotes: 134,
+    downvotes: 7,
+    userVote: null,
+    highFives: 68,
+    userHighFived: false,
+    items: ['The Shins', 'Fleet Foxes', 'Broken Social Scene', 'Band of Horses', 'Deer Tick'],
+    description: 'Indie folk bands with lush harmonies, psychedelic touches, and that perfect blend of vintage and modern songcraft that Dr. Dog masters.',
+    comments: [],
+    saves: 89
+  },
+  {
+    id: 156,
+    title: 'If you like "Tom Waits", try these FIVE ALIKE...',
+    author: '@gravellysounds',
+    category: 'Music',
+    date: '12/10/2024',
+    votes: 189,
+    upvotes: 198,
+    downvotes: 9,
+    userVote: null,
+    highFives: 134,
+    userHighFived: false,
+    items: [
+      'Captain Beefheart',
+      'Nick Cave & The Bad Seeds',
+      'Leonard Cohen',
+      'The Pogues',
+      'Howlin\' Wolf'
+],
+    description: 'Artists who share Waits\' theatrical storytelling, gravelly vocals, and experimental approach to blues, jazz, and folk traditions.',
+    comments: [],
+    saves: 156
+  },
+  {
+    id: 157,
+    title: 'If you like "Mark Lanegan", try these FIVE ALIKE...',
+    author: '@grungememories',
+    category: 'Music',
+    date: '12/9/2024',
+    votes: 98,
+    upvotes: 103,
+    downvotes: 5,
+    userVote: null,
+    highFives: 52,
+    userHighFived: false,
+    items: ['Chris Cornell', 'Johnny Cash (American Recordings)', 'Mazzy Star', 'The Afghan Whigs', 'PJ Harvey'],
+    description: 'Artists with that same haunting, weathered voice and dark, introspective songwriting that made Lanegan\'s solo work so compelling.',
+    comments: [],
+    saves: 71
+  },
+  {
+    id: 158,
+    title: 'If you like "Megadeth", try these FIVE ALIKE...',
+    author: '@thrashmaster',
+    category: 'Music',
+    date: '12/8/2024',
+    votes: 167,
+    upvotes: 178,
+    downvotes: 11,
+    userVote: null,
+    highFives: 89,
+    userHighFived: false,
+    items: [
+      'Testament',
+      'Exodus',
+      'Overkill',
+      'Anthrax',
+      'Death Angel'
+],
+    description: 'Thrash metal legends with technical precision, aggressive riffs, and the speed and intensity that defined the genre alongside Megadeth.',
+    comments: [],
+    saves: 123
+  },
+  {
+    id: 159,
+    title: 'If you like "Spirit Adrift", try these FIVE ALIKE...',
+    author: '@doomrevival',
+    category: 'Music',
+    date: '12/7/2024',
+    votes: 84,
+    upvotes: 87,
+    downvotes: 3,
+    userVote: null,
+    highFives: 41,
+    userHighFived: false,
+    items: [
+      'Khemmis',
+      'Eternal Champion',
+      'Crypt Sermon',
+      'Visigoth',
+      'Pallbearer'
+],
+    description: 'Modern doom and traditional heavy metal bands that blend melody with heaviness, creating that epic, anthemic sound Spirit Adrift perfected.',
+    comments: [
+      {
+        id: 1,
+        user: '@doomcrusader',
+        content: 'Khemmis is incredible! Perfect blend of doom and melody.',
+        time: '4 hours ago',
+        avatar: '⚔️'
+      },
+      {
+        id: 2,
+        user: '@epicmetal',
+        content: 'Eternal Champion brings those fantasy vibes perfectly.',
+        time: '7 hours ago',
+        avatar: '🛡️'
+      }
+    ],
+    saves: 63,
+    isRejected: false
+  },
+  {
+    id: 160,
+    title: 'If you like "Clutch", try these FIVE ALIKE...',
+    author: '@stonerrockking',
+    category: 'Music',
+    date: '12/6/2024',
+    votes: 142,
+    upvotes: 151,
+    downvotes: 9,
+    userVote: null,
+    highFives: 78,
+    userHighFived: false,
+    items: [
+      'Fu Manchu',
+      'Red Fang',
+      'Torche',
+      'The Sword',
+      'Monolord'
+],
+    description: 'Stoner rock and metal bands with groove-heavy riffs, powerful vocals, and that same infectious energy that makes Clutch legendary.',
+    comments: [
+      {
+        id: 1,
+        user: '@groovemetal',
+        content: 'Fu Manchu! The groove is unmatched. Perfect recommendation.',
+        time: '3 hours ago',
+        avatar: '🎸'
+      },
+      {
+        id: 2,
+        user: '@riffmaster',
+        content: 'The Sword brings those epic stoner metal vibes perfectly.',
+        time: '5 hours ago',
+        avatar: '⚔️'
+      }
+    ],
+    saves: 108,
+    isRejected: false
+  },
+  {
+    id: 161,
+    title: 'If you like "Red Fang", try these FIVE ALIKE...',
+    author: '@portlandriff',
+    category: 'Music',
+    date: '12/5/2024',
+    votes: 119,
+    upvotes: 125,
+    downvotes: 6,
+    userVote: null,
+    highFives: 67,
+    userHighFived: false,
+    items: [
+      'Torche',
+      'Baroness',
+      'Mastodon',
+      'High on Fire',
+      'Elder'
+],
+    description: 'Heavy rock bands that balance crushing riffs with melodic sensibilities, creating that perfect blend of accessible and heavy that Red Fang nails.',
+    comments: [
+      {
+        id: 1,
+        user: '@sludgelord',
+        content: 'Torche! Those guys know how to make heavy music catchy.',
+        time: '2 hours ago',
+        avatar: '🔥'
+      },
+      {
+        id: 2,
+        user: '@progmetal',
+        content: 'Baroness and Mastodon - the holy trinity of modern heavy rock!',
+        time: '4 hours ago',
+        avatar: '👑'
+      }
+    ],
+    saves: 89,
+    isRejected: false
+  },
+  {
+    id: 162,
+    title: 'If you like "Converge", try these FIVE ALIKE...',
+    author: '@mathcorelegend',
+    category: 'Music',
+    date: '12/4/2024',
+    votes: 156,
+    upvotes: 164,
+    downvotes: 8,
+    userVote: null,
+    highFives: 94,
+    userHighFived: false,
+    items: [
+      'The Dillinger Escape Plan',
+      'Botch',
+      'Coalesce',
+      'Poison the Well',
+      'Norma Jean'
+],
+    description: 'Mathcore and metalcore pioneers with complex rhythms, emotional intensity, and the technical chaos that Converge helped define.',
+    comments: [
+      {
+        id: 1,
+        user: '@chaostheory',
+        content: 'The Dillinger Escape Plan! Pure mathematical madness.',
+        time: '1 hour ago',
+        avatar: '🌀'
+      },
+      {
+        id: 2,
+        user: '@hardcorekid',
+        content: 'Botch is so underrated. "We Are the Romans" is a masterpiece.',
+        time: '3 hours ago',
+        avatar: '💥'
+      },
+      {
+        id: 3,
+        user: '@emotionalcore',
+        content: 'Poison the Well brought that melodic element that works so well.',
+        time: '5 hours ago',
+        avatar: '🖤'
+      }
+    ],
+    saves: 112,
+    isRejected: false
+  },
+  {
+    id: 163,
+    title: 'If you like "The Sheila Divine", try these FIVE ALIKE...',
+    author: '@bostonrockscene',
+    category: 'Music',
+    date: '12/3/2024',
+    votes: 73,
+    upvotes: 76,
+    downvotes: 3,
+    userVote: null,
+    highFives: 34,
+    userHighFived: false,
+    items: ['The Get Up Kids', 'Piebald', 'The Promise Ring', 'Jets to Brazil', 'Texas Is the Reason'],
+    description: 'Emo and indie rock bands with heartfelt lyrics, melodic guitars, and that same earnest emotional intensity that made The Sheila Divine special.',
+    comments: [],
+    saves: 54
   }
 ];
 

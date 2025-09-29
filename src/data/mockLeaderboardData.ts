@@ -40,7 +40,7 @@ const tasteMakers24h: LeaderboardData = {
       scoreType: 'saves',
       featuredList: {
         id: 2,
-        title: 'If you like "Inception", try these 5...',
+        title: 'If you like "Inception", try these FIVE ALIKE...',
         category: 'Movies'
       },
       change: 'up'
@@ -55,7 +55,7 @@ const tasteMakers24h: LeaderboardData = {
       scoreType: 'saves',
       featuredList: {
         id: 1,
-        title: 'If you like "The Beatles", try these 5...',
+        title: 'If you like "The Beatles", try these FIVE ALIKE...',
         category: 'Music'
       },
       change: 'down'
@@ -70,7 +70,7 @@ const tasteMakers24h: LeaderboardData = {
       scoreType: 'saves',
       featuredList: {
         id: 5,
-        title: 'If you like "Harry Potter", try these 5...',
+        title: 'If you like "Harry Potter", try these FIVE ALIKE...',
         category: 'Books'
       },
       change: 'new'
@@ -85,7 +85,7 @@ const tasteMakers24h: LeaderboardData = {
       scoreType: 'saves',
       featuredList: {
         id: 8,
-        title: 'If you like "iPhone", try these 5...',
+        title: 'If you like "iPhone", try these FIVE ALIKE...',
         category: 'Technology'
       },
       change: 'same'
@@ -100,7 +100,7 @@ const tasteMakers24h: LeaderboardData = {
       scoreType: 'saves',
       featuredList: {
         id: 12,
-        title: 'If you like "Pizza", try these 5...',
+        title: 'If you like "Pizza", try these FIVE ALIKE...',
         category: 'Food'
       },
       change: 'up'
@@ -123,7 +123,7 @@ const trendSetters24h: LeaderboardData = {
       scoreType: 'votes',
       featuredList: {
         id: 15,
-        title: 'If you like "AI", try these 5...',
+        title: 'If you like "AI", try these FIVE ALIKE...',
         category: 'Technology'
       },
       change: 'new'
@@ -138,7 +138,7 @@ const trendSetters24h: LeaderboardData = {
       scoreType: 'votes',
       featuredList: {
         id: 18,
-        title: 'If you like "Paris", try these 5...',
+        title: 'If you like "Paris", try these FIVE ALIKE...',
         category: 'Travel'
       },
       change: 'up'
@@ -153,7 +153,7 @@ const trendSetters24h: LeaderboardData = {
       scoreType: 'votes',
       featuredList: {
         id: 20,
-        title: 'If you like "Zelda", try these 5...',
+        title: 'If you like "Zelda", try these FIVE ALIKE...',
         category: 'Games'
       },
       change: 'same'
@@ -177,7 +177,7 @@ const communityHeroes24h: LeaderboardData = {
       scoreType: 'high_fives',
       featuredList: {
         id: 30,
-        title: 'If you like "Community Building", try these 5...',
+        title: 'If you like "Community Building", try these FIVE ALIKE...',
         category: 'Technology'
       },
       change: 'same'
@@ -192,7 +192,7 @@ const communityHeroes24h: LeaderboardData = {
       scoreType: 'comments',
       featuredList: {
         id: 31,
-        title: 'If you like "Helpful Apps", try these 5...',
+        title: 'If you like "Helpful Apps", try these FIVE ALIKE...',
         category: 'Technology'
       },
       change: 'up'
@@ -215,7 +215,7 @@ const qualityCreators24h: LeaderboardData = {
       scoreType: 'votes',
       featuredList: {
         id: 35,
-        title: 'If you like "Criterion Collection", try these 5...',
+        title: 'If you like "Criterion Collection", try these FIVE ALIKE...',
         category: 'Movies'
       },
       change: 'same'
@@ -230,7 +230,7 @@ const qualityCreators24h: LeaderboardData = {
       scoreType: 'votes',
       featuredList: {
         id: 36,
-        title: 'If you like "Literary Fiction", try these 5...',
+        title: 'If you like "Literary Fiction", try these FIVE ALIKE...',
         category: 'Books'
       },
       change: 'up'

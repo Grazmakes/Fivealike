@@ -22,6 +22,7 @@ interface HomeFeedProps {
   onAuthorClick?: (author: string) => void;
   onMessage?: (username: string) => void;
   onItemBookmark?: (listId: number, itemIndex: number) => void;
+  onEditList?: (listId: number) => void;
   bookmarkState?: { [key: string]: boolean };
   savedLists: number[];
   setSavedLists: (lists: number[]) => void;
@@ -54,6 +55,7 @@ export default function HomeFeed({
   onAuthorClick,
   onMessage,
   onItemBookmark,
+  onEditList,
   bookmarkState = {},
   savedLists,
   setSavedLists,
@@ -183,6 +185,7 @@ export default function HomeFeed({
                   onAuthorClick={onAuthorClick}
                   onMessage={onMessage}
                   onItemBookmark={onItemBookmark}
+                  onEditList={onEditList}
                   bookmarkState={bookmarkState}
                   onSaveList={handleSaveList}
                   isSaved={savedLists.includes(list.id)}

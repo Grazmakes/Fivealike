@@ -19,6 +19,7 @@ import UnifiedDiscovery from '@/components/discovery/UnifiedDiscovery';
 import LocalDiscovery from '@/components/discovery/LocalDiscovery';
 import TrendingLists from '@/components/trending/TrendingLists';
 import CreateListModal from '@/components/modals/CreateListModal';
+import EditListModal from '@/components/modals/EditListModal';
 import TutorialPopup from '@/components/tutorial/TutorialPopup';
 import AccountSettings from '@/components/settings/AccountSettings';
 import CommunityGuidelines from '@/components/community/CommunityGuidelines';
@@ -51,6 +52,8 @@ function HomeContent() {
   const [darkMode, setDarkMode] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showNewListForm, setShowNewListForm] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingList, setEditingList] = useState<List | null>(null);
   const [showTutorial, setShowTutorial] = useState(false);
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   const [showCommunityGuidelines, setShowCommunityGuidelines] = useState(false);
@@ -988,6 +991,41 @@ function HomeContent() {
     } catch (stateError) {
       console.error('💥 Error in state updates:', stateError);
       // Even state updates are wrapped to prevent crashes
+    }
+  };
+
+  // Handle edit list - open edit modal
+  const handleEditList = (listId: number) => {
+    const listToEdit = allLists.find(list => list.id === listId);
+    if (listToEdit) {
+      setEditingList(listToEdit);
+      setShowEditModal(true);
+    }
+  };
+
+  // Handle save edited list
+  const handleSaveEditedList = async (updates: Partial<List>) => {
+    if (!editingList) return;
+
+    try {
+      // Update the list in the state
+      setAllLists(prevLists =>
+        prevLists.map(list =>
+          list.id === editingList.id
+            ? { ...list, ...updates }
+            : list
+        )
+      );
+
+      // Close the modal
+      setShowEditModal(false);
+      setEditingList(null);
+
+      // In a real app, you would also save to the backend here
+      console.log('List updated:', { listId: editingList.id, updates });
+    } catch (error) {
+      console.error('Error saving list:', error);
+      throw error;
     }
   };
 
@@ -1973,6 +2011,7 @@ function HomeContent() {
               onAuthorClick={handleAuthorClick}
               onMessage={handleOpenMessage}
               onItemBookmark={handleItemBookmark}
+              onEditList={handleEditList}
               bookmarkState={bookmarkState}
               highlightedItem={highlightedItem}
               onClearHighlight={() => setHighlightedItem(null)}
@@ -2310,10 +2349,22 @@ function HomeContent() {
       </div>
 
       {showNewListForm && (
-        <CreateListModal 
+        <CreateListModal
           setShowNewListForm={setShowNewListForm}
           allLists={allLists}
           setAllLists={setAllLists}
+        />
+      )}
+
+      {showEditModal && editingList && (
+        <EditListModal
+          list={editingList}
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditingList(null);
+          }}
+          onSave={handleSaveEditedList}
         />
       )}
 
