@@ -3054,6 +3054,516 @@ export const comprehensiveTestLists: List[] = [
     ],
     saves: 143,
     isRejected: false
+  },
+  {
+    id: 501,
+    title: 'Best Boston Food Spots',
+    author: '@bostonbites',
+    location: 'Boston',
+    category: 'Food',
+    items: ['North End Pizza', 'Fenway Park Hot Dogs', 'Cambridge Seafood', 'Beacon Hill Bakery', 'South End Brunch'],
+    votes: 89,
+    date: '2024-01-15',
+    highFives: 23,
+    description: 'Must-try food experiences across Boston neighborhoods.',
+    comments: [
+      { id: 1, user: '@foodie_bean', content: 'North End is unbeatable!', time: '3 hours ago', avatar: '🍕' }
+    ],
+    saves: 67,
+    isRejected: false
+  },
+  {
+    id: 502,
+    title: 'Historic Boston Walking Tours',
+    author: '@freedom_trail',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Freedom Trail', 'Boston Tea Party Ships', 'Paul Revere House', 'Old State House', 'Bunker Hill Monument'],
+    votes: 112,
+    date: '2024-01-14',
+    highFives: 34,
+    description: 'Revolutionary War history comes alive on these walking routes.',
+    comments: [
+      { id: 1, user: '@history_buff', content: 'Did the full trail in one day!', time: '5 hours ago', avatar: '🗽' }
+    ],
+    saves: 89,
+    isRejected: false
+  },
+  {
+    id: 503,
+    title: 'Boston Sports Experiences',
+    author: '@bostonsports',
+    location: 'Boston',
+    category: 'Sports',
+    items: ['Fenway Park Red Sox Game', 'TD Garden Celtics Game', 'Patriots at Gillette Stadium', 'Boston Marathon Route', 'Harvard-Yale Game'],
+    votes: 156,
+    date: '2024-01-13',
+    highFives: 45,
+    description: 'The ultimate Boston sports fan bucket list.',
+    comments: [
+      { id: 1, user: '@green_monster', content: 'Fenway is magical!', time: '1 hour ago', avatar: '⚾' }
+    ],
+    saves: 123,
+    isRejected: false
+  },
+  {
+    id: 504,
+    title: 'Cambridge Coffee Culture',
+    author: '@harvard_caffeine',
+    location: 'Boston',
+    category: 'Food',
+    items: ['Harvard Square Cafe', 'MIT Student Center', 'Porter Square Coffee', 'Central Square Roasters', 'Davis Square Brew'],
+    votes: 78,
+    date: '2024-01-12',
+    highFives: 19,
+    description: 'Where students and locals fuel their minds in Cambridge.',
+    comments: [
+      { id: 1, user: '@study_buddy', content: 'Porter Square has the best wifi', time: '2 hours ago', avatar: '☕' }
+    ],
+    saves: 54,
+    isRejected: false
+  },
+  {
+    id: 505,
+    title: 'Boston Music Venues',
+    author: '@live_music_boston',
+    location: 'Boston',
+    category: 'Music',
+    items: ['House of Blues', 'The Paradise Rock Club', 'Berklee Performance Center', 'Boston Opera House', 'Brighton Music Hall'],
+    votes: 94,
+    date: '2024-01-11',
+    highFives: 28,
+    description: 'From indie rock to classical, Boston\'s best live music spots.',
+    comments: [
+      { id: 1, user: '@music_lover', content: 'Paradise has amazing acoustics', time: '4 hours ago', avatar: '🎵' }
+    ],
+    saves: 71,
+    isRejected: false
+  },
+  {
+    id: 506,
+    title: 'Back Bay Shopping Districts',
+    author: '@fashionista_boston',
+    location: 'Boston',
+    category: 'Fashion',
+    items: ['Newbury Street Boutiques', 'Copley Place Mall', 'Prudential Center', 'Charles Street Antiques', 'Harvard Square Vintage'],
+    votes: 65,
+    date: '2024-01-10',
+    highFives: 15,
+    description: 'From high-end to vintage, Boston\'s shopping destinations.',
+    comments: [
+      { id: 1, user: '@vintage_hunter', content: 'Charles Street has hidden gems', time: '6 hours ago', avatar: '👗' }
+    ],
+    saves: 43,
+    isRejected: false
+  },
+  {
+    id: 507,
+    title: 'Boston Harbor Activities',
+    author: '@harbor_explorer',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Harbor Islands Ferry', 'Boston Harbor Cruise', 'Aquarium IMAX', 'Harborwalk Trail', 'Sunset Sailing'],
+    votes: 87,
+    date: '2024-01-09',
+    highFives: 22,
+    description: 'Discover Boston from the water with these harbor experiences.',
+    comments: [
+      { id: 1, user: '@sailor_boy', content: 'Sunset sailing is unforgettable', time: '7 hours ago', avatar: '⛵' }
+    ],
+    saves: 62,
+    isRejected: false
+  },
+  {
+    id: 508,
+    title: 'Boston University Life',
+    author: '@bu_student',
+    location: 'Boston',
+    category: 'Books',
+    items: ['BU Library Study Spots', 'Commonwealth Ave Bookstores', 'Campus Coffee Shops', 'Student Activities Fair', 'Agganis Arena Events'],
+    votes: 73,
+    date: '2024-01-08',
+    highFives: 18,
+    description: 'The essential Boston University student experience.',
+    comments: [
+      { id: 1, user: '@terrier_pride', content: 'Mugar Library is my second home', time: '3 hours ago', avatar: '📚' }
+    ],
+    saves: 49,
+    isRejected: false
+  },
+  {
+    id: 509,
+    title: 'Boston Winter Activities',
+    author: '@winter_warrior',
+    location: 'Boston',
+    category: 'Sports',
+    items: ['Boston Common Ice Skating', 'Duck Tours Winter Edition', 'Museum of Science Exhibits', 'Quincy Market Hot Chocolate', 'Fenway Winter Classic'],
+    votes: 102,
+    date: '2024-01-07',
+    highFives: 31,
+    description: 'Embrace Boston winters with these cold-weather activities.',
+    comments: [
+      { id: 1, user: '@ice_queen', content: 'Common skating rink is so romantic', time: '5 hours ago', avatar: '⛸️' }
+    ],
+    saves: 78,
+    isRejected: false
+  },
+  {
+    id: 510,
+    title: 'Boston Tech Meetups',
+    author: '@tech_networker',
+    location: 'Boston',
+    category: 'Technology',
+    items: ['MIT Tech Talks', 'Boston Startup Meetup', 'Cambridge Innovation Lab', 'Harvard Tech Conference', 'Kendall Square Events'],
+    votes: 84,
+    date: '2024-01-06',
+    highFives: 26,
+    description: 'Network with Boston\'s thriving tech community.',
+    comments: [
+      { id: 1, user: '@startup_founder', content: 'Great networking opportunities', time: '8 hours ago', avatar: '💻' }
+    ],
+    saves: 58,
+    isRejected: false
+  },
+  {
+    id: 511,
+    title: 'San Francisco Foodie Adventures',
+    author: '@sf_eats',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Mission District Tacos', 'Chinatown Dim Sum', 'Fisherman\'s Wharf Clam Chowder', 'North Beach Italian', 'Castro District Brunch'],
+    votes: 198,
+    date: '2024-01-05',
+    highFives: 67,
+    description: 'A culinary tour through San Francisco\'s diverse neighborhoods.',
+    comments: [
+      { id: 1, user: '@taco_tuesday', content: 'Mission tacos are life-changing', time: '2 hours ago', avatar: '🌮' }
+    ],
+    saves: 145,
+    isRejected: false
+  },
+  {
+    id: 512,
+    title: 'Golden Gate Park Essentials',
+    author: '@park_explorer',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Japanese Tea Garden', 'de Young Museum', 'California Academy of Sciences', 'Conservatory of Flowers', 'Hippie Hill Hangout'],
+    votes: 167,
+    date: '2024-01-04',
+    highFives: 52,
+    description: 'Must-see attractions in San Francisco\'s massive urban park.',
+    comments: [
+      { id: 1, user: '@nature_lover', content: 'Tea garden is so peaceful', time: '4 hours ago', avatar: '🌸' }
+    ],
+    saves: 124,
+    isRejected: false
+  },
+  {
+    id: 513,
+    title: 'SF Tech Scene Hotspots',
+    author: '@silicon_valley',
+    location: 'San Francisco',
+    category: 'Technology',
+    items: ['Twitter HQ Tours', 'Salesforce Tower', 'SOMA Startup Cafes', 'GitHub Universe', 'TechCrunch Disrupt'],
+    votes: 143,
+    date: '2024-01-03',
+    highFives: 41,
+    description: 'Where innovation happens in the heart of tech.',
+    comments: [
+      { id: 1, user: '@code_ninja', content: 'SOMA has the best networking', time: '1 hour ago', avatar: '💻' }
+    ],
+    saves: 108,
+    isRejected: false
+  },
+  {
+    id: 514,
+    title: 'Alcatraz and Bay Views',
+    author: '@island_hopper',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Alcatraz Island Tour', 'Pier 39 Sea Lions', 'Bay Bridge Lights', 'Angel Island Hiking', 'Sausalito Ferry'],
+    votes: 189,
+    date: '2024-01-02',
+    highFives: 58,
+    description: 'Explore San Francisco Bay\'s most iconic attractions.',
+    comments: [
+      { id: 1, user: '@bay_enthusiast', content: 'Alcatraz audio tour is incredible', time: '6 hours ago', avatar: '🏝️' }
+    ],
+    saves: 142,
+    isRejected: false
+  },
+  {
+    id: 515,
+    title: 'Haight-Ashbury Culture',
+    author: '@hippie_historian',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['Vintage Clothing Stores', 'Summer of Love Museum', 'Grateful Dead House', 'Record Shops', 'Peace & Love Murals'],
+    votes: 134,
+    date: '2024-01-01',
+    highFives: 39,
+    description: 'Relive the counterculture movement in its birthplace.',
+    comments: [
+      { id: 1, user: '@flower_power', content: 'The vibe is still alive here', time: '7 hours ago', avatar: '🌻' }
+    ],
+    saves: 97,
+    isRejected: false
+  },
+  {
+    id: 516,
+    title: 'SF Coffee Culture',
+    author: '@caffeine_addict',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Blue Bottle Coffee', 'Philz Coffee Blends', 'Ritual Coffee Roasters', 'Sightglass Coffee', 'Four Barrel Coffee'],
+    votes: 156,
+    date: '2023-12-31',
+    highFives: 45,
+    description: 'Third-wave coffee culture at its finest in San Francisco.',
+    comments: [
+      { id: 1, user: '@espresso_expert', content: 'Blue Bottle changed my life', time: '3 hours ago', avatar: '☕' }
+    ],
+    saves: 118,
+    isRejected: false
+  },
+  {
+    id: 517,
+    title: 'Castro District Nightlife',
+    author: '@night_owl_sf',
+    location: 'San Francisco',
+    category: 'Music',
+    items: ['Castro Theatre Shows', 'Twin Peaks Tavern', 'The Mix Bar', 'Lookout Bar Rooftop', 'Harvey\'s Bar'],
+    votes: 122,
+    date: '2023-12-30',
+    highFives: 34,
+    description: 'Experience the vibrant nightlife of San Francisco\'s most famous neighborhood.',
+    comments: [
+      { id: 1, user: '@rainbow_flag', content: 'Castro Theatre is a landmark', time: '5 hours ago', avatar: '🏳️‍🌈' }
+    ],
+    saves: 89,
+    isRejected: false
+  },
+  {
+    id: 518,
+    title: 'Lombard Street Adventures',
+    author: '@steep_streets',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Lombard Street Drive', 'Russian Hill Walking', 'Coit Tower Views', 'Telegraph Hill Parrots', 'Filbert Street Steps'],
+    votes: 178,
+    date: '2023-12-29',
+    highFives: 54,
+    description: 'Navigate San Francisco\'s most famous steep streets and hidden stairs.',
+    comments: [
+      { id: 1, user: '@hill_climber', content: 'Filbert Steps are a workout!', time: '8 hours ago', avatar: '🏔️' }
+    ],
+    saves: 132,
+    isRejected: false
+  },
+  {
+    id: 519,
+    title: 'Mission District Art Scene',
+    author: '@mural_hunter',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['Clarion Alley Murals', 'Women\'s Building', 'Balmy Alley Art', 'Mission Cultural Center', 'Galería de la Raza'],
+    votes: 145,
+    date: '2023-12-28',
+    highFives: 42,
+    description: 'Discover the vibrant street art and cultural centers of the Mission.',
+    comments: [
+      { id: 1, user: '@street_artist', content: 'Clarion Alley changes constantly', time: '4 hours ago', avatar: '🎨' }
+    ],
+    saves: 103,
+    isRejected: false
+  },
+  {
+    id: 520,
+    title: 'Chinatown Hidden Gems',
+    author: '@chinatown_explorer',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Grant Avenue Markets', 'Dragon Gate Entry', 'Portsmouth Square Tai Chi', 'Fortune Cookie Factory', 'Stockton Street Food'],
+    votes: 167,
+    date: '2023-12-27',
+    highFives: 48,
+    description: 'Authentic experiences in America\'s oldest Chinatown.',
+    comments: [
+      { id: 1, user: '@dumpling_fan', content: 'Stockton Street has the best prices', time: '2 hours ago', avatar: '🥟' }
+    ],
+    saves: 125,
+    isRejected: false
+  },
+  {
+    id: 521,
+    title: 'Nob Hill Luxury',
+    author: '@fancy_sf',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Grace Cathedral', 'Fairmont Hotel', 'Top of the Mark', 'Cable Car Museum', 'Huntington Park'],
+    votes: 134,
+    date: '2023-12-26',
+    highFives: 38,
+    description: 'Experience San Francisco\'s most prestigious neighborhood.',
+    comments: [
+      { id: 1, user: '@high_society', content: 'Top of the Mark has amazing views', time: '6 hours ago', avatar: '🏛️' }
+    ],
+    saves: 98,
+    isRejected: false
+  },
+  {
+    id: 522,
+    title: 'SOMA Art Galleries',
+    author: '@gallery_hopper',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['SFMOMA Collection', 'Yerba Buena Arts', 'Gallery 16', 'Electric Works', 'Minnesota Street Project'],
+    votes: 112,
+    date: '2023-12-25',
+    highFives: 31,
+    description: 'Contemporary art scene in South of Market district.',
+    comments: [
+      { id: 1, user: '@modern_art', content: 'SFMOMA\'s contemporary collection is world-class', time: '7 hours ago', avatar: '🖼️' }
+    ],
+    saves: 84,
+    isRejected: false
+  },
+  {
+    id: 523,
+    title: 'Presidio Outdoor Activities',
+    author: '@nature_sf',
+    location: 'San Francisco',
+    category: 'Sports',
+    items: ['Crissy Field Running', 'Presidio Golf Course', 'Battery Spencer Views', 'Lovers Lane Walking', 'Andy Goldsworthy Art'],
+    votes: 156,
+    date: '2023-12-24',
+    highFives: 44,
+    description: 'Outdoor recreation in San Francisco\'s former military base.',
+    comments: [
+      { id: 1, user: '@trail_runner', content: 'Crissy Field has perfect Golden Gate views', time: '1 hour ago', avatar: '🏃' }
+    ],
+    saves: 117,
+    isRejected: false
+  },
+  {
+    id: 524,
+    title: 'Richmond District Exploration',
+    author: '@outer_richmond',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Geary Boulevard Asian Food', 'Ocean Beach Bonfires', 'Golden Gate Park West', 'Clement Street Shopping', 'Land\'s End Lookout'],
+    votes: 143,
+    date: '2023-12-23',
+    highFives: 40,
+    description: 'Discover the diverse culture of San Francisco\'s Richmond neighborhood.',
+    comments: [
+      { id: 1, user: '@beach_walker', content: 'Ocean Beach sunsets are magical', time: '9 hours ago', avatar: '🌅' }
+    ],
+    saves: 105,
+    isRejected: false
+  },
+  {
+    id: 525,
+    title: 'Ferry Building Food Hall',
+    author: '@farmers_market',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Saturday Farmers Market', 'Acme Bread Company', 'Cowgirl Creamery', 'Blue Bottle Coffee', 'Hog Island Oysters'],
+    votes: 187,
+    date: '2023-12-22',
+    highFives: 59,
+    description: 'San Francisco\'s premier food destination at the waterfront.',
+    comments: [
+      { id: 1, user: '@foodie_paradise', content: 'Saturday market is a must-do', time: '3 hours ago', avatar: '🥕' }
+    ],
+    saves: 140,
+    isRejected: false
+  },
+  {
+    id: 526,
+    title: 'Pacific Heights Architecture',
+    author: '@architecture_sf',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['Painted Ladies', 'Mansion Row', 'Alta Plaza Park', 'Fillmore Street Shopping', 'Steiner Street Views'],
+    votes: 165,
+    date: '2023-12-21',
+    highFives: 47,
+    description: 'Victorian architecture and luxury living in Pacific Heights.',
+    comments: [
+      { id: 1, user: '@victorian_lover', content: 'Painted Ladies are iconic for a reason', time: '5 hours ago', avatar: '🏘️' }
+    ],
+    saves: 122,
+    isRejected: false
+  },
+  {
+    id: 527,
+    title: 'North Beach Italian Heritage',
+    author: '@little_italy_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Tony\'s Little Star Pizza', 'Molinari Delicatessen', 'Caffe Trieste', 'Washington Square Park', 'Saints Peter and Paul Church'],
+    votes: 174,
+    date: '2023-12-20',
+    highFives: 51,
+    description: 'Authentic Italian-American culture in San Francisco\'s Little Italy.',
+    comments: [
+      { id: 1, user: '@pasta_lover', content: 'Molinari has the best sandwiches', time: '4 hours ago', avatar: '🍝' }
+    ],
+    saves: 129,
+    isRejected: false
+  },
+  {
+    id: 528,
+    title: 'Union Square Shopping',
+    author: '@shop_till_drop',
+    location: 'San Francisco',
+    category: 'Fashion',
+    items: ['Macy\'s Flagship Store', 'Neiman Marcus', 'Apple Store', 'Maiden Lane Boutiques', 'Powell Street Cable Cars'],
+    votes: 138,
+    date: '2023-12-19',
+    highFives: 36,
+    description: 'Premier shopping destination in downtown San Francisco.',
+    comments: [
+      { id: 1, user: '@fashionista', content: 'Maiden Lane has unique boutiques', time: '6 hours ago', avatar: '🛍️' }
+    ],
+    saves: 101,
+    isRejected: false
+  },
+  {
+    id: 529,
+    title: 'Sunset District Local Life',
+    author: '@sunset_local',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Irving Street Shops', 'Golden Gate Heights Park', 'Judah Street N-Line', 'Moraga Steps Mosaic', 'Ocean Beach Access'],
+    votes: 127,
+    date: '2023-12-18',
+    highFives: 33,
+    description: 'Experience residential San Francisco in the foggy Sunset.',
+    comments: [
+      { id: 1, user: '@fog_city', content: 'Moraga Steps are a hidden treasure', time: '8 hours ago', avatar: '🌫️' }
+    ],
+    saves: 93,
+    isRejected: false
+  },
+  {
+    id: 530,
+    title: 'Financial District Power Lunch',
+    author: '@wall_street_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Tadich Grill Historic', 'One Market Restaurant', 'Benu Michelin Star', 'Ferry Plaza Wine Bar', 'Sam\'s Grill Classic'],
+    votes: 152,
+    date: '2023-12-17',
+    highFives: 43,
+    description: 'Where San Francisco\'s business elite dine and deal.',
+    comments: [
+      { id: 1, user: '@power_lunch', content: 'Tadich Grill is old-school elegance', time: '2 hours ago', avatar: '💼' }
+    ],
+    saves: 112,
+    isRejected: false
   }
 ];
 
