@@ -83,12 +83,44 @@ export default function SimpleAuth({ onUserChange }: SimpleAuthProps) {
         username: account.username,
         email,
         avatar: '⭐',
+        avatarImage: null,
         bio: `Welcome to Five Alike! I'm ${account.username}`,
         favoriteTopics: [],
         selectedGenres: [],
         achievements: [],
-        antiSocialMode: false,
+        badges: [],
+        selectedBadge: null,
+        goals: [],
+        seasonalReminders: [],
+        followers: 0,
+        following: 0,
+        joinDate: new Date().toISOString(),
+        isEarlyAdopter: false,
         hasSeenTutorial: false,
+        claimedRewards: [],
+        antiSocialMode: false,
+        stats: {
+          listsCreated: 0,
+          totalVotes: 0,
+          followers: 0,
+          listsSaved: 0,
+          commentsPosted: 0,
+          highFivesGiven: 0,
+          highFivesReceived: 0,
+          trendsStarted: 0,
+          firstToSave: 0
+        },
+        analytics: {
+          tasteProfile: {
+            categoryBreakdown: {},
+            genrePreferences: {},
+            votingPatterns: {
+              upvotesByCategory: {},
+              downvotesByCategory: {}
+            },
+            discoveryHistory: []
+          }
+        },
         created_at: new Date().toISOString()
       };
 
@@ -138,12 +170,44 @@ export default function SimpleAuth({ onUserChange }: SimpleAuthProps) {
         username: username.trim(),
         email,
         avatar: '✨',
+        avatarImage: null,
         bio: `New to Five Alike! I'm ${username.trim()}`,
         favoriteTopics: [],
         selectedGenres: [],
         achievements: ['first_steps'],
-        antiSocialMode: false,
+        badges: [],
+        selectedBadge: null,
+        goals: [],
+        seasonalReminders: [],
+        followers: 0,
+        following: 0,
+        joinDate: new Date().toISOString(),
+        isEarlyAdopter: false,
         hasSeenTutorial: false,
+        claimedRewards: [],
+        antiSocialMode: false,
+        stats: {
+          listsCreated: 0,
+          totalVotes: 0,
+          followers: 0,
+          listsSaved: 0,
+          commentsPosted: 0,
+          highFivesGiven: 0,
+          highFivesReceived: 0,
+          trendsStarted: 0,
+          firstToSave: 0
+        },
+        analytics: {
+          tasteProfile: {
+            categoryBreakdown: {},
+            genrePreferences: {},
+            votingPatterns: {
+              upvotesByCategory: {},
+              downvotesByCategory: {}
+            },
+            discoveryHistory: []
+          }
+        },
         created_at: new Date().toISOString()
       };
 
