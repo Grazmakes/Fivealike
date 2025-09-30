@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { MessageCircle, ChevronUp } from 'lucide-react';
 import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState, HistoryItem } from '@/types';
-import { testLists as mockLists, testNotifications as mockNotifications } from '@/data/comprehensiveTestData';
+import { comprehensiveTestLists as mockLists, testNotifications as mockNotifications } from '@/data/comprehensiveTestData';
 
 import TopHeader from '@/components/TopHeader';
 import Navigation from '@/components/Navigation';
