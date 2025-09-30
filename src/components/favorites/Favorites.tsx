@@ -257,10 +257,6 @@ export default function Favorites({
             {filteredSavedLists.length > 0 ? (
               filteredSavedLists.map(list => (
                 <div key={list.id} className="relative">
-                  <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full z-10 flex items-center space-x-1">
-                    <BookmarkIcon size={12} />
-                    <span>Saved</span>
-                  </div>
                   <ListCard
                     list={list}
                     onListVote={onListVote}

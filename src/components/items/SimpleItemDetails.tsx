@@ -128,7 +128,21 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
 
             if (results && results.length > 0) {
               console.log('[SimpleItemDetails] Setting book data:', results[0]);
-              setData(results[0]);
+              // Transform flat API response to match expected volumeInfo structure
+              const bookData = results[0];
+              setData({
+                volumeInfo: {
+                  title: bookData.title,
+                  authors: bookData.authors,
+                  description: bookData.description,
+                  imageLinks: bookData.thumbnail ? { thumbnail: bookData.thumbnail } : undefined,
+                  publishedDate: bookData.publishedDate,
+                  pageCount: bookData.pageCount,
+                  categories: bookData.categories,
+                  language: bookData.language,
+                  infoLink: bookData.infoLink
+                }
+              });
             } else {
               console.log('[SimpleItemDetails] No books found, will use fallback');
               if (bookFallback) {
@@ -182,8 +196,11 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
             const results = await response.json();
             console.log('[SimpleItemDetails] Movies API results:', results);
 
-            if (results && results.results && results.results.length > 0) {
-              console.log('[SimpleItemDetails] Setting movie data:', results.results[0]);
+            if (results && Array.isArray(results) && results.length > 0) {
+              console.log('[SimpleItemDetails] Setting movie data:', results[0]);
+              setData(results[0]);
+            } else if (results && results.results && results.results.length > 0) {
+              console.log('[SimpleItemDetails] Setting movie data (nested):', results.results[0]);
               setData(results.results[0]);
             } else {
               console.log('[SimpleItemDetails] No movies found, will use Wikipedia fallback');
@@ -237,8 +254,11 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           const results = await response.json();
           console.log('[SimpleItemDetails] TV Shows API results:', results);
 
-          if (results && results.results && results.results.length > 0) {
-            console.log('[SimpleItemDetails] Setting TV show data:', results.results[0]);
+          if (results && Array.isArray(results) && results.length > 0) {
+            console.log('[SimpleItemDetails] Setting TV show data:', results[0]);
+            setData(results[0]);
+          } else if (results && results.results && results.results.length > 0) {
+            console.log('[SimpleItemDetails] Setting TV show data (nested):', results.results[0]);
             setData(results.results[0]);
           } else {
             console.log('[SimpleItemDetails] No TV shows found, will use Wikipedia fallback');
@@ -368,6 +388,20 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                 {data.volumeInfo.title.substring(0, 2).toUpperCase()}
               </div>
 
+              {/* Amazon button under cover */}
+              <div className="mt-2">
+                <a
+                  href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}&i=stripbooks`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-24 hover:opacity-80 transition-opacity"
+                >
+                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
+                    Buy on Amazon
+                  </div>
+                </a>
+              </div>
+
               {/* Details on the right */}
               <div className="flex-1 min-w-0">
                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
@@ -409,8 +443,8 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           ) : category === 'Movies' && data ? (
             <div className="flex gap-4">
               {/* Poster on the left */}
-              {data.poster_path && (
-                <div className="flex-shrink-0">
+              <div className="flex-shrink-0">
+                {data.poster_path && (
                   <img
                     src={`https://image.tmdb.org/t/p/w500${data.poster_path}`}
                     alt={data.title || itemName}
@@ -421,8 +455,22 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                       target.style.display = 'none';
                     }}
                   />
+                )}
+
+                {/* Amazon button under poster */}
+                <div className="mt-2">
+                  <a
+                    href={`https://www.amazon.com/gp/video/search?phrase=${encodeURIComponent(itemName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-24 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
+                      Buy on Amazon
+                    </div>
+                  </a>
                 </div>
-              )}
+              </div>
 
               {/* Details on the right */}
               <div className="flex-1 min-w-0">
@@ -495,6 +543,20 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                     );
                   }
                 })()}
+
+                {/* Amazon button under artwork */}
+                <div className="mt-2">
+                  <a
+                    href={`https://music.amazon.com/search/${encodeURIComponent(itemName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-24 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
+                      Buy on Amazon
+                    </div>
+                  </a>
+                </div>
               </div>
 
               {/* Details on the right */}
@@ -555,45 +617,91 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
               </div>
             </div>
           ) : category === 'Games' && data ? (
-            <>
-              <h4 className="font-semibold text-gray-900 dark:text-white">
-                {data.name}
-              </h4>
-              {data.released && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Released: {data.released}
-                </p>
-              )}
-              {data.rating && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Rating: {data.rating}/5
-                </p>
-              )}
-              {data.platforms && data.platforms.length > 0 && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Platforms: {data.platforms.map((p: any) => p.platform.name).join(', ')}
-                </p>
-              )}
-              {data.description_raw && (
-                <div className="text-sm text-gray-700 dark:text-gray-300">
-                  <p className="line-clamp-4">
-                    {data.description_raw}
-                  </p>
+            <div className="flex gap-4">
+              {/* Game image on the left */}
+              <div className="flex-shrink-0">
+                {data.background_image && (
+                  <img
+                    src={data.background_image}
+                    alt={data.name}
+                    className="w-32 h-20 object-cover rounded shadow-md"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      console.log('Game image failed to load:', target.src);
+                      target.style.display = 'none';
+                    }}
+                  />
+                )}
+
+                {/* Amazon button under game image */}
+                <div className="mt-2">
+                  <a
+                    href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}&i=videogames`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-32 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
+                      Buy on Amazon
+                    </div>
+                  </a>
                 </div>
-              )}
-              {data.background_image && (
-                <img
-                  src={data.background_image}
-                  alt={data.name}
-                  className="w-64 h-36 object-cover rounded"
-                />
-              )}
-            </>
+              </div>
+
+              {/* Details on the right */}
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  {data.name}
+                </h4>
+
+                <div className="space-y-1 mb-3">
+                  {data.released && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Released: {new Date(data.released).getFullYear()}
+                    </p>
+                  )}
+                  {data.rating && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Rating: {data.rating}/5 {data.rating_count && `(${data.rating_count.toLocaleString()} reviews)`}
+                    </p>
+                  )}
+                  {data.metacritic && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Metacritic: {data.metacritic}/100
+                    </p>
+                  )}
+                  {data.esrb_rating && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      ESRB: {data.esrb_rating}
+                    </p>
+                  )}
+                  {data.genres && data.genres.length > 0 && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Genres: {data.genres.slice(0, 3).join(', ')}
+                    </p>
+                  )}
+                  {data.platforms && data.platforms.length > 0 && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Platforms: {Array.isArray(data.platforms) ? data.platforms.slice(0, 4).join(', ') : data.platforms}
+                      {data.platforms.length > 4 && ` +${data.platforms.length - 4} more`}
+                    </p>
+                  )}
+                </div>
+
+                {(data.description || data.description_raw) && (
+                  <div className="text-sm text-gray-700 dark:text-gray-300">
+                    <p className="leading-relaxed">
+                      {data.description || data.description_raw}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           ) : category === 'Podcasts' && data ? (
             <div className="flex gap-4">
               {/* Podcast artwork on the left */}
-              {data.artwork && (
-                <div className="flex-shrink-0">
+              <div className="flex-shrink-0">
+                {data.artwork && (
                   <img
                     src={data.artwork}
                     alt={data.name}
@@ -604,8 +712,22 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                       target.style.display = 'none';
                     }}
                   />
+                )}
+
+                {/* Amazon button under podcast artwork */}
+                <div className="mt-2">
+                  <a
+                    href={`https://music.amazon.com/search/${encodeURIComponent(itemName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-24 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
+                      Buy on Amazon
+                    </div>
+                  </a>
                 </div>
-              )}
+              </div>
 
               {/* Details on the right */}
               <div className="flex-1 min-w-0">
@@ -643,8 +765,8 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           ) : category === 'TV Shows' && data ? (
             <div className="flex gap-4">
               {/* TV Show poster on the left */}
-              {data.poster_path && (
-                <div className="flex-shrink-0">
+              <div className="flex-shrink-0">
+                {data.poster_path && (
                   <img
                     src={`https://image.tmdb.org/t/p/w500${data.poster_path}`}
                     alt={data.name || itemName}
@@ -655,8 +777,22 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                       target.style.display = 'none';
                     }}
                   />
+                )}
+
+                {/* Amazon button under TV show poster */}
+                <div className="mt-2">
+                  <a
+                    href={`https://www.amazon.com/gp/video/search?phrase=${encodeURIComponent(itemName)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-24 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
+                      Buy on Amazon
+                    </div>
+                  </a>
                 </div>
-              )}
+              </div>
 
               {/* Details on the right */}
               <div className="flex-1 min-w-0">
@@ -695,6 +831,18 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
             <div>
               <h4 className="font-semibold text-gray-900 dark:text-white">{data.title || data.name || itemName}</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400">{data.description || `Details for ${itemName} would appear here.`}</p>
+              <div className="mt-3">
+                <a
+                  href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block w-24 hover:opacity-80 transition-opacity"
+                >
+                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
+                    Buy on Amazon
+                  </div>
+                </a>
+              </div>
             </div>
           )}
         </div>
@@ -782,6 +930,33 @@ function WikipediaFallback({ itemName, category }: { itemName: string; category?
         <div className="wiki-placeholder w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded shadow-md flex items-center justify-center text-white font-bold text-lg" style={{display: wikiData.thumbnail ? 'none' : 'flex'}}>
           {itemName.substring(0, 2).toUpperCase()}
         </div>
+
+        {/* Amazon button under cover */}
+        <div className="mt-2">
+          <a
+            href={(() => {
+              const searchTerm = encodeURIComponent(itemName);
+              if (category === 'Music' || category === 'Podcasts') {
+                return `https://music.amazon.com/search/${searchTerm}`;
+              } else if (category === 'TV Shows' || category === 'Movies') {
+                return `https://www.amazon.com/gp/video/search?phrase=${searchTerm}`;
+              } else if (category === 'Books') {
+                return `https://www.amazon.com/s?k=${searchTerm}&i=stripbooks`;
+              } else if (category === 'Games') {
+                return `https://www.amazon.com/s?k=${searchTerm}&i=videogames`;
+              } else {
+                return `https://www.amazon.com/s?k=${searchTerm}`;
+              }
+            })()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-24 hover:opacity-80 transition-opacity"
+          >
+            <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
+              Buy on Amazon
+            </div>
+          </a>
+        </div>
       </div>
 
       {/* Details on the right */}
@@ -807,18 +982,20 @@ function WikipediaFallback({ itemName, category }: { itemName: string; category?
           </p>
         </div>
 
-        {wikiData.url && (
-          <div className="mt-3">
-            <a
-              href={wikiData.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
-            >
-              Read more on Wikipedia →
-            </a>
-          </div>
-        )}
+        <div className="mt-3 space-y-2">
+          {wikiData.url && (
+            <div>
+              <a
+                href={wikiData.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm"
+              >
+                Read more on Wikipedia →
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

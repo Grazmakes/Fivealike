@@ -543,6 +543,32 @@ function ListCard({
         }
       }
 
+      // Use games API for Games category
+      if (list.category === 'Games') {
+        const response = await fetch(`/api/search/games?query=${encodeURIComponent(itemName)}&limit=1`);
+
+        if (response.ok) {
+          const gamesData = await response.json();
+          if (gamesData && gamesData.length > 0) {
+            const gameData = gamesData[0];
+            const result = {
+              type: 'game',
+              name: gameData.name,
+              description: gameData.description || `${gameData.name} is a popular video game.`,
+              image: gameData.background_image,
+              released: gameData.released,
+              rating: gameData.rating,
+              platforms: gameData.platforms,
+              genres: gameData.genres
+            };
+            // Cache the result
+            setTmdbCache(prev => ({ ...prev, [itemName]: result }));
+            setLoadingItems(prev => ({ ...prev, [itemIndex]: false }));
+            return result;
+          }
+        }
+      }
+
       // Fallback to mock artist data (music)
       const artistItem = mockArtistData[itemName];
       if (artistItem) {
@@ -678,7 +704,7 @@ function ListCard({
         <span>{list.category}</span>
       </button>
 
-      
+
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
@@ -872,6 +898,11 @@ function ListCard({
             </div>
             <span>•</span>
             <span>{list.date}</span>
+            {list.isRejected && (
+              <span className="ml-2 text-xs bg-red-600 text-white px-2 py-1 rounded-full">
+                {Math.round((list.downvotes / (list.upvotes + list.downvotes)) * 100)}% ⬇️
+              </span>
+            )}
             {list.twinCount && list.twinCount > 1 && (
               <span
                 className="ml-2 text-xs text-gray-500 dark:text-gray-400 cursor-help inline-flex items-center space-x-1"
@@ -1069,7 +1100,7 @@ function ListCard({
               setExpandedItem(null);
             } else {
               setExpandedItem(index);
-              if ((list.category === 'Movies' || list.category === 'TV Shows' || list.category === 'Music') && !cachedDetails) {
+              if ((list.category === 'Movies' || list.category === 'TV Shows' || list.category === 'Music' || list.category === 'Games') && !cachedDetails) {
                 await getItemDetails(item, index);
               }
             }

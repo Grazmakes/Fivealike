@@ -246,7 +246,7 @@ function HomeContent() {
   // Data State
   const [allLists, setAllLists] = useState<List[]>(mockLists);
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
-  const [followedUsers, setFollowedUsers] = useState(['@musiclover', '@bookworm', '@readingcorner', '@indievibes', '@artlover']);
+  const [followedUsers, setFollowedUsers] = useState(['@musiclover', '@bookworm', '@readingcorner', '@indievibes', '@artlover', '@comedy_central', '@swiftie_forever', '@puzzle_master', '@sci_fi_sage', '@prestige_tv', '@noodle_ninja', '@anime_dreams', '@podcast_addict', '@tvjunkie']);
   
   // Mention Notifications
   const {
@@ -689,15 +689,15 @@ function HomeContent() {
     }
   }, [isLoggedIn, userProfile.hasSeenTutorial, showTutorial, userProfile.id, userProfile.username]);
 
-  // Scroll to top when view changes
+  // Scroll to top when view changes or user logs in
   useEffect(() => {
     const mainContent = document.querySelector('[data-main-content]');
     if (mainContent) {
       mainContent.scrollTo(0, 0);
     }
-  }, [currentView, viewingProfile]);
+  }, [currentView, viewingProfile, isLoggedIn]);
 
-  // Back to top button scroll detection - show when first list is out of view
+  // Back to top button scroll detection - show when first list passes out of view
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
@@ -717,7 +717,7 @@ function HomeContent() {
       const firstList = document.querySelector('[data-list-card]');
       if (firstList) {
         observer.observe(firstList);
-        console.log('Observing first list element');
+        console.log('Observing first list element for back to top button');
       } else {
         console.log('First list element not found');
       }
@@ -727,7 +727,7 @@ function HomeContent() {
       clearTimeout(timeoutId);
       observer.disconnect();
     };
-  }, [currentView]);
+  }, [currentView, isLoggedIn]);
 
   // Handle scroll to top
   const scrollToTop = () => {
@@ -1031,12 +1031,14 @@ function HomeContent() {
 
   // Handle category click - navigate to search with category filter
   const handleCategoryClick = (category: string) => {
+    console.log(`[page.tsx] handleCategoryClick called with: "${category}"`);
     setSelectedCategory(category);
     setCurrentView('discover');
   };
 
   // Handle category selection from sidebar - update filter and switch to discover view
   const handleCategorySelect = (category: string) => {
+    console.log(`[page.tsx] handleCategorySelect called with: "${category}"`);
     setSelectedCategory(category);
     setCurrentView('discover');
   };

@@ -220,10 +220,6 @@ export default function RejectLists({
         {filteredLists.length > 0 ? (
           filteredLists.map(list => (
             <div key={list.id} className="relative">
-              {/* Rejection Badge */}
-              <div className="absolute -top-2 -right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full z-10">
-                {Math.round((list.downvotes / (list.upvotes + list.downvotes)) * 100)}% ⬇️
-              </div>
               <ListCard
                 list={list}
                 itemVotes={itemVotes[list.id.toString()] || {}}
