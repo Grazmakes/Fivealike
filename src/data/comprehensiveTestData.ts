@@ -3564,6 +3564,686 @@ export const comprehensiveTestLists: List[] = [
     ],
     saves: 112,
     isRejected: false
+  },
+  {
+    id: 531,
+    title: 'Cambridge Student Life Essentials',
+    author: '@harvard_mit_life',
+    location: 'Boston',
+    category: 'Books',
+    items: ['Study Spots Near Harvard Square', 'MIT Campus Hidden Gems', 'Porter Square Late Night Eats', 'Central Square Music Venues', 'Davis Square Thrift Shops'],
+    votes: 134,
+    date: '2024-01-16',
+    highFives: 38,
+    description: 'The ultimate guide to student life in Cambridge, Massachusetts.',
+    comments: [
+      { id: 1, user: '@grad_student', content: 'Porter Square Coffee Co is my go-to', time: '4 hours ago', avatar: '📚' }
+    ],
+    saves: 96,
+    isRejected: false
+  },
+  {
+    id: 532,
+    title: 'Boston Brewery Hop Route',
+    author: '@craft_beer_bos',
+    location: 'Boston',
+    category: 'Food',
+    items: ['Samuel Adams Brewery', 'Harpoon Brewery', 'Trillium Brewing', 'Night Shift Brewing', 'Lamplighter Brewing'],
+    votes: 167,
+    date: '2024-01-15',
+    highFives: 49,
+    description: 'Craft beer tour through Boston\'s finest local breweries.',
+    comments: [
+      { id: 1, user: '@beer_enthusiast', content: 'Trillium\'s IPAs are world class', time: '2 hours ago', avatar: '🍺' }
+    ],
+    saves: 128,
+    isRejected: false
+  },
+  {
+    id: 533,
+    title: 'South End Victorian Architecture',
+    author: '@architecture_walk',
+    location: 'Boston',
+    category: 'Art',
+    items: ['Rutland Square Gardens', 'Union Park Historic District', 'Tremont Street Brownstones', 'Washington Street Gallery District', 'Peters Park Community'],
+    votes: 98,
+    date: '2024-01-14',
+    highFives: 27,
+    description: 'Explore Boston\'s most preserved Victorian neighborhood architecture.',
+    comments: [
+      { id: 1, user: '@design_lover', content: 'Union Park is absolutely stunning', time: '6 hours ago', avatar: '🏛️' }
+    ],
+    saves: 74,
+    isRejected: false
+  },
+  {
+    id: 534,
+    title: 'North Shore Boston Day Trips',
+    author: '@coastal_explorer',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Salem Witch Museum', 'Marblehead Harbor', 'Gloucester Fishing Village', 'Newburyport Waterfront', 'Essex Antique Shopping'],
+    votes: 145,
+    date: '2024-01-13',
+    highFives: 41,
+    description: 'Discover the historic coastal towns just north of Boston.',
+    comments: [
+      { id: 1, user: '@history_seeker', content: 'Salem in October is incredible', time: '3 hours ago', avatar: '🎃' }
+    ],
+    saves: 112,
+    isRejected: false
+  },
+  {
+    id: 535,
+    title: 'Boston Marathon Training Routes',
+    author: '@marathon_runner',
+    location: 'Boston',
+    category: 'Sports',
+    items: ['Charles River Esplanade', 'Arnold Arboretum Hills', 'Fresh Pond Loop', 'Blue Hills Reservation', 'Minuteman Bikeway Run'],
+    votes: 189,
+    date: '2024-01-12',
+    highFives: 56,
+    description: 'Train like a champion on Boston\'s best running routes.',
+    comments: [
+      { id: 1, user: '@boston_runner', content: 'Heartbreak Hill training is brutal but worth it', time: '1 hour ago', avatar: '🏃' }
+    ],
+    saves: 143,
+    isRejected: false
+  },
+  {
+    id: 536,
+    title: 'Boston Food Truck Culture',
+    author: '@street_food_bos',
+    location: 'Boston',
+    category: 'Food',
+    items: ['Chicken & Rice Guys', 'Bon Me Vietnamese', 'Roxy\'s Grilled Cheese', 'Moyzilla Asian Fusion', 'Pennypackers Food Truck'],
+    votes: 123,
+    date: '2024-01-11',
+    highFives: 35,
+    description: 'Mobile eats that define Boston\'s street food scene.',
+    comments: [
+      { id: 1, user: '@lunch_hunter', content: 'Chicken & Rice Guys downtown is legendary', time: '5 hours ago', avatar: '🌮' }
+    ],
+    saves: 89,
+    isRejected: false
+  },
+  {
+    id: 537,
+    title: 'Beacon Hill Secret Spots',
+    author: '@beacon_insider',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Hidden Gardens on Pinckney St', 'Louisburg Square Private Park', 'Acorn Street Photo Ops', 'Mount Vernon Street Mansions', 'Charles Street Antique Row'],
+    votes: 156,
+    date: '2024-01-10',
+    highFives: 44,
+    description: 'Discover the exclusive corners of Boston\'s most prestigious neighborhood.',
+    comments: [
+      { id: 1, user: '@old_money', content: 'Louisburg Square is pure elegance', time: '7 hours ago', avatar: '🏘️' }
+    ],
+    saves: 117,
+    isRejected: false
+  },
+  {
+    id: 538,
+    title: 'Boston Underground Music Scene',
+    author: '@indie_boston',
+    location: 'Boston',
+    category: 'Music',
+    items: ['The Sinclair Cambridge', 'Great Scott Allston', 'ONCE Ballroom Somerville', 'Middle East Downstairs', 'Club Passim Folk'],
+    votes: 142,
+    date: '2024-01-09',
+    highFives: 39,
+    description: 'Where Boston\'s next big bands cut their teeth.',
+    comments: [
+      { id: 1, user: '@music_scout', content: 'Great Scott has launched so many careers', time: '4 hours ago', avatar: '🎸' }
+    ],
+    saves: 104,
+    isRejected: false
+  },
+  {
+    id: 539,
+    title: 'Jamaica Plain Hipster Guide',
+    author: '@jp_local',
+    location: 'Boston',
+    category: 'Art',
+    items: ['Centre Street Murals', 'Spontaneous Celebrations Gallery', 'JP Licks Ice Cream', 'City Feed Vintage Shopping', 'Doyle\'s Tavern History'],
+    votes: 118,
+    date: '2024-01-08',
+    highFives: 32,
+    description: 'Explore Boston\'s most eclectic and artistic neighborhood.',
+    comments: [
+      { id: 1, user: '@alternative_life', content: 'JP has the best community vibe', time: '6 hours ago', avatar: '🎨' }
+    ],
+    saves: 85,
+    isRejected: false
+  },
+  {
+    id: 540,
+    title: 'Boston Waterfront Adventures',
+    author: '@harbor_life',
+    location: 'Boston',
+    category: 'Sports',
+    items: ['Kayaking from Community Boating', 'Dragon Boat Racing', 'Stand-up Paddleboarding', 'Harbor Islands Camping', 'Sailing Lessons at Courageous'],
+    votes: 134,
+    date: '2024-01-07',
+    highFives: 37,
+    description: 'Get on the water and see Boston from a new perspective.',
+    comments: [
+      { id: 1, user: '@water_sports', content: 'Community Boating is such a steal', time: '2 hours ago', avatar: '⛵' }
+    ],
+    saves: 98,
+    isRejected: false
+  },
+  {
+    id: 541,
+    title: 'Boston Pizza Quest',
+    author: '@pizza_hunter_bos',
+    location: 'Boston',
+    category: 'Food',
+    items: ['Santarpio\'s East Boston', 'Regina\'s North End', 'Ernesto\'s North End', 'Bianchi\'s Roxbury', 'Monte\'s East Boston'],
+    votes: 178,
+    date: '2024-01-06',
+    highFives: 53,
+    description: 'The definitive guide to Boston\'s best pizza joints.',
+    comments: [
+      { id: 1, user: '@pizza_expert', content: 'Santarpio\'s is worth the trip to Eastie', time: '3 hours ago', avatar: '🍕' }
+    ],
+    saves: 136,
+    isRejected: false
+  },
+  {
+    id: 542,
+    title: 'Cambridge Bookstore Crawl',
+    author: '@book_lover_cambridge',
+    location: 'Boston',
+    category: 'Books',
+    items: ['Harvard Book Store', 'Porter Square Books', 'Pandemonium Science Fiction', 'Grolier Poetry Book Shop', 'MIT Press Bookstore'],
+    votes: 145,
+    date: '2024-01-05',
+    highFives: 42,
+    description: 'Literary treasures in the heart of academic Cambridge.',
+    comments: [
+      { id: 1, user: '@bibliophile', content: 'Grolier is a poetry lover\'s paradise', time: '5 hours ago', avatar: '📖' }
+    ],
+    saves: 109,
+    isRejected: false
+  },
+  {
+    id: 543,
+    title: 'Boston Irish Heritage Trail',
+    author: '@irish_boston',
+    location: 'Boston',
+    category: 'History',
+    items: ['Irish Heritage Trail Markers', 'Kennedy Presidential Library', 'Boston Irish Famine Memorial', 'St. Patrick\'s Cathedral', 'South Boston Irish Cultural Centre'],
+    votes: 123,
+    date: '2024-01-04',
+    highFives: 34,
+    description: 'Trace the rich Irish-American history throughout Boston.',
+    comments: [
+      { id: 1, user: '@heritage_walker', content: 'The Famine Memorial is deeply moving', time: '4 hours ago', avatar: '☘️' }
+    ],
+    saves: 91,
+    isRejected: false
+  },
+  {
+    id: 544,
+    title: 'Somerville Squares Exploration',
+    author: '@somerville_guide',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Davis Square Scene', 'Porter Square Shopping', 'Union Square Restaurants', 'Teele Square Hidden Gems', 'Ball Square Local Life'],
+    votes: 112,
+    date: '2024-01-03',
+    highFives: 29,
+    description: 'Discover the unique character of each Somerville square.',
+    comments: [
+      { id: 1, user: '@squares_fan', content: 'Union Square is having such a renaissance', time: '6 hours ago', avatar: '🏙️' }
+    ],
+    saves: 83,
+    isRejected: false
+  },
+  {
+    id: 545,
+    title: 'Boston Rooftop Views',
+    author: '@skyline_seeker',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Skywalk Observatory', 'Top of the Hub Restaurant', 'Legal Harborside Rooftop', 'Prudential Center Top Floor', 'Marriott Copley View'],
+    votes: 167,
+    date: '2024-01-02',
+    highFives: 48,
+    description: 'See Boston from above at these stunning viewpoints.',
+    comments: [
+      { id: 1, user: '@height_lover', content: 'Top of the Hub at sunset is magical', time: '1 hour ago', avatar: '🌆' }
+    ],
+    saves: 124,
+    isRejected: false
+  },
+  {
+    id: 546,
+    title: 'Boston Marathon Spectator Guide',
+    author: '@marathon_fan',
+    location: 'Boston',
+    category: 'Sports',
+    items: ['Heartbreak Hill Cheering', 'Wellesley College Scream Tunnel', 'Finish Line on Boylston', 'Newton Hills Strategy', 'Brookline Viewing Spots'],
+    votes: 198,
+    date: '2024-01-01',
+    highFives: 62,
+    description: 'The best spots to cheer on Marathon Monday runners.',
+    comments: [
+      { id: 1, user: '@marathon_mom', content: 'Wellesley girls are the absolute best', time: '2 hours ago', avatar: '🏃‍♀️' }
+    ],
+    saves: 151,
+    isRejected: false
+  },
+  {
+    id: 547,
+    title: 'Boston Seafood Institution Tour',
+    author: '@lobster_roll_expert',
+    location: 'Boston',
+    category: 'Food',
+    items: ['Legal Sea Foods Original', 'Union Oyster House Historic', 'Neptune Oyster North End', 'Row 34 Fort Point', 'Island Creek Oyster Bar'],
+    votes: 189,
+    date: '2023-12-31',
+    highFives: 57,
+    description: 'Where Bostonians go for the freshest seafood in the city.',
+    comments: [
+      { id: 1, user: '@seafood_snob', content: 'Neptune Oyster is worth the wait', time: '3 hours ago', avatar: '🦞' }
+    ],
+    saves: 142,
+    isRejected: false
+  },
+  {
+    id: 548,
+    title: 'Boston College Sports Experience',
+    author: '@eagle_pride',
+    location: 'Boston',
+    category: 'Sports',
+    items: ['BC Eagles Hockey at Conte Forum', 'Alumni Stadium Football Games', 'Beanpot Tournament', 'Boston College Basketball', 'Tailgating at Mod Lot'],
+    votes: 156,
+    date: '2023-12-30',
+    highFives: 44,
+    description: 'Experience the passion of Boston College athletics.',
+    comments: [
+      { id: 1, user: '@bc_alum', content: 'Hockey East tournaments are incredible', time: '5 hours ago', avatar: '🏒' }
+    ],
+    saves: 118,
+    isRejected: false
+  },
+  {
+    id: 549,
+    title: 'Boston Common Four Seasons',
+    author: '@common_walker',
+    location: 'Boston',
+    category: 'Travel',
+    items: ['Spring Cherry Blossoms', 'Summer Swan Boat Rides', 'Fall Foliage Walking', 'Winter Ice Skating', 'Year-round People Watching'],
+    votes: 143,
+    date: '2023-12-29',
+    highFives: 40,
+    description: 'America\'s oldest public park beautiful in every season.',
+    comments: [
+      { id: 1, user: '@seasons_lover', content: 'Cherry blossoms in spring are breathtaking', time: '4 hours ago', avatar: '🌸' }
+    ],
+    saves: 107,
+    isRejected: false
+  },
+  {
+    id: 550,
+    title: 'Boston Innovation District',
+    author: '@seaport_tech',
+    location: 'Boston',
+    category: 'Technology',
+    items: ['District Hall Startup Events', 'Seaport World Trade Center', 'Innovation and Design Building', 'Boston Convention Center Tech Shows', 'Pier 4 Coworking Spaces'],
+    votes: 134,
+    date: '2023-12-28',
+    highFives: 36,
+    description: 'Where Boston\'s tech future is being built on the waterfront.',
+    comments: [
+      { id: 1, user: '@startup_founder', content: 'District Hall networking events are gold', time: '6 hours ago', avatar: '💻' }
+    ],
+    saves: 98,
+    isRejected: false
+  },
+  {
+    id: 551,
+    title: 'San Francisco Michelin Star Chase',
+    author: '@michelin_hunter_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Atelier Crenn 3-Star', 'Benu Contemporary Asian', 'Quince Italian Fine Dining', 'State Bird Provisions', 'Californios Mexican Innovation'],
+    votes: 234,
+    date: '2023-12-27',
+    highFives: 78,
+    description: 'San Francisco\'s most prestigious culinary destinations.',
+    comments: [
+      { id: 1, user: '@fine_dining', content: 'Atelier Crenn is pure artistry', time: '2 hours ago', avatar: '⭐' }
+    ],
+    saves: 187,
+    isRejected: false
+  },
+  {
+    id: 552,
+    title: 'Silicon Valley Tech Campus Tours',
+    author: '@tech_tourist',
+    location: 'San Francisco',
+    category: 'Technology',
+    items: ['Apple Park Visitor Center', 'Googleplex Mountain View', 'Facebook Menlo Park', 'Tesla Fremont Factory', 'Oracle Redwood City'],
+    votes: 198,
+    date: '2023-12-26',
+    highFives: 64,
+    description: 'Visit the headquarters of the world\'s biggest tech companies.',
+    comments: [
+      { id: 1, user: '@tech_pilgrim', content: 'Apple Park is like a spaceship landed', time: '4 hours ago', avatar: '🚀' }
+    ],
+    saves: 156,
+    isRejected: false
+  },
+  {
+    id: 553,
+    title: 'Marin County Nature Escapes',
+    author: '@marin_explorer',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Muir Woods Redwood Forest', 'Mount Tamalpais Hiking', 'Point Reyes Lighthouse', 'Stinson Beach Relaxation', 'Sausalito Houseboats'],
+    votes: 176,
+    date: '2023-12-25',
+    highFives: 52,
+    description: 'Natural wonders just across the Golden Gate Bridge.',
+    comments: [
+      { id: 1, user: '@nature_escape', content: 'Muir Woods feels like another world', time: '3 hours ago', avatar: '🌲' }
+    ],
+    saves: 134,
+    isRejected: false
+  },
+  {
+    id: 554,
+    title: 'SF Street Art Mission District',
+    author: '@mural_walker_sf',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['24th Street Murals', 'Clarion Alley Collective', 'Women\'s Building Facade', 'Balmy Alley Art Walk', 'Mission Cultural Center'],
+    votes: 165,
+    date: '2023-12-24',
+    highFives: 47,
+    description: 'The world\'s largest outdoor gallery in the Mission.',
+    comments: [
+      { id: 1, user: '@street_art_fan', content: '24th Street is constantly evolving', time: '5 hours ago', avatar: '🎨' }
+    ],
+    saves: 123,
+    isRejected: false
+  },
+  {
+    id: 555,
+    title: 'Napa Valley Wine Day Trips',
+    author: '@wine_country_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Castello di Amorosa Castle', 'Schramsberg Sparkling Wine', 'Opus One Bordeaux Blend', 'Inglenook Historic Estate', 'Oxbow Public Market'],
+    votes: 201,
+    date: '2023-12-23',
+    highFives: 67,
+    description: 'World-class wineries just an hour from San Francisco.',
+    comments: [
+      { id: 1, user: '@wine_enthusiast', content: 'Castello di Amorosa is like Tuscany', time: '1 hour ago', avatar: '🍷' }
+    ],
+    saves: 162,
+    isRejected: false
+  },
+  {
+    id: 556,
+    title: 'Pacific Heights Mansion Tours',
+    author: '@architecture_sf_elite',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['Broadway Billionaire Row', 'Spreckels Mansion Views', 'Lyon Street Steps Architecture', 'Presidio Heights Estates', 'Fillmore Street Luxury Shopping'],
+    votes: 143,
+    date: '2023-12-22',
+    highFives: 39,
+    description: 'Where San Francisco\'s ultra-wealthy live in architectural splendor.',
+    comments: [
+      { id: 1, user: '@mansion_admirer', content: 'Broadway mansions are absolutely stunning', time: '6 hours ago', avatar: '🏛️' }
+    ],
+    saves: 108,
+    isRejected: false
+  },
+  {
+    id: 557,
+    title: 'SF Food Truck Revolution',
+    author: '@mobile_eats_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Off the Grid Markets', 'SoMa StrEat Food Park', 'Chairman Bao Truck', 'Curry Up Now Indian', 'The Grilled Cheese Guy'],
+    votes: 134,
+    date: '2023-12-21',
+    highFives: 36,
+    description: 'Gourmet cuisine on wheels throughout San Francisco.',
+    comments: [
+      { id: 1, user: '@street_food_lover', content: 'Off the Grid Friday nights are epic', time: '4 hours ago', avatar: '🚚' }
+    ],
+    saves: 99,
+    isRejected: false
+  },
+  {
+    id: 558,
+    title: 'Fisherman\'s Wharf Beyond Tourists',
+    author: '@wharf_local',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['Hyde Street Pier Historic Ships', 'Musée Mécanique Antique Arcade', 'Boudin Bakery Sourdough Demo', 'Sea Lion Viewing at Pier 39', 'Crab Stands Early Morning'],
+    votes: 156,
+    date: '2023-12-20',
+    highFives: 44,
+    description: 'Find the authentic experiences hidden among the tourist traps.',
+    comments: [
+      { id: 1, user: '@authentic_sf', content: 'Early morning crab stands are the real deal', time: '7 hours ago', avatar: '🦀' }
+    ],
+    saves: 117,
+    isRejected: false
+  },
+  {
+    id: 559,
+    title: 'Golden Gate Bridge Photo Spots',
+    author: '@bridge_photographer',
+    location: 'San Francisco',
+    category: 'Photography',
+    items: ['Battery Spencer Overlook', 'Crissy Field Beach Level', 'Marin Headlands Vista Point', 'Marshall\'s Beach Sunset', 'Hawk Hill Best Overall'],
+    votes: 187,
+    date: '2023-12-19',
+    highFives: 56,
+    description: 'Capture the perfect shot of the world\'s most photogenic bridge.',
+    comments: [
+      { id: 1, user: '@photo_hunter', content: 'Hawk Hill at sunrise is unbeatable', time: '2 hours ago', avatar: '📸' }
+    ],
+    saves: 143,
+    isRejected: false
+  },
+  {
+    id: 560,
+    title: 'SF Jazz Scene Deep Dive',
+    author: '@jazz_sf_insider',
+    location: 'San Francisco',
+    category: 'Music',
+    items: ['SFJAZZ Center Performances', 'The Fillmore Historic Jazz', 'Yoshi\'s Oakland Jazz Club', 'Black Cat Late Night Sets', 'Boom Boom Room Blues'],
+    votes: 123,
+    date: '2023-12-18',
+    highFives: 33,
+    description: 'Where jazz legends are born and legends return to play.',
+    comments: [
+      { id: 1, user: '@jazz_lover', content: 'SFJAZZ Center acoustics are perfect', time: '5 hours ago', avatar: '🎺' }
+    ],
+    saves: 92,
+    isRejected: false
+  },
+  {
+    id: 561,
+    title: 'Castro District LGBTQ+ History',
+    author: '@rainbow_historian',
+    location: 'San Francisco',
+    category: 'History',
+    items: ['Harvey Milk Plaza', 'Castro Theatre Landmark', 'Twin Peaks Tavern First', 'AIDS Memorial Grove', 'GLBT Historical Society'],
+    votes: 145,
+    date: '2023-12-17',
+    highFives: 41,
+    description: 'The birthplace of the modern LGBTQ+ rights movement.',
+    comments: [
+      { id: 1, user: '@pride_history', content: 'Harvey Milk\'s legacy lives on', time: '3 hours ago', avatar: '🏳️‍🌈' }
+    ],
+    saves: 109,
+    isRejected: false
+  },
+  {
+    id: 562,
+    title: 'SF Startup Ecosystem Tour',
+    author: '@startup_scene_sf',
+    location: 'San Francisco',
+    category: 'Technology',
+    items: ['Y Combinator Demo Days', 'SOMA Coworking Spaces', 'TechCrunch Disrupt SF', 'Founder Meetups at Galvanize', 'Sand Hill Road VC Offices'],
+    votes: 167,
+    date: '2023-12-16',
+    highFives: 48,
+    description: 'Where billion-dollar companies begin as two people in a garage.',
+    comments: [
+      { id: 1, user: '@entrepreneur', content: 'Y Combinator is startup mecca', time: '4 hours ago', avatar: '💡' }
+    ],
+    saves: 126,
+    isRejected: false
+  },
+  {
+    id: 563,
+    title: 'Alcatraz Island Deep Exploration',
+    author: '@island_historian',
+    location: 'San Francisco',
+    category: 'History',
+    items: ['Main Cellhouse Audio Tour', 'Recreation Yard Stories', 'Dining Hall Recreations', 'Hospital Wing Mysteries', 'Escape Attempt Routes'],
+    votes: 198,
+    date: '2023-12-15',
+    highFives: 62,
+    description: 'Uncover every secret of America\'s most infamous prison.',
+    comments: [
+      { id: 1, user: '@prison_history', content: 'The audio tour gives me chills every time', time: '6 hours ago', avatar: '🏝️' }
+    ],
+    saves: 152,
+    isRejected: false
+  },
+  {
+    id: 564,
+    title: 'SF Underground Speakeasy Hunt',
+    author: '@cocktail_detective',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Bourbon & Branch Hidden Bar', 'Wilson & Wilson Secret Entrance', 'Treasury Lounge Speakeasy', 'Comstock Saloon Historic', 'Smuggler\'s Cove Tiki Underground'],
+    votes: 178,
+    date: '2023-12-14',
+    highFives: 54,
+    description: 'Secret bars and hidden cocktail lounges throughout the city.',
+    comments: [
+      { id: 1, user: '@mixology_fan', content: 'Bourbon & Branch requires a password!', time: '1 hour ago', avatar: '🍸' }
+    ],
+    saves: 138,
+    isRejected: false
+  },
+  {
+    id: 565,
+    title: 'Twin Peaks Hiking Adventures',
+    author: '@peak_climber_sf',
+    location: 'San Francisco',
+    category: 'Sports',
+    items: ['Twin Peaks Summit Hike', 'Tank Hill Secret Views', 'Mount Davidson Cross', 'Bernal Heights Park Climb', 'Corona Heights Rock Outcrop'],
+    votes: 156,
+    date: '2023-12-13',
+    highFives: 44,
+    description: 'Conquer San Francisco\'s highest points for stunning 360° views.',
+    comments: [
+      { id: 1, user: '@hill_runner', content: 'Tank Hill is the hidden gem', time: '5 hours ago', avatar: '⛰️' }
+    ],
+    saves: 119,
+    isRejected: false
+  },
+  {
+    id: 566,
+    title: 'SF Giants Baseball Culture',
+    author: '@giants_superfan',
+    location: 'San Francisco',
+    category: 'Sports',
+    items: ['Oracle Park Garlic Fries', 'McCovey Cove Kayaking', 'Giants Dugout Store Shopping', 'Pregame at MoMo\'s', 'World Series Trophy Room'],
+    votes: 189,
+    date: '2023-12-12',
+    highFives: 58,
+    description: 'Everything you need to know about San Francisco Giants fandom.',
+    comments: [
+      { id: 1, user: '@orange_friday', content: 'McCovey Cove splash hits are magical', time: '2 hours ago', avatar: '⚾' }
+    ],
+    saves: 144,
+    isRejected: false
+  },
+  {
+    id: 567,
+    title: 'Chinatown Authentic Experiences',
+    author: '@chinatown_insider_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Portsmouth Square Tai Chi', 'Grant Avenue Herb Shops', 'Stockton Street Markets', 'Golden Dragon Parade Route', 'Old St. Mary\'s Cathedral'],
+    votes: 167,
+    date: '2023-12-11',
+    highFives: 47,
+    description: 'Beyond the tourist shops: real Chinatown culture and community.',
+    comments: [
+      { id: 1, user: '@cultural_explorer', content: 'Morning tai chi in Portsmouth Square is zen', time: '3 hours ago', avatar: '🏮' }
+    ],
+    saves: 128,
+    isRejected: false
+  },
+  {
+    id: 568,
+    title: 'SF Museum Mile Walking Tour',
+    author: '@museum_curator_sf',
+    location: 'San Francisco',
+    category: 'Art',
+    items: ['SFMOMA Contemporary Collection', 'de Young Museum Art', 'Legion of Honor European', 'Asian Art Museum Treasures', 'California Academy Sciences'],
+    votes: 134,
+    date: '2023-12-10',
+    highFives: 36,
+    description: 'World-class art and culture within walking distance.',
+    comments: [
+      { id: 1, user: '@art_enthusiast', content: 'SFMOMA\'s photography collection is incredible', time: '4 hours ago', avatar: '🖼️' }
+    ],
+    saves: 102,
+    isRejected: false
+  },
+  {
+    id: 569,
+    title: 'SF Coffee Roastery Revolution',
+    author: '@coffee_connoisseur_sf',
+    location: 'San Francisco',
+    category: 'Food',
+    items: ['Blue Bottle Coffee Origins', 'Ritual Coffee Roasters Mission', 'Sightglass Coffee SOMA', 'Four Barrel Coffee Mission', 'Andytown Coffee Sunset'],
+    votes: 145,
+    date: '2023-12-09',
+    highFives: 41,
+    description: 'Where third-wave coffee culture was born and perfected.',
+    comments: [
+      { id: 1, user: '@espresso_expert', content: 'Blue Bottle changed coffee forever', time: '6 hours ago', avatar: '☕' }
+    ],
+    saves: 111,
+    isRejected: false
+  },
+  {
+    id: 570,
+    title: 'Golden Gate Park Hidden Gems',
+    author: '@park_secret_keeper',
+    location: 'San Francisco',
+    category: 'Travel',
+    items: ['AIDS Memorial Grove Quiet Reflection', 'Buffalo Paddock Bison Viewing', 'Polo Fields Weekend Matches', 'Rose Garden Seasonal Blooms', 'Windmill Dutch Architecture'],
+    votes: 156,
+    date: '2023-12-08',
+    highFives: 44,
+    description: 'Discover the lesser-known corners of San Francisco\'s greatest park.',
+    comments: [
+      { id: 1, user: '@park_wanderer', content: 'The AIDS Memorial Grove is deeply moving', time: '7 hours ago', avatar: '🌳' }
+    ],
+    saves: 118,
+    isRejected: false
   }
 ];
 

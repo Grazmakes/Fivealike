@@ -397,7 +397,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                   className="block w-24 hover:opacity-80 transition-opacity"
                 >
                   <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
-                    Buy on Amazon
+                    Try on Amazon
                   </div>
                 </a>
               </div>
@@ -466,7 +466,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                     className="block w-24 hover:opacity-80 transition-opacity"
                   >
                     <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
-                      Buy on Amazon
+                      Try on Amazon
                     </div>
                   </a>
                 </div>
@@ -553,7 +553,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                     className="block w-24 hover:opacity-80 transition-opacity"
                   >
                     <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
-                      Buy on Amazon
+                      Try on Amazon
                     </div>
                   </a>
                 </div>
@@ -642,7 +642,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                     className="block w-32 hover:opacity-80 transition-opacity"
                   >
                     <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
-                      Buy on Amazon
+                      Try on Amazon
                     </div>
                   </a>
                 </div>
@@ -723,7 +723,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                     className="block w-24 hover:opacity-80 transition-opacity"
                   >
                     <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
-                      Buy on Amazon
+                      Try on Amazon
                     </div>
                   </a>
                 </div>
@@ -788,7 +788,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                     className="block w-24 hover:opacity-80 transition-opacity"
                   >
                     <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
-                      Buy on Amazon
+                      Try on Amazon
                     </div>
                   </a>
                 </div>
@@ -839,7 +839,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
                   className="inline-block w-24 hover:opacity-80 transition-opacity"
                 >
                   <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
-                    Buy on Amazon
+                    Try on Amazon
                   </div>
                 </a>
               </div>
@@ -953,7 +953,7 @@ function WikipediaFallback({ itemName, category }: { itemName: string; category?
             className="block w-24 hover:opacity-80 transition-opacity"
           >
             <div className="bg-yellow-500 text-white font-semibold py-1.5 px-2 rounded text-center text-xs">
-              Buy on Amazon
+              Try on Amazon
             </div>
           </a>
         </div>
