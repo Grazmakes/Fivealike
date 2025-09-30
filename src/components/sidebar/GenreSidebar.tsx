@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { categories, categoryEmojis } from '@/data/mockData';
+import { getCategorySwatch, getCategoryText } from '@/utils/categoryColors';
 import { List } from '@/types';
 
 interface GenreSidebarProps {
@@ -55,21 +56,26 @@ export default function GenreSidebar({
               {categories.map((category) => {
                 const listCount = getListCount(category);
                 const isSelected = selectedCategory === category;
-                
+                const swatch = getCategorySwatch(category);
+                console.log(`Category: ${category}, Swatch: ${swatch}`);
+
                 return (
                   <button
                     key={category}
                     onClick={() => onCategorySelect(category)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
-                      isSelected 
-                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300' 
+                    className={`group w-full flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
+                      isSelected
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
                         : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
-                      <span className="text-lg">
-                        {categoryEmojis[category] || '📝'}
-                      </span>
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-4 h-4 rounded-full ${getCategorySwatch(category)} border-2 border-gray-300 transition-all duration-200 group-hover:scale-125 group-hover:shadow-lg`}></div>
+                        <span className="text-lg">
+                          {categoryEmojis[category] || '📝'}
+                        </span>
+                      </div>
                       <span className="font-medium text-sm">
                         {category}
                       </span>

@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { mockArtistData } from '@/data/mockData';
 import { artistFallbacks } from '@/data/artistFallbacks';
 import { getBookFallback } from '@/data/bookFallbacks';
+import { getCategorySwatch, getCategoryText } from '@/utils/categoryColors';
 
 interface SimpleItemDetailsProps {
   itemName: string;
@@ -107,6 +108,20 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
         console.log(`[SimpleItemDetails] Fetching data for "${itemName}" in category "${category}"`);
         console.log(`[SimpleItemDetails] Category type:`, typeof category);
         console.log(`[SimpleItemDetails] Category exact value:`, JSON.stringify(category));
+
+        // Categories that should use Wikipedia fallback for rich content
+        const wikipediaCategories = [
+          'Travel', 'Sports', 'Technology', 'Food', 'Art', 'Fashion', 'Photography',
+          'Fitness', 'Science', 'History', 'Politics', 'Comedy', 'Horror', 'Romance',
+          'Adventure', 'Board Games', 'Health', 'Relationships', 'Business', 'Education',
+          'Transportation', 'Pets', 'Environment', 'Social', 'Shopping', 'Work'
+        ];
+
+        if (wikipediaCategories.includes(category)) {
+          console.log(`[SimpleItemDetails] ${category} category detected - using Wikipedia fallback for rich content`);
+          setData(null); // This will trigger WikipediaFallback component
+          return;
+        }
 
         if (category === 'Books') {
           const bookFallback = getBookFallback(itemName);
@@ -314,6 +329,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           }
         } else {
           // If no specific category handler, set data to null to trigger Wikipedia fallback
+          console.log('[SimpleItemDetails] Unhandled category:', category, '- using Wikipedia fallback');
           setData(null);
         }
       } catch (err) {
@@ -362,44 +378,48 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
           {category === 'Books' && data.volumeInfo ? (
             <div className="flex gap-4">
               {/* Book cover on the left */}
-              {(() => {
-                const thumbnail = data.volumeInfo.imageLinks?.thumbnail;
-                if (!thumbnail) return null;
-                return (
-                <div className="flex-shrink-0">
-                  <img
-                    src={thumbnail}
-                    alt={data.volumeInfo.title}
-                    className="w-24 h-36 object-cover rounded shadow-md"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      console.log('Book cover failed to load:', target.src);
-                      target.style.display = 'none';
-                      const placeholder = target.parentElement?.querySelector('.book-placeholder');
-                      if (placeholder) {
-                        (placeholder as HTMLElement).style.display = 'flex';
-                      }
-                    }}
-                  />
-                </div>
-                );
-              })()}
-              <div className="book-placeholder w-24 h-36 bg-gradient-to-br from-slate-400 to-slate-600 rounded shadow-md flex items-center justify-center text-white font-bold text-lg" style={{ display: data.volumeInfo.imageLinks?.thumbnail ? 'none' : 'flex' }}>
-                {data.volumeInfo.title.substring(0, 2).toUpperCase()}
-              </div>
+              <div className="flex-shrink-0">
+                {(() => {
+                  const thumbnail = data.volumeInfo.imageLinks?.thumbnail;
+                  if (thumbnail) {
+                    return (
+                      <img
+                        src={thumbnail}
+                        alt={data.volumeInfo.title}
+                        className="w-24 h-36 object-cover rounded shadow-md"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          console.log('Book cover failed to load:', target.src);
+                          target.style.display = 'none';
+                          const placeholder = target.parentElement?.querySelector('.book-placeholder');
+                          if (placeholder) {
+                            (placeholder as HTMLElement).style.display = 'flex';
+                          }
+                        }}
+                      />
+                    );
+                  } else {
+                    return (
+                      <div className="book-placeholder w-24 h-36 bg-gradient-to-br from-slate-400 to-slate-600 rounded shadow-md flex items-center justify-center text-white font-bold text-lg">
+                        {data.volumeInfo.title.substring(0, 2).toUpperCase()}
+                      </div>
+                    );
+                  }
+                })()}
 
-              {/* Amazon button under cover */}
-              <div className="mt-2">
-                <a
-                  href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}&i=stripbooks`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-24 hover:opacity-80 transition-opacity"
-                >
-                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
-                    Try on Amazon
-                  </div>
-                </a>
+                {/* Amazon button under cover */}
+                <div className="mt-2">
+                  <a
+                    href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}&i=stripbooks`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-24 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
+                      Try on Amazon
+                    </div>
+                  </a>
+                </div>
               </div>
 
               {/* Details on the right */}
@@ -970,9 +990,15 @@ function WikipediaFallback({ itemName, category }: { itemName: string; category?
             Source: Wikipedia
           </p>
           {category && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Category: {category}
-            </p>
+            <div className="group flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+              <span>Category:</span>
+              <div className="flex items-center space-x-2">
+                <div className={`w-3 h-3 rounded-full ${getCategorySwatch(category)} transition-all duration-200 group-hover:scale-125 group-hover:shadow-lg`}></div>
+                <span className={`font-medium ${getCategoryText(category)} group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors`}>
+                  {category}
+                </span>
+              </div>
+            </div>
           )}
         </div>
 
