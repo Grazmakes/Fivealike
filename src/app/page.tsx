@@ -44,8 +44,8 @@ function HomeContent() {
   // Real-time votes context
   const { broadcastVote, getVoteUpdate } = useRealTimeVotesContext();
   
-  // Auth State
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Auth State - TEMPORARILY BYPASSED FOR DEMO
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   // UI State
   const [currentView, setCurrentView] = useState<ViewType>('home');
