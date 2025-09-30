@@ -22,20 +22,68 @@ export async function GET(request: NextRequest) {
 
         if (response.ok) {
           const data = await response.json();
-          const games = (data.results || []).map((game: any) => ({
-            id: game.id,
-            name: game.name,
-            description: game.description_raw || `${game.name} is a popular video game with a rating of ${game.rating}/5.`,
-            background_image: game.background_image,
-            released: game.released,
-            rating: game.rating,
-            rating_count: game.ratings_count,
-            platforms: game.platforms?.map((p: any) => p.platform.name),
-            genres: game.genres?.map((g: any) => g.name),
-            stores: game.stores?.map((s: any) => s.store.name)
-          }));
 
-          return NextResponse.json(games);
+          // Get detailed information for each game
+          const gamesWithDetails = await Promise.all(
+            (data.results || []).slice(0, Math.min(limit, 5)).map(async (game: any) => {
+              try {
+                // Fetch detailed game information
+                const detailResponse = await fetch(`https://api.rawg.io/api/games/${game.id}?key=${rawgApiKey}`, {
+                  headers: {
+                    'User-Agent': 'Five Alike App/1.0'
+                  }
+                });
+
+                let description = `${game.name} is a popular video game with a rating of ${game.rating}/5.`;
+
+                if (detailResponse.ok) {
+                  const detailData = await detailResponse.json();
+                  // Use the detailed description if available
+                  description = detailData.description_raw || detailData.description || description;
+
+                  // Clean up HTML tags if present
+                  description = description.replace(/<[^>]*>/g, '').trim();
+
+                  // Limit description length
+                  if (description.length > 500) {
+                    description = description.substring(0, 500) + '...';
+                  }
+                }
+
+                return {
+                  id: game.id,
+                  name: game.name,
+                  description: description,
+                  background_image: game.background_image,
+                  released: game.released,
+                  rating: game.rating,
+                  rating_count: game.ratings_count,
+                  platforms: game.platforms?.map((p: any) => p.platform.name) || [],
+                  genres: game.genres?.map((g: any) => g.name) || [],
+                  stores: game.stores?.map((s: any) => s.store.name) || [],
+                  metacritic: game.metacritic,
+                  esrb_rating: game.esrb_rating?.name
+                };
+              } catch (detailError) {
+                console.error(`Error fetching details for game ${game.id}:`, detailError);
+                // Return basic info if detail fetch fails
+                return {
+                  id: game.id,
+                  name: game.name,
+                  description: `${game.name} is a popular video game with a rating of ${game.rating}/5.`,
+                  background_image: game.background_image,
+                  released: game.released,
+                  rating: game.rating,
+                  rating_count: game.ratings_count,
+                  platforms: game.platforms?.map((p: any) => p.platform.name) || [],
+                  genres: game.genres?.map((g: any) => g.name) || [],
+                  stores: game.stores?.map((s: any) => s.store.name) || []
+                };
+              }
+            })
+          );
+
+          return NextResponse.json(gamesWithDetails);
         }
       } catch (error) {
         console.error('RAWG API error:', error);

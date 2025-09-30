@@ -103,9 +103,13 @@ export default function UnifiedDiscovery({
 
   // Auto-switch to search tab when a category is selected
   const handleCategorySelect = (category: string) => {
+    console.log(`[UnifiedDiscovery] handleCategorySelect called with: "${category}"`);
     setSelectedTab('search');
     if (onCategorySelect) {
+      console.log(`[UnifiedDiscovery] Calling parent onCategorySelect with: "${category}"`);
       onCategorySelect(category);
+    } else {
+      console.log(`[UnifiedDiscovery] No onCategorySelect prop provided!`);
     }
   };
 

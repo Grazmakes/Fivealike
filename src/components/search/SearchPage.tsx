@@ -72,9 +72,9 @@ export default function SearchPage({
 
   // Update selectedCategory when initialCategory changes
   useEffect(() => {
-    console.log('SearchPage: initialCategory changed from', selectedCategory, 'to', initialCategory);
+    console.log(`[SearchPage] initialCategory: "${initialCategory}", searchSettings.category: "${searchSettings?.category}", selectedCategory: "${selectedCategory}"`);
     // Note: selectedCategory is derived from searchSettings or initialCategory, no need to set it
-  }, [initialCategory, selectedCategory]);
+  }, [initialCategory, selectedCategory, searchSettings]);
 
   // Clear forceRandomList when user starts typing or selects category
   useEffect(() => {
@@ -119,24 +119,28 @@ export default function SearchPage({
 
       // Apply category filter
       if (selectedCategory) {
+        console.log(`[SearchPage] Filtering for category: "${selectedCategory}"`);
+        console.log(`[SearchPage] Available categories in data:`, [...new Set(allLists.map(list => list.category))]);
+        console.log(`[SearchPage] Board Games lists:`, allLists.filter(list => list.category === 'Board Games').length);
         results = results.filter(list => list.category === selectedCategory);
+        console.log(`[SearchPage] Results after category filter: ${results.length}`);
       }
 
-      // Apply advanced filters from search settings
-      if (searchSettings?.showRecommended) {
+      // Apply advanced filters from search settings (only when actively searching, not browsing)
+      if (activeQuery && searchSettings?.showRecommended) {
         results = results.filter(list => list.votes >= 10);
       }
 
-      if (searchSettings?.showPopular) {
+      if (activeQuery && searchSettings?.showPopular) {
         results = results.filter(list => list.highFives >= 5);
       }
 
-      if (searchSettings?.minVotes && searchSettings.minVotes > 0) {
+      if (activeQuery && searchSettings?.minVotes && searchSettings.minVotes > 0) {
         results = results.filter(list => list.votes >= searchSettings.minVotes);
       }
 
-      // Apply date range filter
-      if (searchSettings?.dateRange && searchSettings.dateRange !== 'all') {
+      // Apply date range filter (only when actively searching, not browsing)
+      if (activeQuery && searchSettings?.dateRange && searchSettings.dateRange !== 'all') {
         const now = new Date();
         const cutoffDate = new Date();
 

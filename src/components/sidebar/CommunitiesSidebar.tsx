@@ -16,6 +16,7 @@ export default function CommunitiesSidebar({
   onRejectListsClick,
   selectedCategory = ''
 }: CommunitiesSidebarProps) {
+
   // Calculate list count for each category
   const getListCount = (category: string) => {
     return allLists.filter(list => list.category === category && !list.isRejected).length;
@@ -35,12 +36,14 @@ export default function CommunitiesSidebar({
         <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
           <div className="space-y-1">
             {categories.map((category) => {
+              const listCount = getListCount(category);
               const isSelected = selectedCategory === category;
             
               return (
               <button
                 key={category}
                 onClick={() => {
+                  console.log(`[CommunitiesSidebar] Button clicked for category: "${category}"`);
                   onCategorySelect(category);
                   // Scroll main content to top
                   const mainContent = document.querySelector('.fixed.left-80');
@@ -60,6 +63,9 @@ export default function CommunitiesSidebar({
                   <span className="text-lg mr-4">{categoryEmojis[category] || '📝'}</span>
                   <span className="text-base">{category}</span>
                 </div>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  {listCount}
+                </span>
               </button>
             );
             })}

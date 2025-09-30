@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Settings, ChevronDown, X, Filter, SortAsc } from 'lucide-react';
-import { categories } from '@/data/mockData';
+import { categories } from '@/data/testData';
 
 type SortOption = 'recent' | 'mostLikes' | 'bestOverall' | 'mostHighFives' | 'mostComments';
 type ViewMode = 'grid' | 'list';
