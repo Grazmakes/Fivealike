@@ -145,7 +145,7 @@ export default function SleekNotificationsDropdown({
       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden -z-10" onClick={handleClose} />
       
       {/* Main dropdown */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl w-80 shadow-xl border border-green-200 dark:border-green-700/50 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl w-80 shadow-xl border border-green-200 dark:border-green-700/50 overflow-hidden">
         
         {/* Header */}
         <div className="p-4 bg-white dark:from-gray-900 dark:to-gray-800 border-b border-gray-100 dark:border-gray-700">

@@ -679,7 +679,7 @@ function ListCard({
     <div
       id={`list-${list.id}`}
       data-list-card
-      className={`list-card relative mb-10 rounded-3xl border border-gray-200/80 dark:border-gray-700/70 bg-white/95 dark:bg-gray-900/80 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow hover:shadow-[0_35px_65px_-30px_rgba(15,23,42,0.85)] border-l-4 ${getCategoryBorderColor(list.category)}`}
+      className={`list-card relative mb-10 rounded-3xl border border-gray-200/80 dark:border-gray-700/70 bg-white/95 dark:bg-gray-800/80 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow hover:shadow-[0_35px_65px_-30px_rgba(15,23,42,0.85)] border-l-4 ${getCategoryBorderColor(list.category)}`}
     >
 
       {/* Genre Bubble */}
@@ -1010,7 +1010,7 @@ function ListCard({
                     <img
                       src={mainSubjectData.image}
                       alt={mainSubjectName}
-                      className="w-full h-full object-contain bg-white dark:bg-gray-900"
+                      className="w-full h-full object-contain bg-white dark:bg-gray-800"
                       onError={(event) => {
                         const target = event.currentTarget as HTMLImageElement;
                         target.onerror = null;

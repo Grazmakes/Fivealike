@@ -262,83 +262,9 @@ export default function SearchPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-          Search Lists
-        </h1>
-        
-        {/* Search Bar */}
-        <div className="relative mb-4">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              const value = e.target.value;
-              console.log('🔍 Search input changed:', value);
-              setSearchQuery(value);
-              // Clear forceRandomList immediately when user starts typing
-              if (value.trim() && forceRandomList) {
-                console.log('⚡ Immediately clearing forceRandomList on input change');
-                setForceRandomList(null);
-              }
-            }}
-            placeholder="Search lists, authors, or recommendations..."
-            className="w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-lg"
-          />
-          {(searchQuery || selectedCategory) && (
-            <button
-              onClick={clearSearch}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          )}
-        </div>
 
 
 
-        {/* Filter Controls */}
-        <div className="flex items-center gap-4 mb-6">
-
-          {/* Sort Dropdown */}
-          <div className="relative" ref={sortDropdownRef}>
-            <button
-              onClick={() => setShowSortDropdown(!showSortDropdown)}
-              className="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors min-w-[200px] justify-between"
-            >
-              <span>{sortOptions.find(opt => opt.value === sortBy)?.label}</span>
-              <ChevronDown size={16} className={`transition-transform ${showSortDropdown ? 'rotate-180' : ''}`} />
-            </button>
-
-            {showSortDropdown && (
-              <div className="absolute top-full left-0 mt-2 w-full bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-600 py-1 z-50">
-                {sortOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleSortChange(option.value as SortOption)}
-                    className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                      sortBy === option.value
-                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          
-          <button
-            onClick={handleRandomClick}
-            className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center space-x-2"
-          >
-            <span>🎲</span>
-            <span>Random List</span>
-          </button>
-        </div>
 
 
         {/* Search Results Info */}
@@ -360,7 +286,7 @@ export default function SearchPage({
           {(forceRandomList || searchQuery || initialQuery || selectedCategory) && (
             <button
               onClick={clearSearch}
-              className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
+              className="text-lg font-bold text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
             >
               {forceRandomList ? 'Show all lists' : 'Clear filters'}
             </button>

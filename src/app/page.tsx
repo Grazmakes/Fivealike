@@ -2257,7 +2257,7 @@ function HomeContent() {
   return (
     <>
       <div className="transparent-top-bar"></div>
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-gray-800">
         <TopHeader 
           darkMode={darkMode}
           setDarkMode={setDarkMode}

@@ -195,26 +195,6 @@ export default function UnifiedDiscovery({
         </div>
       </div>
 
-      {/* Discovery Tabs */}
-      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
-        {[
-          { id: 'search', label: 'Search', icon: Search },
-          { id: 'trending', label: 'Trending', icon: TrendingUp }
-        ].map(({ id, label, icon: Icon }) => (
-          <button
-            key={id}
-            onClick={() => setSelectedTab(id as DiscoveryTab)}
-            className={`flex items-center space-x-3 px-6 py-3 rounded-lg text-base font-medium transition-colors flex-1 justify-center ${
-              selectedTab === id
-                ? 'bg-white dark:bg-gray-700 text-green-600 dark:text-green-400 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
-            }`}
-          >
-            <Icon size={20} />
-            <span className="hidden sm:inline">{label}</span>
-          </button>
-        ))}
-      </div>
 
       {/* Tab Content */}
       <div className="min-h-[600px]">
