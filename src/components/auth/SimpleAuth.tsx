@@ -119,20 +119,19 @@ export default function SimpleAuth({ onUserChange }: SimpleAuthProps) {
       return;
     }
 
-    // Check if email already exists
+    // Check if email already exists in test accounts
     if (TEST_ACCOUNTS[email.toLowerCase()]) {
       setError('An account with this email already exists. Please sign in instead.');
       return;
     }
 
+    // In a real app, you would check against your database here
+
     setLoading(true);
 
     setTimeout(() => {
-      // Add new account to test accounts (in real app, this would be saved to database)
-      TEST_ACCOUNTS[email.toLowerCase()] = {
-        password,
-        username: username.trim()
-      };
+      // In real app, this would be saved to database
+      // For demo purposes, we'll simulate account creation without modifying the global object
 
       const newUser = {
         id: `user_${email}`,
@@ -225,7 +224,7 @@ export default function SimpleAuth({ onUserChange }: SimpleAuthProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-green-500 focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-green-100 dark:focus:ring-green-900 transition-all"
                 onKeyPress={(e) => e.key === 'Enter' && (isRegistering ? handleRegister() : handleSignIn())}
               />
             </div>
@@ -236,7 +235,7 @@ export default function SimpleAuth({ onUserChange }: SimpleAuthProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={isRegistering ? "Create a password (min 6 characters)" : "Enter your password"}
-                className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white dark:focus:bg-gray-700 transition-all"
+                className="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-green-500 focus:bg-white dark:focus:bg-gray-700 focus:ring-2 focus:ring-green-100 dark:focus:ring-green-900 transition-all"
                 onKeyPress={(e) => e.key === 'Enter' && (isRegistering ? handleRegister() : handleSignIn())}
               />
             </div>
