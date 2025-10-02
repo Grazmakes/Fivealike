@@ -9,6 +9,12 @@ export const metadata: Metadata = {
     width: 'device-width',
     initialScale: 1,
     viewportFit: 'cover',
+    minimumScale: 1,
+    maximumScale: 1,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
   },
 }
 

@@ -135,7 +135,7 @@ export default function HomeFeed({
   };
 
   return (
-    <div className="space-y-6 bg-transparent">
+    <div className="space-y-2 lg:space-y-6 bg-transparent">
       {/* Header section - Hidden on mobile */}
       <div className="hidden lg:block bg-transparent">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
@@ -187,8 +187,8 @@ export default function HomeFeed({
         </p>
       </div>
 
-      {/* Fixed Search Bar - Flush with Top Menu */}
-      <div className="fixed left-0 right-0 top-[48px] bg-transparent px-0 py-2 z-40" ref={searchSettingsRef}>
+      {/* Fixed Search Bar - Flush with Top Menu (Mobile Only) */}
+      <div className="lg:hidden fixed left-0 right-0 top-[60px] bg-transparent px-0 py-2 z-40" ref={searchSettingsRef}>
         <div className="relative flex items-center">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
@@ -202,7 +202,7 @@ export default function HomeFeed({
                   onSearch?.(searchQuery.trim());
                 }
               }}
-              className="w-full pl-12 pr-16 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
+              className="w-full pl-12 pr-16 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
             />
             {searchQuery && (
               <button
@@ -240,8 +240,8 @@ export default function HomeFeed({
         )}
       </div>
 
-      {/* Spacer for fixed search bar */}
-      <div className="h-16"></div>
+      {/* Spacer for fixed search bar (Mobile Only) */}
+      <div className="lg:hidden h-4"></div>
 
       {/* Hot Lists Carousel - Hidden on mobile */}
       <div className="hidden lg:block">
@@ -251,7 +251,7 @@ export default function HomeFeed({
       </div>
 
       {/* Lists */}
-      <div className="space-y-6">
+      <div className="space-y-3 lg:space-y-6">
         {filteredLists.length > 0 ? (
           filteredLists.map((list, index) => (
             <ListErrorBoundary key={list.id} listTitle={list.title}>

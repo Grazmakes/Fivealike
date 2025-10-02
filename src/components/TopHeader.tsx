@@ -111,7 +111,7 @@ export default function TopHeader({
       <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm h-20">
         <div className="flex items-center justify-between px-6 h-full">
           {/* Logo - left aligned */}
-          <div className="flex-1 flex justify-start">
+          <div className="flex-shrink-0">
             <button
               onClick={() => onNavigateToHome?.()}
               className="flex flex-col items-start hover:opacity-80 transition-opacity"
@@ -125,8 +125,55 @@ export default function TopHeader({
             </button>
           </div>
 
+          {/* Search Bar - center aligned (hidden on mobile) */}
+          <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search lists..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  onSearch?.(e.target.value);
+                }}
+                className="w-full px-4 py-2 pl-10 pr-10 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              {searchQuery && (
+                <button
+                  onClick={() => {
+                    setSearchQuery('');
+                    onClearSearch?.();
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                >
+                  <span className="text-gray-400 text-xl leading-none">×</span>
+                </button>
+              )}
+            </div>
+            {onSearchSettingsChange && (
+              <div className="relative ml-2" ref={searchSettingsRef}>
+                <button
+                  onClick={() => setShowSearchSettings(!showSearchSettings)}
+                  className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                  aria-label="Search settings"
+                >
+                  <Filter size={20} className="text-gray-600 dark:text-gray-400" />
+                </button>
+                {showSearchSettings && (
+                  <SearchSettingsDropdown
+                    settings={searchSettings}
+                    onSettingsChange={onSearchSettingsChange}
+                    onClose={() => setShowSearchSettings(false)}
+                    onRandomList={onRandomList}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+
           {/* Right side Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             {/* Notifications */}
             <div className="relative" ref={notificationsRef}>
               <button

@@ -124,9 +124,9 @@ export default function Favorites({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-3 lg:space-y-6">
+      {/* Header - Hidden on mobile */}
+      <div className="hidden lg:flex items-center justify-between">
         <div className="flex items-center gap-4">
           {onBack && (
             <button
@@ -149,7 +149,7 @@ export default function Favorites({
       </div>
 
       {/* Search and Filter Bar */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2 lg:gap-4">
         {/* Search */}
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -158,69 +158,71 @@ export default function Favorites({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search favorites..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent max-w-full"
+            className="w-full pl-10 pr-4 py-2.5 lg:py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent max-w-full text-base"
           />
         </div>
 
         {/* Category Filter */}
-        <div className="flex items-center space-x-2">
-          <Filter size={16} className="text-gray-500" />
+        <div className="flex items-center gap-2">
+          <div className="flex-shrink-0">
+            <Filter size={16} className="text-gray-500" />
+          </div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="flex-1 px-3 py-2.5 lg:py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-base"
           >
             <option value="">All Categories</option>
             {allCategories.map(category => (
               <option key={category} value={category}>{category}</option>
             ))}
           </select>
+          {/* Clear Filters - Inline on mobile */}
+          {(searchQuery || selectedCategory) && (
+            <button
+              onClick={clearFilters}
+              className="flex-shrink-0 p-2.5 lg:px-4 lg:py-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center justify-center"
+              title="Clear filters"
+            >
+              <X size={18} />
+              <span className="hidden lg:inline ml-1">Clear</span>
+            </button>
+          )}
         </div>
-
-        {/* Clear Filters */}
-        {(searchQuery || selectedCategory) && (
-          <button
-            onClick={clearFilters}
-            className="px-4 py-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center space-x-1"
-          >
-            <X size={16} />
-            <span>Clear</span>
-          </button>
-        )}
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1 max-w-full overflow-hidden">
+      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 max-w-full overflow-hidden">
         <button
           onClick={() => setSelectedTab('lists')}
-          className={`flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
+          className={`flex flex-col lg:flex-row items-center lg:space-x-2 px-2 lg:px-4 py-2.5 lg:py-3 rounded-lg text-xs lg:text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
             selectedTab === 'lists'
               ? 'bg-white dark:bg-gray-700 text-green-600 dark:text-green-400 shadow-sm'
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
         >
-          <List size={16} />
-          <span className="truncate">Saved Lists</span>
-          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 ${
-            selectedTab === 'lists' 
+          <List size={18} className="lg:w-4 lg:h-4" />
+          <span className="truncate mt-1 lg:mt-0 text-xs lg:text-sm">Save...</span>
+          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5 lg:mt-0 ${
+            selectedTab === 'lists'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
           }`}>
             {filteredSavedLists.length}
           </span>
         </button>
-        
+
         <button
           onClick={() => setSelectedTab('items')}
-          className={`flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
+          className={`flex flex-col lg:flex-row items-center lg:space-x-2 px-2 lg:px-4 py-2.5 lg:py-3 rounded-lg text-xs lg:text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
             selectedTab === 'items'
               ? 'bg-white dark:bg-gray-700 text-green-600 dark:text-green-400 shadow-sm'
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
         >
-          <Bookmark size={16} />
-          <span className="truncate">Bookmarked Items</span>
-          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 ${
+          <Bookmark size={18} className="lg:w-4 lg:h-4" />
+          <span className="truncate mt-1 lg:mt-0 text-xs lg:text-sm">Book...</span>
+          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5 lg:mt-0 ${
             selectedTab === 'items'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
@@ -231,15 +233,15 @@ export default function Favorites({
 
         <button
           onClick={() => setSelectedTab('history')}
-          className={`flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
+          className={`flex flex-col lg:flex-row items-center lg:space-x-2 px-2 lg:px-4 py-2.5 lg:py-3 rounded-lg text-xs lg:text-sm font-medium transition-colors flex-1 justify-center min-w-0 ${
             selectedTab === 'history'
               ? 'bg-white dark:bg-gray-700 text-green-600 dark:text-green-400 shadow-sm'
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
           }`}
         >
-          <HistoryIcon size={16} />
-          <span className="truncate">History</span>
-          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 ${
+          <HistoryIcon size={18} className="lg:w-4 lg:h-4" />
+          <span className="truncate mt-1 lg:mt-0 text-xs lg:text-sm">Hist...</span>
+          <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5 lg:mt-0 ${
             selectedTab === 'history'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
               : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'

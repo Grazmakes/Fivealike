@@ -2,6 +2,33 @@
 
 import { categories, categoryEmojis } from '@/data/mockData';
 import { List } from '@/types';
+import { Music, Film, BookOpen, Tv, Gamepad2, Mic, Laptop, Utensils, Plane, Palette, Dumbbell, Microscope, ScrollText, Landmark, Smile, Ghost, Heart, Map, Dice5, Camera, Shirt, Trophy } from 'lucide-react';
+
+// Category icon mapping
+const categoryIcons: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  'Music': Music,
+  'Movies': Film,
+  'Books': BookOpen,
+  'TV Shows': Tv,
+  'Games': Gamepad2,
+  'Podcasts': Mic,
+  'Technology': Laptop,
+  'Food': Utensils,
+  'Travel': Plane,
+  'Art': Palette,
+  'Fitness': Dumbbell,
+  'Science': Microscope,
+  'History': ScrollText,
+  'Politics': Landmark,
+  'Comedy': Smile,
+  'Horror': Ghost,
+  'Romance': Heart,
+  'Adventure': Map,
+  'Board Games': Dice5,
+  'Photography': Camera,
+  'Fashion': Shirt,
+  'Sports': Trophy,
+};
 
 interface CommunitiesSidebarProps {
   allLists: List[];
@@ -38,7 +65,8 @@ export default function CommunitiesSidebar({
             {categories.map((category) => {
               const listCount = getListCount(category);
               const isSelected = selectedCategory === category;
-            
+              const IconComponent = categoryIcons[category] || BookOpen;
+
               return (
               <button
                 key={category}
@@ -52,15 +80,15 @@ export default function CommunitiesSidebar({
                   }
                 }}
                 className={`flex items-center justify-between w-full px-4 py-3 rounded-lg transition-all duration-200 ${
-                  isSelected 
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-medium' 
+                  isSelected
+                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-medium'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
                 }`}
                 title={category}
                 aria-label={category}
               >
                 <div className="flex items-center">
-                  <span className="text-lg mr-4">{categoryEmojis[category] || '📝'}</span>
+                  <IconComponent size={20} className="mr-4 text-gray-600 dark:text-gray-400" />
                   <span className="text-base">{category}</span>
                 </div>
                 <span className="text-xs text-gray-500 dark:text-gray-400">

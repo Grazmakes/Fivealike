@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageCircle, ChevronUp, Home as HomeIcon, Search, Plus, Bookmark, Menu, Trophy, Users, Layers, Calendar, Headphones, MapPin, TrendingUp } from 'lucide-react';
+import { MessageCircle, ChevronUp, Home as HomeIcon, Search, Plus, Bookmark, Menu, Trophy, Users, Layers, Calendar, Headphones, MapPin, TrendingUp, Music, Film, BookOpen, Tv, Gamepad2, Mic, Laptop, Utensils, Plane, Palette, Dumbbell, Microscope, ScrollText, Landmark, Smile, Ghost, Heart, Map, Dice5, Camera, Shirt } from 'lucide-react';
 import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState, HistoryItem } from '@/types';
 import { comprehensiveTestLists as mockLists, testNotifications as mockNotifications } from '@/data/comprehensiveTestData';
 import { categories, categoryEmojis } from '@/data/mockData';
@@ -39,6 +39,32 @@ const debugLog = (...args: unknown[]) => {
     // eslint-disable-next-line no-console
     console.log(...args);
   }
+};
+
+// Category icon mapping
+const categoryIcons: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  'Music': Music,
+  'Movies': Film,
+  'Books': BookOpen,
+  'TV Shows': Tv,
+  'Games': Gamepad2,
+  'Podcasts': Mic,
+  'Technology': Laptop,
+  'Food': Utensils,
+  'Travel': Plane,
+  'Art': Palette,
+  'Fitness': Dumbbell,
+  'Science': Microscope,
+  'History': ScrollText,
+  'Politics': Landmark,
+  'Comedy': Smile,
+  'Horror': Ghost,
+  'Romance': Heart,
+  'Adventure': Map,
+  'Board Games': Dice5,
+  'Photography': Camera,
+  'Fashion': Shirt,
+  'Sports': Trophy,
 };
 
 function HomeContent() {
@@ -673,9 +699,12 @@ function HomeContent() {
     };
   }, []);
 
-  // Tutorial auto-show for new signups
+  // Tutorial auto-show for new signups (disabled on mobile)
   useEffect(() => {
-    if (isLoggedIn && !userProfile.hasSeenTutorial && !showTutorial) {
+    // Check if we're on mobile (screen width < 1024px which is the lg breakpoint)
+    const isMobile = window.innerWidth < 1024;
+
+    if (!isMobile && isLoggedIn && !userProfile.hasSeenTutorial && !showTutorial) {
       // Check if tutorial was shown for THIS specific user (not just any user)
       const userSpecificKey = `tutorial-shown-${userProfile.id || userProfile.username}`;
       const hasShownTutorialForThisUser = sessionStorage.getItem(userSpecificKey);
@@ -2406,8 +2435,8 @@ function HomeContent() {
 
       {/* Mobile Genres Modal */}
       {showMobileGenres && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMobileGenres(false)}>
-          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh]" onClick={(e) => e.stopPropagation()}>
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 animate-fadeIn" onClick={() => setShowMobileGenres(false)}>
+          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh] animate-slideUp" onClick={(e) => e.stopPropagation()}>
             <div className="px-4 py-4">
               <div className="flex justify-between items-center mb-3">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">Genres</h2>
@@ -2422,6 +2451,7 @@ function HomeContent() {
               <div className="space-y-1 max-h-[50vh] overflow-y-auto">
                 {categories.map((category) => {
                   const listCount = allLists.filter(list => list.category === category && !list.isRejected).length;
+                  const IconComponent = categoryIcons[category] || BookOpen;
 
                   return (
                     <button
@@ -2434,7 +2464,7 @@ function HomeContent() {
                       className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
                       <div className="flex items-center space-x-3">
-                        <span className="text-base">{categoryEmojis[category] || '📝'}</span>
+                        <IconComponent size={20} className="text-gray-600 dark:text-gray-400" />
                         <span className="text-sm text-gray-900 dark:text-white">{category}</span>
                       </div>
                       <span className="text-xs text-gray-500 dark:text-gray-400">{listCount}</span>
@@ -2449,8 +2479,8 @@ function HomeContent() {
 
       {/* Mobile Menu Modal */}
       {showMobileMenu && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMobileMenu(false)}>
-          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh]" onClick={(e) => e.stopPropagation()}>
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 animate-fadeIn" onClick={() => setShowMobileMenu(false)}>
+          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh] animate-slideUp" onClick={(e) => e.stopPropagation()}>
             <div className="px-4 py-4">
               <div className="flex justify-between items-center mb-3">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
@@ -2472,28 +2502,6 @@ function HomeContent() {
                 >
                   <TrendingUp size={20} className="text-gray-700 dark:text-gray-300" />
                   <span className="text-sm text-gray-900 dark:text-white">Trending</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setCurrentView('local');
-                    setShowMobileMenu(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <MapPin size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Local Lists</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    setCurrentView('favorites');
-                    setShowMobileMenu(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <Bookmark size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Saved Lists</span>
                 </button>
 
                 <button
@@ -2558,7 +2566,7 @@ function HomeContent() {
 
       {/* Mobile Bottom Navigation - Only visible on mobile */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
-        <div className="flex justify-around items-center h-16 px-2">
+        <div className="flex justify-around items-center h-16 px-1">
           <button
             onClick={() => {
               setShowMobileMenu(!showMobileMenu);
@@ -2572,6 +2580,17 @@ function HomeContent() {
           </button>
           <button
             onClick={() => {
+              setShowMobileGenres(!showMobileGenres);
+              setShowMobileMenu(false);
+              setShowRedditChat(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+          >
+            <Search size={20} />
+            <span className="text-xs mt-1">Genres</span>
+          </button>
+          <button
+            onClick={() => {
               setCurrentView('local');
               setShowMobileMenu(false);
               setShowMobileGenres(false);
@@ -2580,7 +2599,7 @@ function HomeContent() {
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
             <MapPin size={20} />
-            <span className="text-xs mt-1">Local Lists</span>
+            <span className="text-xs mt-1">Local</span>
           </button>
           <button
             onClick={() => {
@@ -2589,9 +2608,9 @@ function HomeContent() {
               setShowMobileGenres(false);
               setShowRedditChat(false);
             }}
-            className="flex flex-col items-center justify-center flex-1 py-3 bg-green-500 text-white rounded-lg mx-2 shadow-lg hover:bg-green-600 transition-colors"
+            className="flex flex-col items-center justify-center flex-1 py-3 bg-green-500 text-white rounded-lg mx-1 shadow-lg hover:bg-green-600 transition-colors"
           >
-            <Plus size={28} />
+            <Plus size={24} />
             <span className="text-xs mt-1 font-semibold">Create</span>
           </button>
           <button
@@ -2612,14 +2631,27 @@ function HomeContent() {
           </button>
           <button
             onClick={() => {
-              setShowMobileGenres(!showMobileGenres);
+              setCurrentView('favorites');
               setShowMobileMenu(false);
+              setShowMobileGenres(false);
               setShowRedditChat(false);
             }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
-            <Search size={20} />
-            <span className="text-xs mt-1">Genres</span>
+            <Bookmark size={20} />
+            <span className="text-xs mt-1">Saved</span>
+          </button>
+          <button
+            onClick={() => {
+              setCurrentView('home');
+              setShowMobileMenu(false);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+          >
+            <HomeIcon size={20} />
+            <span className="text-xs mt-1">Home</span>
           </button>
         </div>
       </nav>

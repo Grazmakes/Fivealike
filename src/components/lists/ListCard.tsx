@@ -679,13 +679,13 @@ function ListCard({
     <div
       id={`list-${list.id}`}
       data-list-card
-      className={`list-card relative mb-10 rounded-3xl border border-gray-200/80 dark:border-gray-700/70 bg-white/95 dark:bg-gray-800/80 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow hover:shadow-[0_35px_65px_-30px_rgba(15,23,42,0.85)] border-l-4 ${getCategoryBorderColor(list.category)}`}
+      className={`list-card relative mb-10 rounded-lg border border-gray-200/80 dark:border-gray-700/70 bg-white/95 dark:bg-gray-800/80 shadow-[0_25px_60px_-35px_rgba(15,23,42,0.75)] backdrop-blur-sm transition-shadow hover:shadow-[0_35px_65px_-30px_rgba(15,23,42,0.85)] border-l-4 ${getCategoryBorderColor(list.category)}`}
     >
 
-      {/* Genre Bubble */}
+      {/* Genre Badge - Top Right (Desktop Only) */}
       <button
         onClick={() => onCategoryClick?.(list.category)}
-        className={`absolute -top-2 -right-2 text-white text-sm px-3 py-1.5 rounded-full z-20 flex items-center space-x-1 font-medium shadow-lg hover:scale-105 transition-transform cursor-pointer ${
+        className={`hidden lg:flex absolute -top-4 -right-2 text-white text-sm px-3 py-1.5 rounded-full z-[100] items-center space-x-1 font-medium shadow-lg hover:scale-105 transition-transform cursor-pointer ${
           list.category === 'Movies' ? 'bg-red-500 hover:bg-red-600' :
           list.category === 'TV Shows' ? 'bg-purple-500 hover:bg-purple-600' :
           list.category === 'Books' ? 'bg-green-600 hover:bg-green-700' :
@@ -704,31 +704,29 @@ function ListCard({
         <span>{list.category}</span>
       </button>
 
-
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-4 lg:mb-4">
         <div className="flex-1">
-          <div className="flex items-center space-x-3 mb-2">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white flex-1">
-              If you like {onTitleClick ? (
+          <div className="flex items-center flex-wrap gap-x-3 gap-y-2 mb-3 lg:mb-2">
+            <h3 className="text-2xl lg:text-2xl font-bold text-gray-900 dark:text-white leading-relaxed">
+              <span className="text-lg lg:text-2xl">If you like </span>{onTitleClick ? (
               <button
                 onClick={() => onTitleClick(list.title.match(/\"([^"]+)\"/)?.[1] || list.title)}
-                className="text-primary-600 dark:text-primary-400 underline decoration-2 hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
+                className="text-primary-600 dark:text-primary-400 underline decoration-2 hover:text-primary-700 dark:hover:text-primary-300 transition-colors text-2xl lg:text-2xl"
               >
-                &quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}&quot;
+                {list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}
               </button>
             ) : (
-              <span className="text-primary-600 dark:text-primary-400 underline decoration-2">&quot;{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}&quot;</span>
-            )}, try these FIVE&nbsp;ALIKE...
+              <span className="text-primary-600 dark:text-primary-400 underline decoration-2 text-2xl lg:text-2xl">{list.title.match(/\"([^"]+)\"/)?.[1] || list.title.split("'")[1]?.split("'")[0] || mainSubjectName}</span>
+            )}<span className="text-lg lg:text-2xl">, try these FIVE ALIKE...</span>
+            </h3>
             {list.isOrdered && (
-              <span className="inline-flex items-center px-2 py-1 ml-2 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 rounded-full">
+              <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 rounded-full">
                 📊 Ranked List
               </span>
             )}
-            </h3>
-
           </div>
-          <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex items-center space-x-2 text-base lg:text-sm text-gray-600 dark:text-gray-400">
             <span>by</span>
             <div className="relative inline-block">
               <button
@@ -898,6 +896,18 @@ function ListCard({
             </div>
             <span>•</span>
             <span>{list.date}</span>
+            <button
+              onClick={() => onSaveList(list.id)}
+              className={`flex items-center space-x-1 px-2 py-1 rounded-lg transition-colors text-xs ${
+                isSaved
+                  ? 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900'
+                  : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+              }`}
+              title={isSaved ? 'Unsave list' : 'Save List'}
+            >
+              <Bookmark size={16} fill={isSaved ? 'currentColor' : 'none'} />
+              <span className="font-medium">{isSaved ? 'Saved' : 'Save List'}</span>
+            </button>
             {list.isRejected && (
               <span className="ml-2 text-xs bg-red-600 text-white px-2 py-1 rounded-full">
                 {Math.round((list.downvotes / (list.upvotes + list.downvotes)) * 100)}% ⬇️
@@ -914,21 +924,8 @@ function ListCard({
             )}
           </div>
         </div>
-        
-        <div className="flex items-center space-x-2 mt-3">
-          <button
-            onClick={() => onSaveList(list.id)}
-            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
-              isSaved
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900'
-                : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-            }`}
-            title={isSaved ? 'Unsave list' : 'Save List'}
-          >
-            <Bookmark size={20} fill={isSaved ? 'currentColor' : 'none'} />
-            <span className="text-sm font-medium">{isSaved ? 'Saved' : 'Save List'}</span>
-          </button>
 
+        <div className="flex items-center space-x-2 mt-3">
           {/* Edit Button */}
           {canEditList() && (
             <button
@@ -951,50 +948,36 @@ function ListCard({
               <Bell size={20} />
             </button>
           )}
-
-          {/* Export Menu */}
-          <div className="relative" ref={exportMenuRef}>
-            <button
-              onClick={() => setShowExportMenu(!showExportMenu)}
-              className="p-2 rounded-lg text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-100 dark:hover:bg-green-900 transition-colors"
-              title="Export list"
-            >
-              <Download size={20} />
-            </button>
-
-            {showExportMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-600 py-2 z-50">
-                <button
-                  onClick={() => handleExport('pdf')}
-                  className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <FileText size={16} />
-                  <span>Export as PDF</span>
-                </button>
-                <button
-                  onClick={() => handleExport('csv')}
-                  className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <FileDown size={16} />
-                  <span>Export as CSV</span>
-                </button>
-                <button
-                  onClick={() => handleExport('text')}
-                  className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
-                  <Share size={16} />
-                  <span>Export as Text</span>
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       </div>
 
       {/* Main Subject Overview */}
       {hasHydrated && mainSubjectName && mainSubjectName !== 'Unknown' && (
         <div className="mb-6">
-          <div className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm">
+          <div className="relative rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 sm:p-5 shadow-sm">
+
+            {/* Genre Badge - Mobile Only */}
+            <button
+              onClick={() => onCategoryClick?.(list.category)}
+              className={`lg:hidden absolute -top-4 -right-2 text-white text-sm px-3 py-1.5 rounded-full z-[100] flex items-center space-x-1 font-medium shadow-lg hover:scale-105 transition-transform cursor-pointer ${
+                list.category === 'Movies' ? 'bg-red-500 hover:bg-red-600' :
+                list.category === 'TV Shows' ? 'bg-purple-500 hover:bg-purple-600' :
+                list.category === 'Books' ? 'bg-green-600 hover:bg-green-700' :
+                list.category === 'Music' ? 'bg-pink-500 hover:bg-pink-600' :
+                list.category === 'Games' ? 'bg-orange-500 hover:bg-orange-600' :
+                list.category === 'Food & Drink' ? 'bg-yellow-500 hover:bg-yellow-600' :
+                list.category === 'Travel' ? 'bg-cyan-500 hover:bg-cyan-600' :
+                list.category === 'Technology' ? 'bg-indigo-500 hover:bg-indigo-600' :
+                list.category === 'Health & Fitness' ? 'bg-emerald-500 hover:bg-emerald-600' :
+                list.category === 'Arts & Crafts' ? 'bg-violet-500 hover:bg-violet-600' :
+                list.category === 'Sports' ? 'bg-blue-600 hover:bg-blue-700' :
+                'bg-gray-500 hover:bg-gray-600'
+              }`}
+              title={`View all ${list.category} lists`}
+            >
+              <span>{list.category}</span>
+            </button>
+
             <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4 space-y-4 sm:space-y-0">
               <div className="flex-shrink-0">
                 <div className="w-28 h-40 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
@@ -1083,7 +1066,7 @@ function ListCard({
       )}
 
       {/* Items */}
-      <div className="space-y-3 mb-6">
+      <div className="space-y-3 lg:space-y-3 mb-6">
         {list.items.map((item, index) => {
           const normalizedItem = normalizeName(item);
           const isMainSubjectItem = normalizedItem && normalizedItem === mainSubjectNormalized;
@@ -1108,12 +1091,12 @@ function ListCard({
 
           return (
             <div key={index} className="rounded-lg bg-gray-200 dark:bg-gray-500 transition-colors">
-              <div className="flex items-center justify-between p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                <div className="flex items-center space-x-3">
-                  <span className="font-semibold lg:font-medium text-gray-900 dark:text-white">
+              <div className="flex items-center justify-between p-4 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <span className="font-bold lg:font-medium text-gray-900 dark:text-white text-base lg:text-sm truncate">
                     {list.isOrdered ? (
                       <>
-                        <span className="inline-flex items-center justify-center w-6 h-6 mr-3 rounded-full text-xs font-bold text-white bg-green-600">
+                        <span className="inline-flex items-center justify-center w-7 h-7 lg:w-6 lg:h-6 mr-3 rounded-full text-sm lg:text-xs font-bold text-white bg-green-600">
                           {index + 1}
                         </span>
                         {displayLabel}
@@ -1122,42 +1105,42 @@ function ListCard({
                       displayLabel
                     )}
                   </span>
-                  <button 
+                  <button
                     onClick={handleExpandClick}
-                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                    className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors flex-shrink-0"
                     title="Show details"
                     disabled={isLoading}
                   >
                     {isLoading ? (
-                      <div className="animate-spin w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full" />
+                      <div className="animate-spin w-6 h-6 lg:w-5 lg:h-5 border-2 border-green-600 border-t-transparent rounded-full" />
                     ) : (
-                      <ChevronRight 
-                        size={20} 
-                        className={`transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : 'rotate-0'}`}
+                      <ChevronRight
+                        size={24}
+                        className={`lg:w-5 lg:h-5 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : 'rotate-0'}`}
                       />
                     )}
                   </button>
                 </div>
-                
-                <div className="flex items-center space-x-2">
+
+                <div className="flex items-center space-x-2 flex-shrink-0">
                   {onItemBookmark && (
                     <button
                       onClick={() => onItemBookmark(list.id, index)}
-                      className={`p-2 rounded-full text-sm font-medium transition-colors ${
+                      className={`p-2.5 lg:p-2 rounded-full text-sm font-medium transition-colors ${
                         bookmarkState[`${list.id}-${index}`]
                           ? 'bg-green-500 text-white hover:bg-green-600'
                           : 'bg-gray-100 text-gray-600 hover:bg-green-500 hover:text-white dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-green-500 dark:hover:text-white'
                       }`}
                       title={bookmarkState[`${list.id}-${index}`] ? 'Saved to your bookmarks' : 'Save Item'}
                     >
-                      <Bookmark size={16} className={bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''} />
+                      <Bookmark size={18} className={`lg:w-4 lg:h-4 ${bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''}`} />
                     </button>
                   )}
 
                   {onAddToHistory && (
                     <button
                       onClick={() => onAddToHistory(list.id, index)}
-                      className="flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-purple-100 hover:text-purple-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900 dark:hover:text-purple-300 transition-colors"
+                      className="hidden lg:flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-purple-100 hover:text-purple-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900 dark:hover:text-purple-300 transition-colors"
                       title="Add to history"
                     >
                       <History size={14} />
@@ -1210,18 +1193,18 @@ function ListCard({
           {!antiSocialMode && (
             <button
               onClick={() => onListVote(list.id, 'up')}
-              className={`vote-button min-w-[44px] min-h-[44px] ${list.userVote === 'up' ? 'upvoted' : ''}`}
+              className={`vote-button min-w-[48px] min-h-[48px] lg:min-w-[44px] lg:min-h-[44px] ${list.userVote === 'up' ? 'upvoted' : ''}`}
               title="Upvote this list - Click to add +1 to the score if you think this is a great recommendation list"
             >
-              <ArrowUp size={20} className="sm:w-[22px] sm:h-[22px]" />
+              <ArrowUp size={24} className="lg:w-5 lg:h-5" />
             </button>
           )}
-          
+
           <div className="relative">
-            <span 
-              className={`font-bold text-lg text-gray-900 dark:text-white cursor-help transition-all duration-300 ${
-                realtimeUpdate?.latestVoteEvent && Date.now() - realtimeUpdate.latestVoteEvent.timestamp < 2000 
-                  ? 'scale-110 text-primary-600' 
+            <span
+              className={`font-bold text-xl lg:text-lg text-gray-900 dark:text-white cursor-help transition-all duration-300 ${
+                realtimeUpdate?.latestVoteEvent && Date.now() - realtimeUpdate.latestVoteEvent.timestamp < 2000
+                  ? 'scale-110 text-primary-600'
                   : ''
               }`}
               onMouseEnter={() => setShowVotesTooltip(true)}
@@ -1275,10 +1258,10 @@ function ListCard({
           {!antiSocialMode && (
             <button
               onClick={() => onListVote(list.id, 'down')}
-              className={`vote-button min-w-[44px] min-h-[44px] ${list.userVote === 'down' ? 'downvoted' : ''}`}
+              className={`vote-button min-w-[48px] min-h-[48px] lg:min-w-[44px] lg:min-h-[44px] ${list.userVote === 'down' ? 'downvoted' : ''}`}
               title="Downvote this list - Click to subtract -1 from the score if you don't think this is a good recommendation list"
             >
-              <ArrowDown size={20} className="sm:w-[22px] sm:h-[22px]" />
+              <ArrowDown size={24} className="lg:w-5 lg:h-5" />
             </button>
           )}
         </div>

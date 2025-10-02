@@ -56,7 +56,7 @@ const flattenTopics = (topics: DuckDuckGoTopic[] = []): DuckDuckGoTopic[] => {
   });
 };
 
-const DEFAULT_TIMEOUT = 2000;
+const DEFAULT_TIMEOUT = 1000; // Reduced from 2000ms to 1000ms for faster failures
 
 const fetchWithTimeout = async (input: string, init?: RequestInit, timeout = DEFAULT_TIMEOUT) => {
   const controller = new AbortController();
@@ -564,15 +564,7 @@ export async function POST(request: Request) {
       categoryDetails = await fetchCategoryArtwork(subject, category);
     }
 
-    // If no data yet, try DuckDuckGo and Wikipedia
-    if (!data) {
-      data = await fetchDuckDuckGo(subject, category);
-    }
-
-    if (!data) {
-      data = await fetchWikipedia(subject);
-    }
-
+    // If we have category details, use them
     if (!data && categoryDetails) {
       data = {
         description: cleanDescription(categoryDetails.description) || '',
@@ -580,6 +572,15 @@ export async function POST(request: Request) {
         sourceName: categoryDetails.sourceName || 'External Source',
         sourceUrl: categoryDetails.sourceUrl
       };
+    }
+
+    // If no data yet, try DuckDuckGo and Wikipedia only if we don't have category data
+    if (!data && !categoryDetails) {
+      data = await fetchDuckDuckGo(subject, category);
+    }
+
+    if (!data && !categoryDetails) {
+      data = await fetchWikipedia(subject);
     }
 
     if (!data) {
@@ -593,7 +594,8 @@ export async function POST(request: Request) {
       data.sourceUrl = categoryDetails.sourceUrl || data.sourceUrl;
     }
 
-    if (!data.image) {
+    // Only try Wikipedia for image if we already have some data and are missing just the image
+    if (!data.image && data.description) {
       const wikiFallback = await fetchWikipedia(subject);
       if (wikiFallback?.image) {
         data.image = wikiFallback.image;
