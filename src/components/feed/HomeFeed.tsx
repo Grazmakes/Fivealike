@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Home, ArrowLeft } from 'lucide-react';
+import { ChevronDown, Search, Filter } from 'lucide-react';
 import { FeedTab, List, ItemVotes, User } from '@/types';
 import ListCard from '@/components/lists/ListCard';
 import HotListsCarousel from '@/components/lists/HotListsCarousel';
+import SearchSettingsDropdown from '@/components/search/SearchSettingsDropdown';
 import { FeedErrorBoundary, ListErrorBoundary } from '@/components/ui/ErrorBoundaries';
 
 interface HomeFeedProps {
@@ -29,6 +30,11 @@ interface HomeFeedProps {
   userProfile: User;
   highlightedItem?: {type: 'list' | 'message' | 'comment', id: string} | null;
   onClearHighlight?: () => void;
+  onSearch?: (query: string) => void;
+  searchSettings?: any;
+  onSearchSettingsChange?: (settings: any) => void;
+  onRandomList?: () => void;
+  onClearSearch?: () => void;
 }
 
 const feedTabs = [
@@ -61,16 +67,35 @@ export default function HomeFeed({
   setSavedLists,
   userProfile,
   highlightedItem,
-  onClearHighlight
+  onClearHighlight,
+  onSearch,
+  searchSettings = {
+    category: '',
+    sortBy: 'recent',
+    viewMode: 'grid',
+    showRecommended: false,
+    showPopular: false,
+    minVotes: 0,
+    dateRange: 'all'
+  },
+  onSearchSettingsChange,
+  onRandomList,
+  onClearSearch
 }: HomeFeedProps) {
   const [showFeedDropdown, setShowFeedDropdown] = useState(false);
+  const [showSearchSettings, setShowSearchSettings] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const feedDropdownRef = useRef<HTMLDivElement>(null);
+  const searchSettingsRef = useRef<HTMLDivElement>(null);
   
   // Handle click outside to close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (feedDropdownRef.current && !feedDropdownRef.current.contains(event.target as Node)) {
         setShowFeedDropdown(false);
+      }
+      if (searchSettingsRef.current && !searchSettingsRef.current.contains(event.target as Node)) {
+        setShowSearchSettings(false);
       }
     }
 
@@ -111,12 +136,12 @@ export default function HomeFeed({
 
   return (
     <div className="space-y-6 bg-transparent">
-      <div className="bg-transparent">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
-          <Home className="text-green-500 mr-2" size={28} />
+      {/* Header section - Hidden on mobile */}
+      <div className="hidden lg:block bg-transparent">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Your Home Feed
         </h1>
-        
+
         {/* Feed Dropdown */}
         <div className="mb-6">
           <div className="relative" ref={feedDropdownRef}>
@@ -132,7 +157,7 @@ export default function HomeFeed({
             </button>
 
             {showFeedDropdown && (
-              <div className="absolute top-full left-0 mt-3 w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-600 py-2 z-50 backdrop-blur-sm">
+              <div className="absolute top-full left-0 mt-3 w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-600 py-2 z-50 backdrop-blur-sm animate-slideDown">
                 {feedTabs.map((tab, index) => (
                   <button
                     key={tab.id}
@@ -162,10 +187,68 @@ export default function HomeFeed({
         </p>
       </div>
 
-      {/* Hot Lists Carousel */}
-      <FeedErrorBoundary>
-        <HotListsCarousel allLists={allLists} onTitleClick={onTitleClick} />
-      </FeedErrorBoundary>
+      {/* Fixed Search Bar - Flush with Top Menu */}
+      <div className="fixed left-0 right-0 top-[48px] bg-transparent px-0 py-2 z-40" ref={searchSettingsRef}>
+        <div className="relative flex items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search lists, authors, or topics..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && searchQuery.trim()) {
+                  onSearch?.(searchQuery.trim());
+                }
+              }}
+              className="w-full pl-12 pr-16 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                ×
+              </button>
+            )}
+            {/* Search Settings Button */}
+            <button
+              onClick={() => setShowSearchSettings(!showSearchSettings)}
+              className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-md transition-colors ${
+                showSearchSettings
+                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                  : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+              title="Search Settings"
+            >
+              <Filter size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Search Settings Dropdown */}
+        {showSearchSettings && onSearchSettingsChange && (
+          <SearchSettingsDropdown
+            isOpen={showSearchSettings}
+            onToggle={() => setShowSearchSettings(false)}
+            settings={searchSettings}
+            onSettingsChange={onSearchSettingsChange}
+            onRandomList={onRandomList}
+            onClearSearch={onClearSearch}
+          />
+        )}
+      </div>
+
+      {/* Spacer for fixed search bar */}
+      <div className="h-16"></div>
+
+      {/* Hot Lists Carousel - Hidden on mobile */}
+      <div className="hidden lg:block">
+        <FeedErrorBoundary>
+          <HotListsCarousel allLists={allLists} onTitleClick={onTitleClick} />
+        </FeedErrorBoundary>
+      </div>
 
       {/* Lists */}
       <div className="space-y-6">

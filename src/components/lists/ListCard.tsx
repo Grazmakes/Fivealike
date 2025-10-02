@@ -1067,12 +1067,12 @@ function ListCard({
                       <div className="h-3 w-2/3 bg-gray-200 dark:bg-gray-700 rounded" />
                     </div>
                   ) : mainSubjectError ? (
-                    <p className="text-sm text-amber-600 dark:text-amber-400">{mainSubjectError}</p>
+                    <p className="text-sm text-amber-600 dark:text-amber-400 font-semibold">{mainSubjectError}</p>
                   ) : mainSubjectData?.description ? (
-                    <p>{mainSubjectData.description}</p>
+                    <p className="font-semibold">{mainSubjectData.description}</p>
                   ) : (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      We couldn’t find a quick description yet. We’ll keep looking for fresh sources.
+                    <p className="text-sm text-gray-500 dark:text-gray-400 font-semibold">
+                      We couldn't find a quick description yet. We'll keep looking for fresh sources.
                     </p>
                   )}
                 </div>
@@ -1110,7 +1110,7 @@ function ListCard({
             <div key={index} className="rounded-lg bg-gray-200 dark:bg-gray-500 transition-colors">
               <div className="flex items-center justify-between p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                 <div className="flex items-center space-x-3">
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="font-semibold lg:font-medium text-gray-900 dark:text-white">
                     {list.isOrdered ? (
                       <>
                         <span className="inline-flex items-center justify-center w-6 h-6 mr-3 rounded-full text-xs font-bold text-white bg-green-600">
@@ -1143,15 +1143,14 @@ function ListCard({
                   {onItemBookmark && (
                     <button
                       onClick={() => onItemBookmark(list.id, index)}
-                      className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      className={`p-2 rounded-full text-sm font-medium transition-colors ${
                         bookmarkState[`${list.id}-${index}`]
-                          ? 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800'
-                          : 'bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-blue-900 dark:hover:text-blue-300'
+                          ? 'bg-green-500 text-white hover:bg-green-600'
+                          : 'bg-gray-100 text-gray-600 hover:bg-green-500 hover:text-white dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-green-500 dark:hover:text-white'
                       }`}
                       title={bookmarkState[`${list.id}-${index}`] ? 'Saved to your bookmarks' : 'Save Item'}
                     >
-                      <Bookmark size={14} className={bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''} />
-                      <span>{bookmarkState[`${list.id}-${index}`] ? 'Saved' : 'Save Item'}</span>
+                      <Bookmark size={16} className={bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''} />
                     </button>
                   )}
 

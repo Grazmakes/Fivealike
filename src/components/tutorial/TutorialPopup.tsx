@@ -260,11 +260,11 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-2 lg:p-4 z-50 animate-in fade-in duration-300"
       onClick={onClose}
     >
       <div
-        className={`bg-white dark:bg-gray-800 rounded-2xl max-w-3xl w-full h-[700px] shadow-2xl transform transition-all duration-300 ${
+        className={`bg-white dark:bg-gray-800 rounded-2xl max-w-3xl w-full max-h-[85vh] lg:h-[700px] shadow-2xl transform transition-all duration-300 ${
           isAnimating ? 'scale-95 opacity-50' : 'scale-100 opacity-100'
         } overflow-hidden flex flex-col`}
         onClick={(e) => e.stopPropagation()}
@@ -277,19 +277,19 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
           step.color === 'green' ? 'bg-green-600' :
           step.color === 'yellow' ? 'bg-yellow-600' :
           'bg-red-600'
-        } p-4 text-white relative`}>
-          
+        } p-2 lg:p-4 text-white relative`}>
+
           <div className="flex items-center justify-between relative z-10">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
-                <div className="scale-75">{step.icon}</div>
+            <div className="flex items-center space-x-2 lg:space-x-4 min-w-0 flex-1">
+              <div className="w-8 h-8 lg:w-12 lg:h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="scale-50 lg:scale-75">{step.icon}</div>
               </div>
-              <div>
-                <h2 className="text-xl font-bold">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-sm lg:text-xl font-bold truncate">
                   {step.title}
                 </h2>
-                <p className="text-white/80 text-sm">
-                  Step {currentStep + 1} of {tutorialSteps.length}
+                <p className="text-white/80 text-xs lg:text-sm">
+                  {currentStep + 1}/{tutorialSteps.length}
                 </p>
               </div>
             </div>
@@ -298,34 +298,35 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
                 console.log('❌ Tutorial X button clicked - closing tutorial');
                 onClose();
               }}
-              className="p-3 text-white/70 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-110"
+              className="p-2 lg:p-3 text-white/70 hover:text-white hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-110 flex-shrink-0"
             >
-              <X size={24} />
+              <X size={20} className="lg:hidden" />
+              <X size={24} className="hidden lg:block" />
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-4 flex-1 overflow-y-auto">
+        <div className="p-2 lg:p-4 flex-1 overflow-y-auto">
           {/* Description */}
-          <div className="text-center mb-6">
-            <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+          <div className="text-center mb-2 lg:mb-6">
+            <p className="text-gray-600 dark:text-gray-400 text-xs lg:text-base leading-snug lg:leading-relaxed">
               {step.description}
             </p>
           </div>
 
           {/* Compact Single Column Layout */}
-          <div className="space-y-4 mb-4">
+          <div className="space-y-2 lg:space-y-4 mb-2 lg:mb-4">
             {/* Features List */}
-            <div className="space-y-2">
-              <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                <Play className="w-4 h-4 mr-2 text-blue-600" />
+            <div className="space-y-1 lg:space-y-2">
+              <h4 className="text-xs lg:text-base font-semibold text-gray-900 dark:text-white mb-1 lg:mb-3 flex items-center">
+                <Play className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 text-blue-600" />
                 Key Features
               </h4>
               {step.features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`flex items-start space-x-2 p-2 rounded transition-all duration-300 ${
+                  className={`flex items-start space-x-1 lg:space-x-2 p-1 lg:p-2 rounded transition-all duration-300 ${
                     showDemo ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
                   }`}
                   style={{
@@ -338,7 +339,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
                       '#fef2f2'}`
                   }}
                 >
-                  <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                  <div className={`w-1 h-1 lg:w-2 lg:h-2 rounded-full mt-1 lg:mt-1.5 flex-shrink-0 ${
                     step.color === 'emerald' ? 'bg-emerald-500' :
                     step.color === 'blue' ? 'bg-blue-500' :
                     step.color === 'purple' ? 'bg-purple-500' :
@@ -346,7 +347,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
                     step.color === 'yellow' ? 'bg-yellow-500' :
                     'bg-red-500'
                   }`} />
-                  <span className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
+                  <span className="text-gray-700 dark:text-gray-300 text-[11px] lg:text-sm leading-snug lg:leading-relaxed">
                     {feature}
                   </span>
                 </div>
@@ -355,9 +356,9 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
 
             {/* Interactive Demo */}
             {step.demoElement && (
-              <div className="space-y-2">
-                <h4 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <Zap className="w-4 h-4 mr-2 text-purple-600" />
+              <div className="space-y-1 lg:space-y-2">
+                <h4 className="text-xs lg:text-base font-semibold text-gray-900 dark:text-white mb-1 lg:mb-3 flex items-center">
+                  <Zap className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 text-purple-600" />
                   Example
                 </h4>
                 <div className={`transition-all duration-500 transform ${
@@ -371,14 +372,14 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
         </div>
 
         {/* Progress & Navigation - Fixed at bottom */}
-        <div className="border-t border-gray-200 dark:border-gray-600 p-3 bg-gray-50 dark:bg-gray-800">
+        <div className="border-t border-gray-200 dark:border-gray-600 p-2 lg:p-3 bg-gray-50 dark:bg-gray-800">
           {/* Compact Progress Indicators */}
-          <div className="flex justify-center items-center space-x-2 mb-3">
+          <div className="flex justify-center items-center space-x-1.5 lg:space-x-2 mb-2 lg:mb-3">
             {tutorialSteps.map((tutorialStep, index) => (
               <div key={index} className="flex flex-col items-center">
                 <button
                   onClick={() => goToStep(index)}
-                  className={`w-6 h-6 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 flex items-center justify-center ${
+                  className={`w-5 h-5 lg:w-6 lg:h-6 rounded-full transition-all duration-300 cursor-pointer hover:scale-110 flex items-center justify-center ${
                     index === currentStep
                       ? `${
                         step.color === 'emerald' ? 'bg-emerald-600' :
@@ -406,48 +407,54 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
         </div>
 
         {/* Enhanced Footer */}
-        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between p-2 lg:p-4 bg-gray-50 dark:bg-gray-800/50">
+          <div className="flex items-center space-x-2 lg:space-x-4">
             <button
               onClick={() => {
                 console.log('⏭️ Skip Tutorial button clicked');
                 skipTutorial();
               }}
-              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm font-medium transition-all duration-200 hover:scale-105"
+              className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-xs lg:text-sm font-medium transition-all duration-200 hover:scale-105"
             >
-              Skip Tutorial
+              Skip
             </button>
-            <div className="text-xs text-gray-400">
+            <div className="hidden lg:block text-xs text-gray-400">
               Press ESC to close
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 lg:space-x-3">
             {currentStep > 0 && (
               <button
                 onClick={prevStep}
                 disabled={isAnimating}
-                className="flex items-center space-x-1 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-all duration-200 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center space-x-1 px-2 lg:px-3 py-1.5 lg:py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-all duration-200 text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ArrowLeft size={16} />
-                <span>Back</span>
+                <ArrowLeft size={14} className="lg:hidden" />
+                <ArrowLeft size={16} className="hidden lg:block" />
+                <span className="hidden lg:inline">Back</span>
               </button>
             )}
-            
+
             <button
               onClick={nextStep}
               disabled={isAnimating}
-              className={`flex items-center space-x-1 px-4 py-2 ${
+              className={`flex items-center space-x-1 px-3 lg:px-4 py-1.5 lg:py-2 ${
                 step.color === 'emerald' ? 'bg-emerald-600 hover:bg-emerald-700' :
                 step.color === 'blue' ? 'bg-blue-600 hover:bg-blue-700' :
                 step.color === 'purple' ? 'bg-purple-600 hover:bg-purple-700' :
                 step.color === 'green' ? 'bg-green-600 hover:bg-green-700' :
                 step.color === 'yellow' ? 'bg-yellow-600 hover:bg-yellow-700' :
                 'bg-red-600 hover:bg-red-700'
-              } text-white rounded transition-all duration-200 font-medium text-base disabled:opacity-50 disabled:cursor-not-allowed`}
+              } text-white rounded transition-all duration-200 font-medium text-sm lg:text-base disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              <span>{currentStep === tutorialSteps.length - 1 ? 'Get Started! 🚀' : 'Continue'}</span>
-              {currentStep < tutorialSteps.length - 1 && <ArrowRight size={16} />}
+              <span>{currentStep === tutorialSteps.length - 1 ? 'Start 🚀' : 'Next'}</span>
+              {currentStep < tutorialSteps.length - 1 && (
+                <>
+                  <ArrowRight size={14} className="lg:hidden" />
+                  <ArrowRight size={16} className="hidden lg:block" />
+                </>
+              )}
             </button>
           </div>
         </div>

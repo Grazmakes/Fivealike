@@ -110,70 +110,19 @@ export default function TopHeader({
     <NavigationErrorBoundary>
       <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm h-20">
         <div className="flex items-center justify-between px-6 h-full">
-          {/* Logo - positioned to the left */}
-          <button 
-            onClick={() => onNavigateToHome?.()}
-            className="flex flex-col items-start hover:opacity-80 transition-opacity"
-          >
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Five Alike
-            </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 -mt-1">
-              find a list for just about anything
-            </p>
-          </button>
-
-          {/* Search Bar */}
-          <div className="flex-1 max-w-2xl mx-8 relative" ref={searchSettingsRef}>
-            <div className="relative flex items-center">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Search lists, authors, or topics..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && searchQuery.trim()) {
-                      onSearch?.(searchQuery.trim());
-                    }
-                  }}
-                  className="w-full pl-12 pr-16 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-12 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                  >
-                    ×
-                  </button>
-                )}
-                {/* Search Settings Button */}
-                <button
-                  onClick={() => setShowSearchSettings(!showSearchSettings)}
-                  className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-md transition-colors ${
-                    showSearchSettings
-                      ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                      : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                  }`}
-                  title="Search Settings"
-                >
-                  <Filter size={16} />
-                </button>
-              </div>
-            </div>
-
-            {/* Search Settings Dropdown */}
-            {showSearchSettings && onSearchSettingsChange && (
-              <SearchSettingsDropdown
-                isOpen={showSearchSettings}
-                onToggle={() => setShowSearchSettings(false)}
-                settings={searchSettings}
-                onSettingsChange={onSearchSettingsChange}
-                onRandomList={onRandomList}
-                onClearSearch={onClearSearch}
-              />
-            )}
+          {/* Logo - left aligned */}
+          <div className="flex-1 flex justify-start">
+            <button
+              onClick={() => onNavigateToHome?.()}
+              className="flex flex-col items-start hover:opacity-80 transition-opacity"
+            >
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-left">
+                Five Alike
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 -mt-1 text-left">
+                find a list for just about anything
+              </p>
+            </button>
           </div>
 
           {/* Right side Actions */}
@@ -226,7 +175,7 @@ export default function TopHeader({
               </button>
 
               {showUserDropdown && (
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 py-2 z-[100]">
+                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 py-2 z-[100] animate-slideDown">
                   <button
                     onClick={() => {
                       onNavigateToProfile?.();

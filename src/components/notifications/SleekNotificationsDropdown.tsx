@@ -140,10 +140,10 @@ export default function SleekNotificationsDropdown({
   };
 
   return (
-    <div className="absolute top-full right-0 mt-2 z-50">
+    <div className="absolute top-full right-0 mt-2 z-50 animate-slideDown">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden -z-10" onClick={handleClose} />
-      
+      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden -z-10 animate-fadeIn" onClick={handleClose} />
+
       {/* Main dropdown */}
       <div className="bg-white dark:bg-gray-800 rounded-xl w-80 shadow-xl border border-green-200 dark:border-green-700/50 overflow-hidden">
         

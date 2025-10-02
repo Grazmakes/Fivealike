@@ -12,7 +12,7 @@ interface HotListsCarouselProps {
 export default function HotListsCarousel({ allLists, onTitleClick }: HotListsCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  
+
   // Get hot lists (sorted by votes/likes, exclude rejected)
   const hotLists = allLists
     .filter(list => !list.isRejected)
@@ -55,7 +55,7 @@ export default function HotListsCarousel({ allLists, onTitleClick }: HotListsCar
   }
 
   return (
-    <div className="p-4">
+    <div className="hot-lists-carousel hidden lg:block p-4">
       <div className="flex items-center justify-center mb-4">
         <h3 className="text-2xl font-semibold text-gray-900 dark:text-white flex items-center">
           <TrendingUp size={24} className="mr-2 text-green-500" />

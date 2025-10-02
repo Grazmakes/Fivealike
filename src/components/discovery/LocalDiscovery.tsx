@@ -79,6 +79,12 @@ export default function LocalDiscovery({
       return;
     }
 
+    // Check if we're on HTTP (not HTTPS)
+    if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost') {
+      alert('Location detection requires HTTPS on mobile devices. Please enter your location manually or access the site via HTTPS.');
+      return;
+    }
+
     console.log('Starting geolocation request');
     setIsDetectingLocation(true);
 

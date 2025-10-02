@@ -453,7 +453,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
 
                 {data.volumeInfo.description && (
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-semibold">
                       {data.volumeInfo.description.replace(/<[^>]*>/g, '')}
                     </p>
                   </div>
@@ -513,7 +513,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
 
                 {data.overview && (
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-semibold">
                       {data.overview}
                     </p>
                   </div>
@@ -623,13 +623,13 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
 
                 {data.description ? (
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-semibold">
                       {String(data.description).replace(/<[^>]*>/g, '')}
                     </p>
                   </div>
                 ) : data.bio && data.bio.summary ? (
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-semibold">
                       {data.bio.summary.replace(/<[^>]*>/g, '')}
                     </p>
                   </div>
@@ -840,7 +840,7 @@ export default function SimpleItemDetails({ itemName, category, onClose }: Simpl
 
                 {data.overview && (
                   <div className="text-sm text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
+                    <p className="leading-relaxed font-semibold">
                       {data.overview}
                     </p>
                   </div>

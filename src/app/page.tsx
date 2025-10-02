@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MessageCircle, ChevronUp } from 'lucide-react';
+import { MessageCircle, ChevronUp, Home as HomeIcon, Search, Plus, Bookmark, Menu, Trophy, Users, Layers, Calendar, Headphones, MapPin, TrendingUp } from 'lucide-react';
 import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState, HistoryItem } from '@/types';
 import { comprehensiveTestLists as mockLists, testNotifications as mockNotifications } from '@/data/comprehensiveTestData';
+import { categories, categoryEmojis } from '@/data/mockData';
 
 import TopHeader from '@/components/TopHeader';
 import Navigation from '@/components/Navigation';
@@ -59,6 +60,8 @@ function HomeContent() {
   const [showCommunityGuidelines, setShowCommunityGuidelines] = useState(false);
   const [showRedditChat, setShowRedditChat] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showMobileGenres, setShowMobileGenres] = useState(false);
   
   // State to track which item to highlight when navigating from mention notifications
   const [highlightedItem, setHighlightedItem] = useState<{type: 'list' | 'message' | 'comment', id: string} | null>(null);
@@ -1104,6 +1107,11 @@ function HomeContent() {
     setRandomTrigger(prev => prev + 1);
   };
 
+  // Handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentView('discover');
+  };
 
   // Handle reject lists click - navigate to rejected lists view
   const handleRejectListsClick = () => {
@@ -2020,6 +2028,11 @@ function HomeContent() {
               savedLists={savedLists}
               setSavedLists={setSavedLists}
               userProfile={userProfile}
+              onSearch={handleSearch}
+              searchSettings={searchSettings}
+              onSearchSettingsChange={handleSearchSettingsChange}
+              onRandomList={handleRandomList}
+              onClearSearch={handleClearSearch}
           />
         );
       case 'discover':
@@ -2290,7 +2303,7 @@ function HomeContent() {
         
         <div className="flex">
         {/* Permanent Left Sidebar */}
-        <div className="w-64 flex-shrink-0">
+        <div className="hidden lg:block w-64 flex-shrink-0">
           <div className="fixed left-0 top-24 h-[calc(100vh-6rem)] w-64">
             <Navigation 
               currentView={currentView}
@@ -2315,10 +2328,10 @@ function HomeContent() {
         </div>
         
         {/* Left Vertical Separator */}
-        <div className="w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed left-64 top-0 h-screen"></div>
+        <div className="hidden lg:block w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed left-64 top-0 h-screen"></div>
         
         {/* Main Content Area - Fixed width to prevent expansion */}
-        <div data-main-content className="fixed left-80 top-20 right-64 bottom-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-8 z-30">
+        <div data-main-content className="fixed left-0 lg:left-80 top-20 right-0 lg:right-64 bottom-0 lg:bottom-0 pb-16 lg:pb-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-8 z-30">
           {/* Back to Top Button */}
           <button
             onClick={scrollToTop}
@@ -2331,23 +2344,25 @@ function HomeContent() {
           >
             <ChevronUp size={24} className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" />
           </button>
-          <div className="max-w-4xl mx-auto bg-transparent" style={{ paddingLeft: '2rem', paddingRight: '6rem' }}>
+          <div className="max-w-4xl mx-auto bg-transparent px-0 lg:px-8 lg:pr-24">
             <main className="bg-transparent">
               {renderCurrentView()}
             </main>
           </div>
         </div>
         
-        {/* Right Vertical Separator */}
-        <div className="w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed right-64 top-0 h-screen z-20"></div>
-        
-        {/* Right Sidebar - Communities */}
-        <CommunitiesSidebar
-          allLists={allLists}
-          onCategorySelect={handleCategorySelect}
-          onRejectListsClick={handleRejectListsClick}
-          selectedCategory={selectedCategory}
-        />
+        {/* Right Vertical Separator - Hidden on mobile */}
+        <div className="hidden lg:block w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed right-64 top-0 h-screen z-20"></div>
+
+        {/* Right Sidebar - Communities - Hidden on mobile */}
+        <div className="hidden lg:block">
+          <CommunitiesSidebar
+            allLists={allLists}
+            onCategorySelect={handleCategorySelect}
+            onRejectListsClick={handleRejectListsClick}
+            selectedCategory={selectedCategory}
+          />
+        </div>
       </div>
 
       {showNewListForm && (
@@ -2389,11 +2404,231 @@ function HomeContent() {
         />
       )}
 
-      {/* Floating Chat Button */}
+      {/* Mobile Genres Modal */}
+      {showMobileGenres && (
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMobileGenres(false)}>
+          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh]" onClick={(e) => e.stopPropagation()}>
+            <div className="px-4 py-4">
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Genres</h2>
+                <button
+                  onClick={() => setShowMobileGenres(false)}
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <ChevronUp size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                {categories.map((category) => {
+                  const listCount = allLists.filter(list => list.category === category && !list.isRejected).length;
+
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        setCurrentView('discover');
+                        setShowMobileGenres(false);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-base">{categoryEmojis[category] || '📝'}</span>
+                        <span className="text-sm text-gray-900 dark:text-white">{category}</span>
+                      </div>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">{listCount}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Menu Modal */}
+      {showMobileMenu && (
+        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMobileMenu(false)}>
+          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh]" onClick={(e) => e.stopPropagation()}>
+            <div className="px-4 py-4">
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Menu</h2>
+                <button
+                  onClick={() => setShowMobileMenu(false)}
+                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  <ChevronUp size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-1 max-h-[50vh] overflow-y-auto">
+                <button
+                  onClick={() => {
+                    setCurrentView('trending');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <TrendingUp size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Trending</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('local');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <MapPin size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Local Lists</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('favorites');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Bookmark size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Saved Lists</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('leaderboard');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Trophy size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Leaderboards</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('community');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Users size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Friends</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('groups');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Layers size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Groups</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('events');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Calendar size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Social Events</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCurrentView('podcast');
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <Headphones size={20} className="text-gray-700 dark:text-gray-300" />
+                  <span className="text-sm text-gray-900 dark:text-white">Podcast</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Bottom Navigation - Only visible on mobile */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
+        <div className="flex justify-around items-center h-16 px-2">
+          <button
+            onClick={() => {
+              setShowMobileMenu(!showMobileMenu);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+          >
+            <Menu size={20} />
+            <span className="text-xs mt-1">Menu</span>
+          </button>
+          <button
+            onClick={() => {
+              setCurrentView('local');
+              setShowMobileMenu(false);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+          >
+            <MapPin size={20} />
+            <span className="text-xs mt-1">Local Lists</span>
+          </button>
+          <button
+            onClick={() => {
+              setShowNewListForm(true);
+              setShowMobileMenu(false);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-3 bg-green-500 text-white rounded-lg mx-2 shadow-lg hover:bg-green-600 transition-colors"
+          >
+            <Plus size={28} />
+            <span className="text-xs mt-1 font-semibold">Create</span>
+          </button>
+          <button
+            onClick={() => {
+              setShowRedditChat(!showRedditChat);
+              setShowMobileMenu(false);
+              setShowMobileGenres(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400 relative"
+          >
+            <MessageCircle size={20} />
+            <span className="text-xs mt-1">Chat</span>
+            {unreadMessagesCount > 0 && (
+              <span className="absolute top-1 right-1/4 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                {unreadMessagesCount}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => {
+              setShowMobileGenres(!showMobileGenres);
+              setShowMobileMenu(false);
+              setShowRedditChat(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+          >
+            <Search size={20} />
+            <span className="text-xs mt-1">Genres</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Floating Chat Button - Desktop only */}
       {!showRedditChat && (
         <button
           onClick={() => setShowRedditChat(true)}
-          className="fixed bottom-6 right-72 w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 hover:scale-105 z-40"
+          className="hidden lg:flex fixed bottom-6 right-72 w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg items-center justify-center transition-all duration-200 hover:scale-105 z-40"
           title="Open Chat"
         >
           <MessageCircle size={24} />
