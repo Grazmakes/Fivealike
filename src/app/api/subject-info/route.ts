@@ -6,6 +6,7 @@ interface SubjectInfo {
   image?: string;
   sourceName: string;
   sourceUrl?: string;
+  id?: string;
 }
 
 interface SubjectInfoRequest {
@@ -56,7 +57,7 @@ const flattenTopics = (topics: DuckDuckGoTopic[] = []): DuckDuckGoTopic[] => {
   });
 };
 
-const DEFAULT_TIMEOUT = 1000; // Reduced from 2000ms to 1000ms for faster failures
+const DEFAULT_TIMEOUT = 2000; // 2 second timeout - fast enough for good UX
 
 const fetchWithTimeout = async (input: string, init?: RequestInit, timeout = DEFAULT_TIMEOUT) => {
   const controller = new AbortController();
@@ -358,6 +359,139 @@ const fetchFromITunes = async (subject: string): Promise<SubjectInfo | null> => 
   return null;
 };
 
+const fetchFromSpotify = async (subject: string): Promise<{ id?: string; image?: string } | null> => {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    return null;
+  }
+
+  try {
+    // Get access token
+    const tokenResponse = await fetchWithTimeout(
+      'https://accounts.spotify.com/api/token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64')
+        },
+        body: 'grant_type=client_credentials',
+        cache: 'no-store'
+      },
+      5000
+    );
+
+    if (!tokenResponse || !tokenResponse.ok) {
+      return null;
+    }
+
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
+
+    // Search for artist
+    const searchResponse = await fetchWithTimeout(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(subject)}&type=artist&limit=1`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        },
+        cache: 'no-store'
+      }
+    );
+
+    if (!searchResponse || !searchResponse.ok) {
+      return null;
+    }
+
+    const searchData = await searchResponse.json();
+    const artist = searchData.artists?.items?.[0];
+
+    if (!artist) {
+      return null;
+    }
+
+    return {
+      id: artist.id,
+      image: artist.images?.[0]?.url
+    };
+  } catch (error) {
+    console.error('Spotify lookup failed', error);
+    return null;
+  }
+};
+
+const fetchFromSpotifyShow = async (subject: string): Promise<{ id?: string; image?: string; sourceUrl?: string; description?: string } | null> => {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    return null;
+  }
+
+  try {
+    // Get access token
+    const tokenResponse = await fetchWithTimeout(
+      'https://accounts.spotify.com/api/token',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64')
+        },
+        body: 'grant_type=client_credentials',
+        cache: 'no-store'
+      },
+      5000
+    );
+
+    if (!tokenResponse || !tokenResponse.ok) {
+      return null;
+    }
+
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
+
+    // Search for show (podcast)
+    const searchResponse = await fetchWithTimeout(
+      `https://api.spotify.com/v1/search?q=${encodeURIComponent(subject)}&type=show&limit=1`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        },
+        cache: 'no-store'
+      }
+    );
+
+    if (!searchResponse || !searchResponse.ok) {
+      return null;
+    }
+
+    const searchData = await searchResponse.json();
+    const show = searchData.shows?.items?.[0];
+
+    console.log('[fetchFromSpotifyShow] Raw show object:', JSON.stringify(show, null, 2));
+    console.log('[fetchFromSpotifyShow] Show ID:', show?.id);
+
+    if (!show) {
+      console.log('[fetchFromSpotifyShow] No show found in response');
+      return null;
+    }
+
+    const result = {
+      id: show.id,
+      image: show.images?.[0]?.url,
+      sourceUrl: show.id ? `https://open.spotify.com/show/${show.id}` : undefined,
+      description: show.description ? cleanDescription(show.description) : undefined
+    };
+    console.log('[fetchFromSpotifyShow] Returning:', JSON.stringify(result, null, 2));
+    return result;
+  } catch (error) {
+    return null;
+  }
+};
+
 const fetchCategoryArtwork = async (subject: string, category?: string): Promise<SubjectInfo | null> => {
   if (!category) {
     return null;
@@ -398,26 +532,114 @@ const fetchCategoryArtwork = async (subject: string, category?: string): Promise
   }
 
   if (['music', 'artist', 'song', 'songs', 'album', 'albums'].includes(normalized)) {
-    // Try AudioDB first for the best music artwork coverage
+    // Try Spotify first to get artist ID for embed player
+    const spotifyData = await fetchFromSpotify(subject);
+
+    // Try AudioDB for the best music artwork coverage
     const audioDbData = await fetchFromAudioDB(subject);
     if (audioDbData?.image) {
-      return audioDbData;
+      return {
+        ...audioDbData,
+        id: spotifyData?.id,
+        spotifyId: spotifyData?.id
+      };
     }
 
     // Fall back to Last.fm for biography if AudioDB doesn't have image
     const lastFmData = await fetchFromLastFM(subject);
     if (lastFmData?.image || lastFmData?.description) {
-      // Merge data: use AudioDB image if available, Last.fm biography
+      // Merge data: use AudioDB image if available, Last.fm biography, Spotify ID
       return {
         description: lastFmData.description || audioDbData?.description || '',
-        image: audioDbData?.image || lastFmData.image,
-        sourceName: audioDbData?.image ? 'AudioDB' : 'Last.fm',
-        sourceUrl: lastFmData.sourceUrl || audioDbData?.sourceUrl
+        image: audioDbData?.image || spotifyData?.image || lastFmData.image,
+        sourceName: audioDbData?.image ? 'AudioDB' : (spotifyData?.image ? 'Spotify' : 'Last.fm'),
+        sourceUrl: lastFmData.sourceUrl || audioDbData?.sourceUrl,
+        id: spotifyData?.id,
+        spotifyId: spotifyData?.id
       };
     }
 
-    // Final fallback to iTunes if both fail
-    return fetchFromITunes(subject);
+    // Final fallback to iTunes if others fail, but keep Spotify ID
+    const itunesData = await fetchFromITunes(subject);
+    if (itunesData) {
+      return {
+        ...itunesData,
+        id: spotifyData?.id,
+        spotifyId: spotifyData?.id
+      };
+    }
+
+    // If we at least have Spotify data
+    if (spotifyData?.id || spotifyData?.image) {
+      return {
+        description: '',
+        image: spotifyData.image,
+        sourceName: 'Spotify',
+        sourceUrl: `https://open.spotify.com/artist/${spotifyData.id}`,
+        id: spotifyData.id,
+        spotifyId: spotifyData.id
+      };
+    }
+
+    return null;
+  }
+
+  if (['podcasts', 'podcast'].includes(normalized)) {
+    // For podcasts, fetch iTunes podcast data differently
+    const fetchItunesPodcast = async (): Promise<any> => {
+      try {
+        const response = await fetchWithTimeout(
+          `https://itunes.apple.com/search?term=${encodeURIComponent(subject)}&entity=podcast&limit=1`,
+          { cache: 'no-store' }
+        );
+        if (!response || !response.ok) return null;
+
+        const data = await response.json();
+        const podcast = data.results?.[0];
+        if (!podcast) return null;
+
+        return {
+          description: podcast.description || '',
+          image: upscaleItunesArtwork(podcast.artworkUrl600 || podcast.artworkUrl100),
+          sourceName: 'Apple Podcasts',
+          sourceUrl: ensureHttps(podcast.collectionViewUrl)
+        };
+      } catch (error) {
+        return null;
+      }
+    };
+
+    // Try to get both Spotify (for player) and iTunes (for details) in parallel
+    const [spotifyShowData, itunesData] = await Promise.all([
+      fetchFromSpotifyShow(subject),
+      fetchItunesPodcast()
+    ]);
+
+    console.log(`[Podcast ${subject}] Spotify data:`, JSON.stringify(spotifyShowData, null, 2));
+    console.log(`[Podcast ${subject}] iTunes data:`, JSON.stringify(itunesData, null, 2));
+
+    // If we have Spotify data with an ID, use it
+    if (spotifyShowData?.id) {
+      const result = {
+        description: spotifyShowData.description || itunesData?.description || '',
+        image: spotifyShowData.image || itunesData?.image,
+        sourceName: 'Spotify',
+        sourceUrl: spotifyShowData.sourceUrl || `https://open.spotify.com/show/${spotifyShowData.id}`,
+        id: spotifyShowData.id,
+        spotifyId: spotifyShowData.id
+      };
+      console.log(`[Podcast ${subject}] Returning with Spotify ID:`, JSON.stringify(result, null, 2));
+      return result;
+    }
+
+    // If no Spotify but have iTunes, return iTunes data (won't have player)
+    if (itunesData) {
+      console.log(`[Podcast ${subject}] Returning iTunes only (no Spotify):`, JSON.stringify(itunesData, null, 2));
+      return itunesData;
+    }
+
+    console.log(`[Podcast ${subject}] No data found`);
+    return null;
   }
 
   return null;

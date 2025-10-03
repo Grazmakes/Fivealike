@@ -80,6 +80,7 @@ interface SubjectInfo {
   image?: string;
   sourceName?: string;
   sourceUrl?: string;
+  id?: string;
 }
 
 const subjectInfoCache = new Map<string, SubjectInfo>();
@@ -978,88 +979,12 @@ function ListCard({
               <span>{list.category}</span>
             </button>
 
-            <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4 space-y-4 sm:space-y-0">
-              <div className="flex-shrink-0">
-                <div className="w-28 h-40 rounded-xl bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden ring-1 ring-gray-200 dark:ring-gray-700">
-                  {loadingMainSubject ? (
-                    <div className="w-10 h-10 border-2 border-green-500 border-t-transparent rounded-full animate-spin" aria-label="Loading main subject" />
-                  ) : list.subjectImage ? (
-                    <img
-                      src={list.subjectImage}
-                      alt={mainSubjectName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : mainSubjectData?.image ? (
-                    <img
-                      src={mainSubjectData.image}
-                      alt={mainSubjectName}
-                      className="w-full h-full object-contain bg-white dark:bg-gray-800"
-                      onError={(event) => {
-                        const target = event.currentTarget as HTMLImageElement;
-                        target.onerror = null;
-                        target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(mainSubjectName)}&background=0f766e&color=ffffff&size=256&bold=true`;
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={`https://ui-avatars.com/api/?name=${encodeURIComponent(mainSubjectName)}&background=0f766e&color=ffffff&size=256&bold=true`}
-                      alt={mainSubjectName}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-              </div>
-              <div className="flex-1 space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{mainSubjectName}</h3>
-                    {mainSubjectData?.sourceName && (
-                      <div className="mt-1 flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400">
-                        <span>Source:</span>
-                        {mainSubjectData.sourceUrl ? (
-                          <a
-                            href={mainSubjectData.sourceUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center space-x-1 text-green-600 dark:text-green-400 hover:underline"
-                          >
-                            <span>{mainSubjectData.sourceName}</span>
-                            <ExternalLink size={12} />
-                          </a>
-                        ) : (
-                          <span>{mainSubjectData.sourceName}</span>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleRefreshMainSubject}
-                    disabled={loadingMainSubject}
-                    className="inline-flex items-center space-x-2 self-start px-3 py-1.5 rounded-full text-xs font-medium border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:border-green-300 dark:hover:border-green-400 transition-colors disabled:opacity-60"
-                  >
-                    <RefreshCw size={14} className={loadingMainSubject ? 'animate-spin' : ''} />
-                    <span>{loadingMainSubject ? 'Refreshing' : 'Refresh'}</span>
-                  </button>
-                </div>
-                <div className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  {loadingMainSubject ? (
-                    <div className="space-y-2">
-                      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded" />
-                      <div className="h-3 w-3/4 bg-gray-200 dark:bg-gray-700 rounded" />
-                      <div className="h-3 w-2/3 bg-gray-200 dark:bg-gray-700 rounded" />
-                    </div>
-                  ) : mainSubjectError ? (
-                    <p className="text-sm text-amber-600 dark:text-amber-400 font-semibold">{mainSubjectError}</p>
-                  ) : mainSubjectData?.description ? (
-                    <p className="font-semibold">{mainSubjectData.description}</p>
-                  ) : (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 font-semibold">
-                      We couldn't find a quick description yet. We'll keep looking for fresh sources.
-                    </p>
-                  )}
-                </div>
-              </div>
+            <div className="flex flex-col items-center space-y-4">
+              <SimpleItemDetails
+                itemName={mainSubjectName}
+                category={list.category}
+                showCloseButton={false}
+              />
             </div>
           </div>
         </div>
@@ -1093,10 +1018,10 @@ function ListCard({
             <div key={index} className="rounded-lg bg-gray-200 dark:bg-gray-500 transition-colors">
               <div className="flex items-center justify-between p-4 lg:p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
-                  <span className="font-bold lg:font-medium text-gray-900 dark:text-white text-base lg:text-sm truncate">
+                  <span className="font-bold text-gray-900 dark:text-white text-base truncate">
                     {list.isOrdered ? (
                       <>
-                        <span className="inline-flex items-center justify-center w-7 h-7 lg:w-6 lg:h-6 mr-3 rounded-full text-sm lg:text-xs font-bold text-white bg-green-600">
+                        <span className="inline-flex items-center justify-center w-7 h-7 mr-3 rounded-full text-sm font-bold text-white bg-green-600">
                           {index + 1}
                         </span>
                         {displayLabel}
@@ -1112,7 +1037,7 @@ function ListCard({
                     disabled={isLoading}
                   >
                     {isLoading ? (
-                      <div className="animate-spin w-6 h-6 lg:w-5 lg:h-5 border-2 border-green-600 border-t-transparent rounded-full" />
+                      <div className="text-green-600 dark:text-green-400 text-xs">...</div>
                     ) : (
                       <ChevronRight
                         size={24}

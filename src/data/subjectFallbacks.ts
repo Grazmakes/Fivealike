@@ -3,6 +3,8 @@ export interface SubjectFallback {
   image?: string;
   sourceName: string;
   sourceUrl: string;
+  id?: string;
+  spotifyId?: string;
 }
 
 import { artistFallbacks } from '@/data/artistFallbacks';
@@ -102,7 +104,9 @@ Object.values(artistFallbacks).forEach((artist) => {
     description: artist.biography,
     image: artist.image,
     sourceName: sourceName,
-    sourceUrl: artist.sourceUrl || ''
+    sourceUrl: artist.sourceUrl || '',
+    id: artist.id,
+    spotifyId: artist.id
   };
 });
 

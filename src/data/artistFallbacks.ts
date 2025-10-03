@@ -6,53 +6,56 @@ export interface ArtistFallback {
   genres?: string[];
   members?: string[];
   sourceUrl?: string;
+  id?: string; // Spotify artist ID
 }
 
 export const artistFallbacks: Record<string, ArtistFallback> = {
   'Radiohead': {
     name: 'Radiohead',
     biography: 'Radiohead are an English rock band formed in Abingdon in 1985, known for their experimental approach and influential albums.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/07/60/ba/0760ba0f-148c-b18f-d0ff-169ee96f3af5/634904078164.png/600x600bb.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Radiohead_2018_composite.jpg/330px-Radiohead_2018_composite.jpg',
     formed: '1985',
     genres: ['Alternative Rock', 'Art Rock', 'Experimental Rock'],
     members: ['Thom Yorke', 'Jonny Greenwood', 'Colin Greenwood', 'Ed O\'Brien', 'Philip Selway'],
-    sourceUrl: 'https://music.apple.com/us/artist/radiohead/657515'
+    sourceUrl: 'https://music.apple.com/us/artist/radiohead/657515',
+    id: '4Z8W4fKeB5YxbusRsdQVPb'
   },
   'Muse': {
     name: 'Muse',
     biography: 'Muse are an English rock band formed in Teignmouth in 1994, blending progressive rock, electronica, and symphonic influences.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/da/bf/32/dabf32e7-cb21-e58b-d8b9-4a4ad4a1ad1d/00602547875082.rgb.jpg/600x600bb.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/MuseHammsmith100522_%2847_of_76%29_%2852089636284%29.jpg/330px-MuseHammsmith100522_%2847_of_76%29_%2852089636284%29.jpg',
     formed: '1994',
     genres: ['Alternative Rock', 'Progressive Rock', 'Space Rock'],
     members: ['Matt Bellamy', 'Chris Wolstenholme', 'Dominic Howard'],
-    sourceUrl: 'https://music.apple.com/us/artist/muse/3996865'
+    sourceUrl: 'https://music.apple.com/us/artist/muse/3996865',
+    id: '12Chz98pHFMPJEknJQMWvI'
   },
   'Coldplay': {
     name: 'Coldplay',
     biography: 'Coldplay are a British rock band formed in London in 1997, celebrated for soaring melodies and atmospheric production.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/e9/e9/bf/e9e9bfea-9de9-8b6d-a017-0b9d7dc4b896/14UMGIM45850.rgb.jpg/600x600bb.jpg',
     formed: '1997',
     genres: ['Alternative Rock', 'Pop Rock'],
     members: ['Chris Martin', 'Jonny Buckland', 'Guy Berryman', 'Will Champion'],
-    sourceUrl: 'https://music.apple.com/us/artist/coldplay/471744'
+    sourceUrl: 'https://music.apple.com/us/artist/coldplay/471744',
+    id: '4gzpq5DPGxSnKTe4SA8HAU'
   },
   'Oasis': {
     name: 'Oasis',
     biography: 'Oasis were an English rock band formed in Manchester in 1991, central to the Britpop movement with swaggering guitar anthems.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/2e/de/bf/2edebf1a-7d3e-c88d-01c6-7fb19d0a32dc/886445635362.jpg/600x600bb.jpg',
     formed: '1991',
     genres: ['Britpop', 'Rock', 'Alternative Rock'],
     members: ['Liam Gallagher', 'Noel Gallagher', 'Paul Arthurs', 'Paul McGuigan', 'Tony McCarroll'],
-    sourceUrl: 'https://music.apple.com/us/artist/oasis/657544'
+    sourceUrl: 'https://music.apple.com/us/artist/oasis/657544',
+    id: '2DaxqgrOhkeH0fpeiQq2f4'
   },
   'Blur': {
     name: 'Blur',
     biography: 'Blur are an English rock band formed in London in 1988, known for witty Britpop songwriting and stylistic experimentation.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/cc/8f/93/cc8f93e8-c4f0-05fe-9bb0-1a98cf23c738/19UMGIM95395.rgb.jpg/600x600bb.jpg',
     formed: '1988',
     genres: ['Britpop', 'Alternative Rock', 'Art Rock'],
     members: ['Damon Albarn', 'Graham Coxon', 'Alex James', 'Dave Rowntree'],
-    sourceUrl: 'https://music.apple.com/us/artist/blur/42098'
+    sourceUrl: 'https://music.apple.com/us/artist/blur/42098',
+    id: '7MhMgCo0Bl0Kukl93PZbYS'
   },
   'Conan Gray': {
     name: 'Conan Gray',
@@ -61,33 +64,73 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     formed: '2018',
     genres: ['Pop', 'Indie Pop', 'Bedroom Pop'],
     members: ['Conan Gray'],
-    sourceUrl: 'https://en.wikipedia.org/wiki/Conan_Gray'
+    sourceUrl: 'https://en.wikipedia.org/wiki/Conan_Gray',
+    id: '4TXdHyuAOl3rAOFmZ6MeKz'
   },
   'Taylor Swift': {
     name: 'Taylor Swift',
     biography: 'Taylor Swift is an American singer-songwriter celebrated for her narrative songwriting and genre-spanning reinventions.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/32/b5/6b/32b56b49-0075-7128-e6ec-7c3c4c697242/00843930000821.rgb.jpg/600x600bb.jpg',
     formed: '2006',
     genres: ['Pop', 'Country', 'Indie Folk'],
     members: ['Taylor Swift'],
-    sourceUrl: 'https://music.apple.com/us/artist/taylor-swift/159260351'
+    sourceUrl: 'https://music.apple.com/us/artist/taylor-swift/159260351',
+    id: '06HL4z0CvFAxyc27GXpf02'
   },
   'The Kinks': {
     name: 'The Kinks',
     biography: 'The Kinks were an English rock band formed in Muswell Hill, north London, in 1963 by brothers Ray and Dave Davies.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/84/8c/5f/848c5f84-5e1d-d2c5-c8ed-b3e0b27d6c6b/886445635164.jpg/600x600bb.jpg',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Helmfrid-sofa4_Touched.JPG/250px-Helmfrid-sofa4_Touched.JPG',
     formed: '1963',
     genres: ['Rock', 'Pop Rock', 'British Invasion'],
     members: ['Ray Davies', 'Dave Davies', 'Mick Avory', 'Pete Quaife'],
-    sourceUrl: 'https://music.apple.com/us/artist/the-kinks/177781'
+    sourceUrl: 'https://music.apple.com/us/artist/the-kinks/177781',
+    id: '1SQRv42e4PjEYfPhS0Tk9E'
   },
   'The Who': {
     name: 'The Who',
     biography: 'The Who are an English rock band formed in London in 1964, known for their energetic live performances and rock opera concepts.',
-    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/d5/1e/f8/d51ef8f5-b4c0-5f4e-3c5a-3b8c8b8c8c8c/888072030927.jpg/600x600bb.jpg',
     formed: '1964',
     genres: ['Rock', 'Hard Rock', 'Art Rock'],
     members: ['Roger Daltrey', 'Pete Townshend', 'John Entwistle', 'Keith Moon'],
-    sourceUrl: 'https://music.apple.com/us/artist/the-who/487134'
+    sourceUrl: 'https://music.apple.com/us/artist/the-who/487134',
+    id: '67ea9eGLXYMsO2eYQRui3w'
+  },
+  'The Beach Boys': {
+    name: 'The Beach Boys',
+    biography: 'The Beach Boys are an American rock band formed in Hawthorne, California, in 1961. Known for their vocal harmonies and surf rock sound.',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Beach_Boys_1967_%28cropped%29.jpg/330px-Beach_Boys_1967_%28cropped%29.jpg',
+    formed: '1961',
+    genres: ['Rock', 'Pop Rock', 'Surf Rock'],
+    members: ['Brian Wilson', 'Mike Love', 'Al Jardine', 'Bruce Johnston', 'David Marks'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-beach-boys/140132',
+    id: '3oDbviiivRWhXwIE8hxkVV'
+  },
+  'The Byrds': {
+    name: 'The Byrds',
+    biography: 'The Byrds were an American rock band formed in Los Angeles, California, in 1964. Known for pioneering folk rock and psychedelic rock.',
+    image: 'https://upload.wikimedia.org/wikipedia/en/c/c4/The_Byrds_in_1965.jpg',
+    formed: '1964',
+    genres: ['Rock', 'Folk Rock', 'Psychedelic Rock'],
+    members: ['Roger McGuinn', 'Gene Clark', 'David Crosby', 'Chris Hillman', 'Michael Clarke'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-byrds/100890',
+    id: '1PCZpxHJz7WAMF8EEq8bfc'
+  },
+  'The Zombies': {
+    name: 'The Zombies',
+    biography: 'The Zombies are an English rock band formed in St Albans in 1962. Led by keyboardist/vocalist Rod Argent and lead vocalist Colin Blunstone, they had their first British and American hit in 1964 with "She\'s Not There".',
+    formed: '1962',
+    genres: ['Rock', 'Psychedelic Rock', 'British Invasion'],
+    members: ['Rod Argent', 'Colin Blunstone', 'Paul Atkinson', 'Chris White', 'Hugh Grundy'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-zombies/486517',
+    id: '2jgPkn6LuUazBoBk6vvjh5'
+  },
+  'The Hollies': {
+    name: 'The Hollies',
+    biography: 'The Hollies are an English pop/rock band formed in Manchester in 1962. Known for their distinctive three-part vocal harmony style, they had numerous hits in the 1960s and 1970s.',
+    formed: '1962',
+    genres: ['Rock', 'Pop Rock', 'British Invasion'],
+    members: ['Allan Clarke', 'Graham Nash', 'Tony Hicks', 'Eric Haydock', 'Bobby Elliott'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-hollies/156488',
+    id: '6waa8mKu91GjzD4NlONlNJ'
   }
 };
