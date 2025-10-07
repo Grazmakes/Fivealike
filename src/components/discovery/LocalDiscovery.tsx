@@ -24,6 +24,8 @@ interface LocalDiscoveryProps {
   events?: any[];
   onJoinEvent?: (eventId: string, status: 'going' | 'maybe' | 'not_going') => void;
   onBack?: () => void;
+  onAddListToHistory?: (listId: number) => void;
+  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 
@@ -48,7 +50,9 @@ export default function LocalDiscovery({
   onAddComment,
   events,
   onJoinEvent,
-  onBack
+  onBack,
+  onAddListToHistory,
+  onRateList
 }: LocalDiscoveryProps) {
   const [selectedTab, setSelectedTab] = useState<LocalTab>('nearby');
   const [distanceFilter, setDistanceFilter] = useState<DistanceFilter>('city');
@@ -450,12 +454,14 @@ export default function LocalDiscovery({
                       onMessage={onMessage}
                       onItemBookmark={onItemBookmark}
                       bookmarkState={bookmarkState}
-                      onSaveList={handleSaveList}
-                      isSaved={savedLists.includes(list.id)}
-                      antiSocialMode={userProfile.antiSocialMode}
-                    />
-                  </div>
-                ))}
+                    onSaveList={handleSaveList}
+                    isSaved={savedLists.includes(list.id)}
+                    antiSocialMode={userProfile.antiSocialMode}
+                    onAddListToHistory={onAddListToHistory}
+                    onRateList={onRateList}
+                  />
+                </div>
+              ))}
               </div>
             ) : (
               <div className="text-center py-12">
@@ -512,12 +518,14 @@ export default function LocalDiscovery({
                     onHighFive={onHighFive}
                     onTitleClick={onTitleClick}
                     onAuthorClick={onAuthorClick}
-                    onMessage={onMessage}
-                    onItemBookmark={onItemBookmark}
-                    bookmarkState={bookmarkState}
+                  onMessage={onMessage}
+                  onItemBookmark={onItemBookmark}
+                  bookmarkState={bookmarkState}
                     onSaveList={handleSaveList}
                     isSaved={savedLists.includes(list.id)}
                     antiSocialMode={userProfile.antiSocialMode}
+                    onAddListToHistory={onAddListToHistory}
+                    onRateList={onRateList}
                   />
                 </div>
               ))}

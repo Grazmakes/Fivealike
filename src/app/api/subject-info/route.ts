@@ -7,6 +7,7 @@ interface SubjectInfo {
   sourceName: string;
   sourceUrl?: string;
   id?: string;
+  spotifyId?: string;
 }
 
 interface SubjectInfoRequest {
@@ -792,7 +793,9 @@ export async function POST(request: Request) {
         description: cleanDescription(categoryDetails.description) || '',
         image: categoryDetails.image,
         sourceName: categoryDetails.sourceName || 'External Source',
-        sourceUrl: categoryDetails.sourceUrl
+        sourceUrl: categoryDetails.sourceUrl,
+        id: categoryDetails.id,
+        spotifyId: categoryDetails.spotifyId
       };
     }
 

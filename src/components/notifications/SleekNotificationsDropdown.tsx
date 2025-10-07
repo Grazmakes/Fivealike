@@ -140,15 +140,15 @@ export default function SleekNotificationsDropdown({
   };
 
   return (
-    <div className="absolute top-full right-0 mt-2 z-50 animate-slideDown">
+    <div className="fixed md:absolute inset-x-4 top-20 md:top-full md:right-0 md:left-auto md:inset-x-auto md:mt-2 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/20 backdrop-blur-sm md:hidden -z-10 animate-fadeIn" onClick={handleClose} />
+      <div className="fixed inset-0 bg-black/40 backdrop-blur-sm -z-10 animate-in fade-in duration-200" onClick={handleClose} />
 
       {/* Main dropdown */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl w-80 shadow-xl border border-green-200 dark:border-green-700/50 overflow-hidden">
-        
+      <div className="bg-white dark:bg-gray-900 rounded-xl w-full md:w-80 shadow-2xl border-2 border-green-200 dark:border-green-700/50 overflow-hidden transform transition-all duration-300 ease-out">
+
         {/* Header */}
-        <div className="p-4 bg-white dark:from-gray-900 dark:to-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div className="p-4 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="relative">
@@ -206,7 +206,7 @@ export default function SleekNotificationsDropdown({
 
         {/* Notifications List */}
         <FeedErrorBoundary>
-          <div className="max-h-72 overflow-y-auto">
+          <div className="max-h-96 md:max-h-72 overflow-y-auto">
             {filteredNotifications.length === 0 ? (
             <div className="p-6 text-center">
               <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">

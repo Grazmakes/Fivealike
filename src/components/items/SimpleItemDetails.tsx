@@ -1,38 +1,168 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+/* eslint-disable @next/next/no-img-element */
+
+import { useEffect, useMemo, useState } from 'react';
 import { X } from 'lucide-react';
+
 import { mockArtistData } from '@/data/mockData';
 import { artistFallbacks } from '@/data/artistFallbacks';
 import { getBookFallback } from '@/data/bookFallbacks';
+import { subjectFallbacks, normalizeSubjectKey } from '@/data/subjectFallbacks';
 import { getCategorySwatch, getCategoryText } from '@/utils/categoryColors';
+import { isMusicCategory, isPodcastCategory } from '@/utils/categoryUtils';
 
 interface SimpleItemDetailsProps {
   itemName: string;
   category?: string;
   onClose?: () => void;
   showCloseButton?: boolean;
+  hideSpotifyEmbed?: boolean;
 }
 
-// Helper function to limit text to 4 sentences
-const limitToSentences = (text: string, maxSentences: number = 4): string => {
-  if (!text) return '';
-  // Split on sentence endings (., !, ?) followed by space or end of string
-  const sentences = text.split(/(?<=[.!?])\s+/);
-  const limited = sentences.slice(0, maxSentences).join(' ').trim();
-  return limited;
+type ZoomImage = {
+  src: string;
+  alt: string;
 };
 
-export default function SimpleItemDetails({ itemName, category, onClose, showCloseButton = true }: SimpleItemDetailsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<any>(null);
+type AmazonCategory =
+  | 'Books'
+  | 'Music'
+  | 'Podcasts'
+  | 'Movies'
+  | 'TV Shows'
+  | 'Games'
+  | undefined;
 
-  const fallbackData = useMemo(() => {
+const RICH_WIKIPEDIA_CATEGORIES = [
+  'Travel',
+  'Sports',
+  'Technology',
+  'Food',
+  'Art',
+  'Fashion',
+  'Photography',
+  'Fitness',
+  'Science',
+  'History',
+  'Politics',
+  'Comedy',
+  'Horror',
+  'Romance',
+  'Adventure',
+  'Board Games',
+  'Health',
+  'Relationships',
+  'Business',
+  'Education',
+  'Transportation',
+  'Pets',
+  'Environment',
+  'Social',
+  'Shopping',
+  'Work'
+];
+
+const limitToSentences = (text: string, maxSentences: number = 4): string => {
+  if (!text) return '';
+  const sentences = text.split(/(?<=[.!?])\s+/);
+  return sentences.slice(0, maxSentences).join(' ').trim();
+};
+
+const buildSpotifyEmbedUrl = (options: { type: 'artist' | 'show'; id?: string; fallbackQuery: string }) => {
+  const { type, id, fallbackQuery } = options;
+
+  if (id && id.trim().length > 0) {
+    const pathSegment = type === 'show' ? 'show' : 'artist';
+    return `https://open.spotify.com/embed/${pathSegment}/${id}?utm_source=generator&theme=0`;
+  }
+
+  return `https://open.spotify.com/embed/search/${encodeURIComponent(fallbackQuery)}?utm_source=generator&theme=0`;
+};
+
+const buildAmazonUrl = (category: AmazonCategory, itemName: string): string => {
+  const searchTerm = encodeURIComponent(itemName);
+
+  switch (category) {
+    case 'Music':
+    case 'Podcasts':
+      return `https://music.amazon.com/search/${searchTerm}`;
+    case 'Movies':
+    case 'TV Shows':
+      return `https://www.amazon.com/gp/video/search?phrase=${searchTerm}`;
+    case 'Books':
+      return `https://www.amazon.com/s?k=${searchTerm}&i=stripbooks`;
+    case 'Games':
+      return `https://www.amazon.com/s?k=${searchTerm}&i=videogames`;
+    default:
+      return `https://www.amazon.com/s?k=${searchTerm}`;
+  }
+};
+
+type ArtworkProps = {
+  src?: string | null;
+  alt: string;
+  sizeClass: string;
+  placeholderClass: string;
+  placeholderText: string;
+  onExpand: (image: ZoomImage) => void;
+};
+
+const Artwork = ({
+  src,
+  alt,
+  sizeClass,
+  placeholderClass,
+  placeholderText,
+  onExpand
+}: ArtworkProps): JSX.Element => {
+  if (src && src.trim().length > 0) {
+    return (
+      <img
+        src={src}
+        alt={alt}
+        className={`${sizeClass} object-contain rounded shadow-md bg-white dark:bg-gray-800 cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-yellow-400`}
+        onClick={() => onExpand({ src, alt })}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onExpand({ src, alt });
+          }
+        }}
+        tabIndex={0}
+        role="button"
+      />
+    );
+  }
+
+  return (
+    <div className={`${placeholderClass} rounded shadow-md flex items-center justify-center text-white font-bold text-2xl`}>
+      {placeholderText}
+    </div>
+  );
+};
+
+function AmazonButton({ category, itemName }: { category: AmazonCategory; itemName: string }): JSX.Element {
+  return (
+    <div className="mt-0 flex justify-center" style={{ marginTop: '5px' }}>
+      <a
+        href={buildAmazonUrl(category, itemName)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center px-4 py-2 bg-[#FF9900] hover:bg-[#F08804] text-white font-semibold rounded-lg shadow-md transition-colors"
+      >
+        Try on Amazon
+      </a>
+    </div>
+  );
+}
+
+const useFallbackData = (category: string | undefined, itemName: string) =>
+  useMemo(() => {
     if (!category) return null;
-    const normalizedCategory = category.toLowerCase();
+    const normalized = category.toLowerCase();
 
-    if (normalizedCategory === 'music') {
+    if (normalized === 'music') {
       const candidates = [
         itemName,
         itemName.replace(/ essentials? playlist/i, '').trim(),
@@ -55,25 +185,22 @@ export default function SimpleItemDetails({ itemName, category, onClose, showClo
           };
         }
       }
-    }
 
-    if (normalizedCategory === 'books') {
-      const book = getBookFallback(itemName);
-      if (book) {
+      const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, 'Music')];
+      if (subjectFallback) {
         return {
-          volumeInfo: {
-            title: book.title,
-            authors: book.authors,
-            description: book.description,
-            imageLinks: book.thumbnail ? { thumbnail: book.thumbnail } : undefined,
-            publishedDate: book.publishedDate,
-            pageCount: book.pageCount
-          }
+          type: 'music',
+          name: itemName,
+          description: subjectFallback.description,
+          image: subjectFallback.image,
+          artwork: subjectFallback.image,
+          id: subjectFallback.id,
+          spotifyId: subjectFallback.spotifyId
         };
       }
     }
 
-    if (normalizedCategory === 'books') {
+    if (normalized === 'books') {
       const candidates = [
         itemName,
         itemName.replace(/ companion stories?/i, '').trim(),
@@ -97,262 +224,370 @@ export default function SimpleItemDetails({ itemName, category, onClose, showClo
       }
     }
 
+    const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, category)];
+    if (subjectFallback) {
+      return {
+        name: itemName,
+        ...subjectFallback
+      };
+    }
+
     return null;
   }, [category, itemName]);
+
+export default function SimpleItemDetails({
+  itemName,
+  category,
+  onClose,
+  showCloseButton = true,
+  hideSpotifyEmbed = false
+}: SimpleItemDetailsProps) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<any>(null);
+  const [zoomImage, setZoomImage] = useState<ZoomImage | null>(null);
+  const [forceWikipedia, setForceWikipedia] = useState(false);
+
+  const fallbackData = useFallbackData(category, itemName);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Don't use fallback data immediately - try API first for best quality data
-        // Fallback will be used if API fails (see error handlers below)
-
         setLoading(true);
         setError(null);
+        setForceWikipedia(false);
 
-        console.log(`[SimpleItemDetails] Fetching data for "${itemName}" in category "${category}"`);
-        console.log(`[SimpleItemDetails] Category type:`, typeof category);
-        console.log(`[SimpleItemDetails] Category exact value:`, JSON.stringify(category));
+        if (!category) {
+          setData(null);
+          return;
+        }
 
-        // Categories that should use Wikipedia fallback for rich content
-        const wikipediaCategories = [
-          'Travel', 'Sports', 'Technology', 'Food', 'Art', 'Fashion', 'Photography',
-          'Fitness', 'Science', 'History', 'Politics', 'Comedy', 'Horror', 'Romance',
-          'Adventure', 'Board Games', 'Health', 'Relationships', 'Business', 'Education',
-          'Transportation', 'Pets', 'Environment', 'Social', 'Shopping', 'Work'
-        ];
-
-        if (wikipediaCategories.includes(category)) {
-          console.log(`[SimpleItemDetails] ${category} category detected - using Wikipedia fallback for rich content`);
-          setData(null); // This will trigger WikipediaFallback component
+        if (RICH_WIKIPEDIA_CATEGORIES.includes(category)) {
+          setData(null);
           return;
         }
 
         if (category === 'Books') {
-          const bookFallback = getBookFallback(itemName);
-          console.log('[SimpleItemDetails] Fetching books data...');
+          const fallback = getBookFallback(itemName);
+
           try {
             const response = await fetch(`/api/search/books?query=${encodeURIComponent(itemName)}&limit=1`, {
-              signal: AbortSignal.timeout(10000) // 10 second timeout
+              signal: AbortSignal.timeout(10000)
             });
-            console.log('[SimpleItemDetails] Books response status:', response.status);
 
             if (!response.ok) {
-              const errorText = await response.text();
-              console.error('[SimpleItemDetails] Books API error:', response.status, errorText);
-              throw new Error(`Books API failed: ${response.status}`);
+              throw new Error(`Books API failed with status ${response.status}`);
             }
 
             const results = await response.json();
-            console.log('[SimpleItemDetails] Books API results:', results);
+            const book = results?.[0];
 
-            if (results && results.length > 0) {
-              console.log('[SimpleItemDetails] Setting book data:', results[0]);
-              // Transform flat API response to match expected volumeInfo structure
-              const bookData = results[0];
+            if (book) {
               setData({
                 volumeInfo: {
-                  title: bookData.title,
-                  authors: bookData.authors,
-                  description: bookData.description,
-                  imageLinks: bookData.thumbnail ? { thumbnail: bookData.thumbnail } : undefined,
-                  publishedDate: bookData.publishedDate,
-                  pageCount: bookData.pageCount,
-                  categories: bookData.categories,
-                  language: bookData.language,
-                  infoLink: bookData.infoLink
+                  title: book.title,
+                  authors: book.authors,
+                  description: book.description,
+                  imageLinks: book.thumbnail ? { thumbnail: book.thumbnail } : undefined,
+                  publishedDate: book.publishedDate,
+                  pageCount: book.pageCount,
+                  categories: book.categories,
+                  language: book.language,
+                  infoLink: book.infoLink
                 }
               });
-            } else {
-              console.log('[SimpleItemDetails] No books found, will use fallback');
-              if (bookFallback) {
-                setData({
-                  volumeInfo: {
-                    title: bookFallback.title,
-                    authors: bookFallback.authors,
-                    description: bookFallback.description,
-                    imageLinks: bookFallback.thumbnail ? { thumbnail: bookFallback.thumbnail } : undefined,
-                    publishedDate: bookFallback.publishedDate,
-                    pageCount: bookFallback.pageCount
-                  }
-                });
-              } else {
-                setData(null);
-              }
+              return;
             }
-          } catch (fetchError) {
-            console.error('[SimpleItemDetails] Books fetch error:', fetchError);
-            if (bookFallback) {
+
+            if (fallback) {
               setData({
                 volumeInfo: {
-                  title: bookFallback.title,
-                  authors: bookFallback.authors,
-                  description: bookFallback.description,
-                  imageLinks: bookFallback.thumbnail ? { thumbnail: bookFallback.thumbnail } : undefined,
-                  publishedDate: bookFallback.publishedDate,
-                  pageCount: bookFallback.pageCount
+                  title: fallback.title,
+                  authors: fallback.authors,
+                  description: fallback.description,
+                  imageLinks: fallback.thumbnail ? { thumbnail: fallback.thumbnail } : undefined,
+                  publishedDate: fallback.publishedDate,
+                  pageCount: fallback.pageCount
+                }
+              });
+              return;
+            }
+
+            setData(null);
+            return;
+          } catch (err) {
+            if (fallback) {
+              setData({
+                volumeInfo: {
+                  title: fallback.title,
+                  authors: fallback.authors,
+                  description: fallback.description,
+                  imageLinks: fallback.thumbnail ? { thumbnail: fallback.thumbnail } : undefined,
+                  publishedDate: fallback.publishedDate,
+                  pageCount: fallback.pageCount
                 }
               });
               setError(null);
-              setLoading(false);
               return;
             }
-            throw fetchError;
+            throw err;
           }
-        } else if (category === 'Movies') {
-          console.log('[SimpleItemDetails] Fetching movies data...');
+        }
+
+        if (category === 'Movies') {
           try {
-            const response = await fetch(`/api/search/movies?query=${encodeURIComponent(itemName)}&limit=1`, {
-              signal: AbortSignal.timeout(10000) // 10 second timeout
+            const response = await fetch(`/api/search/movies?query=${encodeURIComponent(itemName)}`, {
+              signal: AbortSignal.timeout(10000)
             });
-            console.log('[SimpleItemDetails] Movies response status:', response.status);
 
             if (!response.ok) {
-              const errorText = await response.text();
-              console.error('[SimpleItemDetails] Movies API error:', response.status, errorText);
-              throw new Error(`Movies API failed: ${response.status}`);
+              if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  setError(null);
+                  return;
+                }
+
+                setForceWikipedia(true);
+                setData(null);
+                setError(null);
+                return;
+              }
+
+              throw new Error(`Movies API failed with status ${response.status}`);
+            }
+
+            const { results } = await response.json();
+            if (results && results.length > 0) {
+              setData(mergeWithFallback(results[0], fallbackData));
+              return;
+            }
+
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+
+            setForceWikipedia(true);
+            setData(null);
+            return;
+          } catch (err) {
+            console.error('[SimpleItemDetails] Movies fetch error:', err);
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+            setData(null);
+            throw err;
+          }
+        }
+
+        if (category === 'TV Shows') {
+          try {
+            const response = await fetch(`/api/search/tvshows?query=${encodeURIComponent(itemName)}`, {
+              signal: AbortSignal.timeout(10000)
+            });
+
+            if (!response.ok) {
+              if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  setError(null);
+                  return;
+                }
+
+                setForceWikipedia(true);
+                setData(null);
+                setError(null);
+                return;
+              }
+
+              throw new Error(`TV API failed with status ${response.status}`);
+            }
+
+            const { results } = await response.json();
+            if (results && results.length > 0) {
+              setData(mergeWithFallback(results[0], fallbackData));
+              return;
+            }
+
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+
+            setForceWikipedia(true);
+            setData(null);
+            return;
+          } catch (err) {
+            console.error('[SimpleItemDetails] TV fetch error:', err);
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+            setData(null);
+            throw err;
+          }
+        }
+
+        if (category === 'Games') {
+          try {
+            const response = await fetch(`/api/search/games?query=${encodeURIComponent(itemName)}&limit=1`, {
+              signal: AbortSignal.timeout(10000)
+            });
+
+            if (!response.ok) {
+              if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  setError(null);
+                  return;
+                }
+
+                setForceWikipedia(true);
+                setData(null);
+                setError(null);
+                return;
+              }
+
+              throw new Error(`Games API failed with status ${response.status}`);
             }
 
             const results = await response.json();
-            console.log('[SimpleItemDetails] Movies API results:', results);
-
-            if (results && Array.isArray(results) && results.length > 0) {
-              console.log('[SimpleItemDetails] Setting movie data:', results[0]);
+            if (results && results.length > 0) {
               setData(results[0]);
-            } else if (results && results.results && results.results.length > 0) {
-              console.log('[SimpleItemDetails] Setting movie data (nested):', results.results[0]);
-              setData(results.results[0]);
-            } else {
-              console.log('[SimpleItemDetails] No movies found, will use Wikipedia fallback');
-              setData(null);
+              return;
             }
-          } catch (fetchError) {
-            console.error('[SimpleItemDetails] Movies fetch error:', fetchError);
-            throw fetchError;
-          }
-        } else if (category === 'Games') {
-          const response = await fetch(`/api/search/games?query=${encodeURIComponent(itemName)}&limit=1`, {
-            signal: AbortSignal.timeout(10000) // 10 second timeout
-          });
-          if (!response.ok) {
-            throw new Error(`Games API failed: ${response.status}`);
-          }
-          const results = await response.json();
-          console.log('[SimpleItemDetails] Games API results:', results);
 
-          if (results && results.length > 0) {
-            console.log('[SimpleItemDetails] Setting games data:', results[0]);
-            setData(results[0]);
-          } else {
-            console.log('[SimpleItemDetails] No games found, will use Wikipedia fallback');
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+
+            setForceWikipedia(true);
             setData(null);
-          }
-        } else if (category === 'Podcasts') {
-          // Use subject-info API which already merges iTunes and Spotify data
-          const subjectInfoResponse = await fetch(`/api/subject-info?cacheBust=${Date.now()}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Cache-Control': 'no-cache, no-store, must-revalidate'
-            },
-            body: JSON.stringify({ subject: itemName, category: 'Podcasts' }),
-            signal: AbortSignal.timeout(10000),
-            cache: 'no-store'
-          });
-
-          console.log('[SimpleItemDetails] Response status:', subjectInfoResponse.status);
-          const subjectData = subjectInfoResponse.ok ? await subjectInfoResponse.json() : null;
-          console.log('[SimpleItemDetails] Subject info data:', JSON.stringify(subjectData, null, 2));
-          console.log('[SimpleItemDetails] Has spotifyId?:', !!subjectData?.spotifyId);
-          console.log('[SimpleItemDetails] Has id?:', !!subjectData?.id);
-
-          if (subjectData) {
-            // Extract Spotify ID from sourceUrl if not present in id/spotifyId fields
-            let spotifyId = subjectData.spotifyId || subjectData.id;
-
-            if (!spotifyId && subjectData.sourceUrl && subjectData.sourceUrl.includes('open.spotify.com/show/')) {
-              const match = subjectData.sourceUrl.match(/\/show\/([a-zA-Z0-9]+)/);
-              if (match) {
-                spotifyId = match[1];
-                console.log('[SimpleItemDetails] Extracted Spotify ID from sourceUrl:', spotifyId);
-                // Add the spotifyId to the data
-                subjectData.spotifyId = spotifyId;
-                subjectData.id = spotifyId;
-              }
+            return;
+          } catch (err) {
+            console.error('[SimpleItemDetails] Games fetch error:', err);
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
             }
+            setData(null);
+            throw err;
+          }
+        }
 
-            // Map API response fields to component expected fields
-            const podcastData = {
-              ...subjectData,
-              name: subjectData.name || itemName,
-              artwork: subjectData.image || subjectData.artwork, // Map 'image' to 'artwork'
-              description: subjectData.description || '',
-              spotifyId: spotifyId
-            };
-
-            console.log('[SimpleItemDetails] Setting podcast data with spotifyId:', spotifyId);
-            console.log('[SimpleItemDetails] About to call setData with:', JSON.stringify(podcastData, null, 2));
-            setData(podcastData);
-            console.log('[SimpleItemDetails] setData called successfully');
-          } else {
-            // If subject-info fails, try iTunes search as fallback
-            console.log('[SimpleItemDetails] Subject info returned null, trying iTunes search');
-            const itunesResponse = await fetch(`/api/search/podcasts?query=${encodeURIComponent(itemName)}&limit=1`, {
+        if (category === 'Music') {
+          try {
+            const response = await fetch('/api/subject-info', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ subject: itemName, category: 'Music' }),
               signal: AbortSignal.timeout(10000)
             });
-            const itunesResults = itunesResponse.ok ? await itunesResponse.json() : [];
 
-            if (itunesResults && itunesResults.length > 0) {
-              console.log('[SimpleItemDetails] Using iTunes data without Spotify player');
-              setData(itunesResults[0]);
-            } else {
-              console.log('[SimpleItemDetails] No podcast data found, will use Wikipedia fallback');
-              setData(null);
+            if (!response.ok) {
+              if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  return;
+                }
+
+                setData(null);
+                setError(null);
+                setForceWikipedia(true);
+                return;
+              }
+
+              throw new Error(`Music API failed with status ${response.status}`);
             }
-          }
-        } else if (category === 'TV Shows') {
-          // Skip slow TMDB API, use Wikipedia fallback immediately
-          console.log('[SimpleItemDetails] Using Wikipedia fallback for TV show');
-          setData(null);
-        } else if (category === 'Music') {
-          // Always fetch Spotify data for music
-          const spotifyResponse = await fetch('/api/subject-info', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ subject: itemName, category: 'Music' }),
-            signal: AbortSignal.timeout(10000)
-          });
 
-          const spotifyData = spotifyResponse.ok ? await spotifyResponse.json() : null;
-          console.log('[SimpleItemDetails] Spotify data for music:', spotifyData);
+            const subjectData = await response.json();
 
-          if (fallbackData) {
-            // Merge fallback data with Spotify ID
-            console.log('[SimpleItemDetails] Using music fallback data with Spotify ID');
-            setData({
-              ...fallbackData,
-              spotifyId: spotifyData?.id || fallbackData.id
-            });
-          } else if (spotifyData?.id) {
-            // Use Spotify data directly
-            console.log('[SimpleItemDetails] Using Spotify data for music');
-            setData({
-              name: itemName,
-              spotifyId: spotifyData.id,
-              image: spotifyData.image,
-              description: spotifyData.description
-            });
-          } else {
-            console.log('[SimpleItemDetails] No fallback or Spotify data for music, using Wikipedia fallback');
-            setData(null); // Will trigger Wikipedia fallback component
+            if (subjectData && (subjectData.spotifyId || subjectData.id || subjectData.image)) {
+              setData(mergeWithFallback(subjectData, fallbackData));
+              return;
+            }
+
+            if (fallbackData) {
+              setData(fallbackData);
+              return;
+            }
+
+            setData(null);
+            return;
+          } catch (err) {
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+            console.error('[SimpleItemDetails] Music fetch error:', err);
+            throw err;
           }
-        } else {
-          // If no specific category handler, set data to null to trigger Wikipedia fallback
-          console.log('[SimpleItemDetails] Unhandled category:', category, '- using Wikipedia fallback');
-          setData(null);
         }
+
+        if (category === 'Podcasts') {
+          try {
+            const response = await fetch('/api/subject-info', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ subject: itemName, category: 'Podcasts' }),
+              signal: AbortSignal.timeout(10000)
+            });
+
+            if (!response.ok) {
+              if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  return;
+                }
+
+                setData(null);
+                setError(null);
+                setForceWikipedia(true);
+                return;
+              }
+
+              throw new Error(`Podcast API failed with status ${response.status}`);
+            }
+
+            const subjectData = await response.json();
+
+            if (subjectData && (subjectData.spotifyId || subjectData.image)) {
+              setData(mergeWithFallback(subjectData, fallbackData));
+              return;
+            }
+
+            if (fallbackData) {
+              setData(fallbackData);
+              return;
+            }
+
+            setData(null);
+            return;
+          } catch (err) {
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
+            console.error('[SimpleItemDetails] Podcast fetch error:', err);
+            throw err;
+          }
+        }
+
+        setData(null);
       } catch (err) {
         console.error('[SimpleItemDetails] Error:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
       } finally {
         setLoading(false);
       }
@@ -361,13 +596,421 @@ export default function SimpleItemDetails({ itemName, category, onClose, showClo
     fetchData();
   }, [itemName, category, fallbackData]);
 
+  useEffect(() => {
+  }, [category, data, itemName]);
+
+  useEffect(() => {
+    if (!zoomImage) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setZoomImage(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [zoomImage]);
+
+  const handleZoom = (image: ZoomImage) => {
+    setZoomImage(image);
+  };
+
+  const mergeWithFallback = (primary: any, fallback: any | null | undefined) => {
+    if (!fallback) return primary;
+    if (!primary) return fallback;
+
+  return {
+    ...fallback,
+    ...primary,
+    description: primary.description || fallback.description,
+    image: primary.image || primary.artwork || fallback.image,
+    artwork: primary.artwork || primary.image || fallback.image,
+    poster_path: primary.poster_path || fallback.poster_path,
+    genres: primary.genres || fallback.genres,
+    bio: primary.bio || fallback.bio,
+    coverArt: primary.coverArt || fallback.coverArt,
+    images: primary.images || fallback.images,
+    albums: primary.albums || fallback.albums,
+    id: primary.id || fallback.id,
+    spotifyId: primary.spotifyId || fallback.spotifyId
+  };
+};
+
+  const renderMusic = () => {
+    if (!data) return renderGeneric();
+
+    const imageCandidates = [
+      data.image,
+      data.artwork,
+      Array.isArray(data.images) ? data.images[0] : undefined,
+      data.coverArt?.sources?.[0]?.url,
+      Array.isArray(data.albums) ? data.albums[0] : undefined,
+      fallbackData?.image,
+      fallbackData?.artwork,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.image,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.artwork
+    ];
+
+    const imageUrl = imageCandidates.map(normalizeMusicImage).find(Boolean);
+    const description = data.description
+      ? limitToSentences(String(data.description).replace(/<[^>]*>/g, ''))
+      : data.bio?.summary
+      ? limitToSentences(data.bio.summary.replace(/<[^>]*>/g, ''))
+      : null;
+
+    const spotifyEmbedSrc = buildSpotifyEmbedUrl({
+      type: 'artist',
+      id: data.spotifyId || data.id,
+      fallbackQuery: data.name || itemName
+    });
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{data.name || itemName}</h4>
+            <Artwork
+              src={imageUrl}
+              alt={data.name || itemName}
+              sizeClass="w-full max-w-xs md:w-52 md:h-52 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-52 h-auto bg-gradient-to-br from-purple-500 to-pink-500"
+              placeholderText={(data.name || itemName).substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left w-full px-4 md:px-0">
+            {description && (
+              <div className="text-base text-gray-700 dark:text-gray-300 mb-4">
+                <p className="leading-relaxed">{description}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Music Player - Full width below everything */}
+        {!hideSpotifyEmbed && (
+          <div className="w-full px-1 md:px-0 mt-4 flex justify-center">
+            <iframe
+              title={`${data.name || itemName} on Spotify`}
+              style={{ borderRadius: '12px', minWidth: '320px', maxWidth: '480px' }}
+              src={spotifyEmbedSrc}
+              width="100%"
+              height="152"
+              frameBorder="0"
+              allowFullScreen={false}
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderGames = () => {
+    if (!data) return renderGeneric();
+
+    // Check for subject fallback first (for games like Wordle with better square icons)
+    const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, 'Games')];
+    const imageUrl = subjectFallback?.image || data.background_image || data.image || null;
+    const descriptionSource = typeof data.description_raw === 'string' && data.description_raw.length > 0
+      ? data.description_raw
+      : data.description;
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{data.name || itemName}</h4>
+            <Artwork
+              src={imageUrl || undefined}
+              alt={data.name || itemName}
+              sizeClass="w-full max-w-xs md:w-52 md:h-52 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-52 h-auto bg-gradient-to-br from-slate-500 to-slate-700"
+              placeholderText={(data.name || itemName).substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
+            {descriptionSource && (
+              <div className="text-base text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed">
+                  {limitToSentences(String(descriptionSource).replace(/<[^>]*>/g, ''))}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderMovies = () => {
+    if (!data) return renderGeneric();
+
+    const title = data.title || data.original_title || itemName;
+    const posterUrl = data.poster_path
+      ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+      : data.image || data.artwork || null;
+    const releaseYear = data.release_date
+      ? new Date(data.release_date).getFullYear()
+      : data.year;
+    const description = data.overview || data.description;
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{title}</h4>
+            <Artwork
+              src={posterUrl || undefined}
+              alt={title}
+              sizeClass="w-full max-w-xs md:w-52 md:h-78 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-78 h-auto bg-gradient-to-br from-slate-400 to-slate-600"
+              placeholderText={title.substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
+            {description && (
+              <div className="text-base text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed">{limitToSentences(description)}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderTVShows = () => {
+    if (!data) return renderGeneric();
+
+    const title = data.name || data.original_name || itemName;
+    const posterUrl = data.poster_path
+      ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
+      : data.image || data.artwork || null;
+    const firstAirYear = data.first_air_date
+      ? new Date(data.first_air_date).getFullYear()
+      : data.year || data.startYear;
+    const description = data.overview || data.description;
+    const countries = Array.isArray(data.origin_country)
+      ? data.origin_country
+      : data.country
+      ? [data.country]
+      : [];
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{title}</h4>
+            <Artwork
+              src={posterUrl || undefined}
+              alt={title}
+              sizeClass="w-full max-w-xs md:w-52 md:h-78 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-78 h-auto bg-gradient-to-br from-blue-500 to-indigo-600"
+              placeholderText={title.substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
+            {description && (
+              <div className="text-base text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed">{limitToSentences(description)}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderBooks = () => {
+    if (!data) return renderGeneric();
+
+    const volumeInfo = data.volumeInfo || {
+      title: data.title || data.name || itemName,
+      authors: data.authors,
+      description: data.description,
+      imageLinks: data.image || data.thumbnail ? { thumbnail: data.image || data.thumbnail } : undefined,
+      publishedDate: data.publishedDate,
+      pageCount: data.pageCount,
+      infoLink: data.sourceUrl
+    };
+
+    const title = volumeInfo.title || data.title || data.name || itemName;
+    const thumbnail = volumeInfo.imageLinks?.thumbnail || data.image || data.thumbnail || null;
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{title}</h4>
+            <Artwork
+              src={thumbnail}
+              alt={title}
+              sizeClass="w-full max-w-xs md:w-52 md:h-78 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-78 h-auto bg-gradient-to-br from-slate-400 to-slate-600"
+              placeholderText={(title || itemName).substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
+            {volumeInfo.description && (
+              <div className="text-base text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed">{limitToSentences(String(volumeInfo.description).replace(/<[^>]*>/g, ''))}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderPodcasts = () => {
+    if (!data) return renderGeneric();
+
+    const podcastImageCandidates = [
+      data.artwork,
+      data.image,
+      Array.isArray(data.images) ? data.images[0] : undefined,
+      data.coverArt?.sources?.[0]?.url,
+      fallbackData?.image,
+      fallbackData?.artwork,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.image,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.artwork
+    ];
+
+    const artworkUrl = podcastImageCandidates.map(normalizeMusicImage).find(Boolean);
+    const spotifyEmbedSrc = buildSpotifyEmbedUrl({
+      type: 'show',
+      id: data.spotifyId || data.id,
+      fallbackQuery: data.name || itemName
+    });
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{data.name || itemName}</h4>
+            <Artwork
+              src={artworkUrl}
+              alt={data.name || itemName}
+              sizeClass="w-full max-w-xs md:w-52 md:h-52 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-52 h-auto bg-gradient-to-br from-blue-500 to-purple-600"
+              placeholderText={(data.name || itemName).substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
+            {data.description && (
+              <div className="text-base text-gray-700 dark:text-gray-300">
+                <p className="leading-relaxed">{limitToSentences(data.description)}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {!hideSpotifyEmbed && (
+          <div className="w-full px-1 md:px-0 mt-4 flex justify-center">
+            <iframe
+              title={`${data.name || itemName} on Spotify`}
+              style={{ borderRadius: '12px', minWidth: '320px', maxWidth: '480px' }}
+              src={spotifyEmbedSrc}
+              width="100%"
+              height="80"
+              frameBorder="0"
+              allowFullScreen={false}
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+            ></iframe>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderGeneric = () => {
+    if (!data) {
+      return null;
+    }
+
+    return (
+      <div className="space-y-2 text-center">
+        <h4 className="text-2xl font-semibold text-gray-900 dark:text-white">{data.title || data.name || itemName}</h4>
+        <p className="text-base text-gray-600 dark:text-gray-400">
+          {data.description ? limitToSentences(data.description) : `Details for ${itemName} would appear here.`}
+        </p>
+        {(!category || !RICH_WIKIPEDIA_CATEGORIES.includes(category)) && (
+          <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+        )}
+      </div>
+    );
+  };
+
+  const renderContent = () => {
+    if (!category || RICH_WIKIPEDIA_CATEGORIES.includes(category)) {
+      return null;
+    }
+
+    if (isMusicCategory(category)) {
+      return renderMusic();
+    }
+
+    if (isPodcastCategory(category)) {
+      return renderPodcasts();
+    }
+
+    switch (category) {
+      case 'Books':
+        return renderBooks();
+      case 'Movies':
+        return renderMovies();
+      case 'TV Shows':
+        return renderTVShows();
+      case 'Games':
+        return renderGames();
+      default:
+        return renderGeneric();
+    }
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
       {showCloseButton && (
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {itemName}
-          </h3>
+        <div className="flex justify-end items-center mb-4">
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -380,9 +1023,7 @@ export default function SimpleItemDetails({ itemName, category, onClose, showClo
       {loading && (
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-          <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-            Loading details...
-          </span>
+          <span className="ml-2 text-base text-gray-600 dark:text-gray-400">Loading details...</span>
         </div>
       )}
 
@@ -393,558 +1034,52 @@ export default function SimpleItemDetails({ itemName, category, onClose, showClo
         </div>
       )}
 
-      {!loading && !error && data && (
-        <div className="space-y-3">
-          {category === 'Books' && data.volumeInfo ? (
-            <div className="flex flex-col items-center space-y-4">
-              {/* Book cover */}
-              <div className="flex-shrink-0 flex flex-col items-center">
-                {(() => {
-                  const thumbnail = data.volumeInfo.imageLinks?.thumbnail;
-                  if (thumbnail) {
-                    return (
-                      <img
-                        src={thumbnail}
-                        alt={data.volumeInfo.title}
-                        className="w-56 h-72 object-contain rounded shadow-md bg-white dark:bg-gray-800"
-                        style={{ objectFit: 'contain' }}
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          console.log('Book cover failed to load:', target.src);
-                          target.style.display = 'none';
-                          const placeholder = target.parentElement?.querySelector('.book-placeholder');
-                          if (placeholder) {
-                            (placeholder as HTMLElement).style.display = 'flex';
-                          }
-                        }}
-                      />
-                    );
-                  } else {
-                    return (
-                      <div className="book-placeholder w-56 h-72 bg-gradient-to-br from-slate-400 to-slate-600 rounded shadow-md flex items-center justify-center text-white font-bold text-2xl">
-                        {data.volumeInfo.title.substring(0, 2).toUpperCase()}
-                      </div>
-                    );
-                  }
-                })()}
+      {!loading && !error && renderContent()}
 
-                {/* Amazon button under cover */}
-                <div className="mt-3 w-56">
-                  <a
-                    href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}&i=stripbooks`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:opacity-80 transition-opacity"
-                  >
-                    <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-base">
-                      Try on Amazon
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="w-full space-y-3 text-center">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {data.volumeInfo.title}
-                </h4>
-
-                <div className="space-y-1">
-                  {data.volumeInfo.authors && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      By: {data.volumeInfo.authors.join(', ')}
-                    </p>
-                  )}
-                  {data.volumeInfo.publishedDate && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Published: {data.volumeInfo.publishedDate}
-                    </p>
-                  )}
-                  {data.volumeInfo.pageCount && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Pages: {data.volumeInfo.pageCount}
-                    </p>
-                  )}
-                  {data.volumeInfo.categories && data.volumeInfo.categories.length > 0 && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Genre: {data.volumeInfo.categories[0]}
-                    </p>
-                  )}
-                </div>
-
-                {data.volumeInfo.description && (
-                  <div className="text-base text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed font-semibold">
-                      {limitToSentences(data.volumeInfo.description.replace(/<[^>]*>/g, ''))}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : category === 'Movies' && data ? (
-            <div className="flex flex-col items-center space-y-4">
-              {/* Poster */}
-              <div className="flex-shrink-0 flex flex-col items-center">
-                {data.poster_path && (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${data.poster_path}`}
-                    alt={data.title || itemName}
-                    className="w-56 h-72 object-contain rounded shadow-md bg-white dark:bg-gray-800"
-                    style={{ objectFit: 'contain' }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      console.log('Image failed to load:', target.src);
-                      target.style.display = 'none';
-                    }}
-                  />
-                )}
-
-                {/* Amazon button under poster */}
-                <div className="mt-3 w-56">
-                  <a
-                    href={`https://www.amazon.com/gp/video/search?phrase=${encodeURIComponent(itemName)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:opacity-80 transition-opacity"
-                  >
-                    <div className="bg-yellow-500 text-white font-semibold py-2 px-3 rounded text-center text-base">
-                      Try on Amazon
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="w-full space-y-3 text-center">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {data.title || data.original_title || itemName}
-                </h4>
-
-                <div className="space-y-1">
-                  {data.release_date && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Released: {new Date(data.release_date).getFullYear()}
-                    </p>
-                  )}
-                  {data.vote_average && data.vote_average > 0 && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Rating: {data.vote_average.toFixed(1)}/10 ({data.vote_count || 0} votes)
-                    </p>
-                  )}
-                </div>
-
-                {data.overview && (
-                  <div className="text-base text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed font-semibold">
-                      {limitToSentences(data.overview)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : category === 'Music' && data ? (
-            <div className="space-y-4">
-              <div className="flex flex-col items-center space-y-4">
-                {/* Artist artwork */}
-                <div className="flex-shrink-0 relative flex flex-col items-center">
-                  {(() => {
-                    const imageUrl = data.image;
-                    console.log('[SimpleItemDetails] Rendering music artwork. imageUrl:', imageUrl);
-
-                    if (imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== '') {
-                      return (
-                        <>
-                          <img
-                            src={imageUrl}
-                            alt={data.name || itemName}
-                            className="w-56 h-56 object-cover rounded shadow-md bg-white dark:bg-gray-800"
-                            onLoad={() => {
-                              console.log('[SimpleItemDetails] Image loaded successfully:', imageUrl);
-                            }}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              console.error('[SimpleItemDetails] Image failed to load:', target.src);
-                              target.style.display = 'none';
-                              const placeholder = target.parentElement?.querySelector('.music-placeholder');
-                              if (placeholder) {
-                                (placeholder as HTMLElement).style.display = 'flex';
-                              }
-                            }}
-                          />
-                          <div className="music-placeholder w-56 h-56 bg-gradient-to-br from-purple-500 to-pink-500 rounded shadow-md flex items-center justify-center text-white font-bold text-2xl absolute top-0 left-0" style={{display: 'none'}}>
-                            {(data.name || itemName).substring(0, 2).toUpperCase()}
-                          </div>
-                        </>
-                      );
-                    } else {
-                      console.log('[SimpleItemDetails] No valid image URL, showing placeholder');
-                      return (
-                        <div className="w-56 h-56 bg-gradient-to-br from-purple-500 to-pink-500 rounded shadow-md flex items-center justify-center text-white font-bold text-2xl">
-                          {(data.name || itemName).substring(0, 2).toUpperCase()}
-                        </div>
-                      );
-                    }
-                  })()}
-
-                  {/* Amazon button under artwork */}
-                  <div className="mt-3 w-56">
-                    <a
-                      href={`https://music.amazon.com/search/${encodeURIComponent(itemName)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block hover:opacity-80 transition-opacity"
-                    >
-                      <div className="bg-yellow-500 text-white font-semibold py-2 px-3 rounded text-center text-base">
-                        Try on Amazon
-                      </div>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="w-full space-y-3 text-center">
-                  <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                    {data.name}
-                  </h4>
-
-                  <div className="space-y-1">
-                    {data.type && (
-                      <p className="text-base text-gray-600 dark:text-gray-400">
-                        Type: {data.type.charAt(0).toUpperCase() + data.type.slice(1)}
-                      </p>
-                    )}
-                    {(() => {
-                      if (!data.genres) return null;
-                      if (Array.isArray(data.genres) && data.genres.length > 0) {
-                        return (
-                          <p className="text-base text-gray-600 dark:text-gray-400">
-                            Genres: {data.genres.slice(0, 3).join(', ')}
-                          </p>
-                        );
-                      }
-                      if (typeof data.genres === 'string' && data.genres.trim().length > 0) {
-                        return (
-                          <p className="text-base text-gray-600 dark:text-gray-400">
-                            Genres: {data.genres}
-                          </p>
-                        );
-                      }
-                      return null;
-                    })()}
-                    {data.popularity && data.popularity > 0 && (
-                      <p className="text-base text-gray-600 dark:text-gray-400">
-                        Popularity: {data.popularity}/100
-                      </p>
-                    )}
-                    {data.followers && data.followers.total > 0 && (
-                      <p className="text-base text-gray-600 dark:text-gray-400">
-                        Followers: {data.followers.total.toLocaleString()}
-                      </p>
-                    )}
-                  </div>
-
-                  {data.description ? (
-                    <div className="text-base text-gray-700 dark:text-gray-300">
-                      <p className="leading-relaxed font-semibold">
-                        {limitToSentences(String(data.description).replace(/<[^>]*>/g, ''))}
-                      </p>
-                    </div>
-                  ) : data.bio && data.bio.summary ? (
-                    <div className="text-base text-gray-700 dark:text-gray-300">
-                      <p className="leading-relaxed font-semibold">
-                        {limitToSentences(data.bio.summary.replace(/<[^>]*>/g, ''))}
-                      </p>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Spotify Player for Music */}
-              {(data.spotifyId || data.id) && (
-                <div className="w-full mt-3">
-                  <iframe
-                    style={{ borderRadius: '12px' }}
-                    src={`https://open.spotify.com/embed/artist/${data.spotifyId || data.id}?utm_source=generator`}
-                    width="100%"
-                    height="80"
-                    frameBorder="0"
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="lazy"
-                  />
-                </div>
-              )}
-            </div>
-          ) : category === 'Games' && data ? (
-            <div className="flex flex-col items-center space-y-4">
-              {/* Game image */}
-              <div className="flex-shrink-0 flex flex-col items-center">
-                {data.background_image && (
-                  <img
-                    src={data.background_image}
-                    alt={data.name}
-                    className="w-56 h-32 object-contain rounded shadow-md bg-white dark:bg-gray-800"
-                    style={{ objectFit: 'contain' }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      console.log('Game image failed to load:', target.src);
-                      target.style.display = 'none';
-                    }}
-                  />
-                )}
-
-                {/* Amazon button under game image */}
-                <div className="mt-3 w-56">
-                  <a
-                    href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}&i=videogames`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:opacity-80 transition-opacity"
-                  >
-                    <div className="bg-yellow-500 text-white font-semibold py-2 px-3 rounded text-center text-base">
-                      Try on Amazon
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="w-full space-y-3 text-center">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {data.name}
-                </h4>
-
-                <div className="space-y-1">
-                  {data.released && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Released: {new Date(data.released).getFullYear()}
-                    </p>
-                  )}
-                  {data.rating && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Rating: {data.rating}/5 {data.rating_count && `(${data.rating_count.toLocaleString()} reviews)`}
-                    </p>
-                  )}
-                  {data.metacritic && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Metacritic: {data.metacritic}/100
-                    </p>
-                  )}
-                  {data.esrb_rating && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      ESRB: {data.esrb_rating}
-                    </p>
-                  )}
-                  {data.genres && data.genres.length > 0 && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Genres: {data.genres.slice(0, 3).join(', ')}
-                    </p>
-                  )}
-                  {data.platforms && data.platforms.length > 0 && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Platforms: {Array.isArray(data.platforms) ? data.platforms.slice(0, 4).join(', ') : data.platforms}
-                      {data.platforms.length > 4 && ` +${data.platforms.length - 4} more`}
-                    </p>
-                  )}
-                </div>
-
-                {(data.description || data.description_raw) && (
-                  <div className="text-base text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
-                      {limitToSentences(data.description || data.description_raw)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : category === 'Podcasts' && data ? (
-            <div className="flex flex-col items-center space-y-4">
-              {/* Podcast artwork */}
-              <div className="flex-shrink-0 flex flex-col items-center">
-                {data.artwork && (
-                  <img
-                    src={data.artwork}
-                    alt={data.name}
-                    className="w-56 h-56 object-contain rounded shadow-md bg-white dark:bg-gray-800"
-                    style={{ objectFit: 'contain' }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      console.log('Podcast artwork failed to load:', target.src);
-                      target.style.display = 'none';
-                    }}
-                  />
-                )}
-
-                {/* Amazon button under podcast artwork */}
-                <div className="mt-3 w-56">
-                  <a
-                    href={`https://music.amazon.com/search/${encodeURIComponent(itemName)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:opacity-80 transition-opacity"
-                  >
-                    <div className="bg-yellow-500 text-white font-semibold py-2 px-3 rounded text-center text-base">
-                      Try on Amazon
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="w-full space-y-3 text-center">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {data.name}
-                </h4>
-
-                <div className="space-y-1">
-                  {data.artist && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      By: {data.artist}
-                    </p>
-                  )}
-                  {data.genre && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Genre: {data.genre}
-                    </p>
-                  )}
-                  {data.trackCount && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Episodes: {data.trackCount}
-                    </p>
-                  )}
-                </div>
-
-                {data.description && (
-                  <div className="text-base text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed">
-                      {limitToSentences(data.description)}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Spotify Player for Podcasts - only show if we have a valid Spotify ID */}
-              {(() => {
-                console.log('[SimpleItemDetails] Rendering podcast player check - data.spotifyId:', data.spotifyId);
-                console.log('[SimpleItemDetails] Full data object:', JSON.stringify(data, null, 2));
-                return data.spotifyId ? (
-                  <div className="w-full mt-3">
-                    <iframe
-                      style={{ borderRadius: '12px' }}
-                      src={`https://open.spotify.com/embed/show/${data.spotifyId}?utm_source=generator`}
-                      width="100%"
-                      height="80"
-                      frameBorder="0"
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : null;
-              })()}
-            </div>
-          ) : category === 'TV Shows' && data ? (
-            <div className="flex flex-col items-center space-y-4">
-              {/* TV Show poster */}
-              <div className="flex-shrink-0 flex flex-col items-center">
-                {data.poster_path && (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${data.poster_path}`}
-                    alt={data.name || itemName}
-                    className="w-56 h-72 object-contain rounded shadow-md bg-white dark:bg-gray-800"
-                    style={{ objectFit: 'contain' }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      console.log('TV Show poster failed to load:', target.src);
-                      target.style.display = 'none';
-                    }}
-                  />
-                )}
-
-                {/* Amazon button under TV show poster */}
-                <div className="mt-3 w-56">
-                  <a
-                    href={`https://www.amazon.com/gp/video/search?phrase=${encodeURIComponent(itemName)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block hover:opacity-80 transition-opacity"
-                  >
-                    <div className="bg-yellow-500 text-white font-semibold py-2 px-3 rounded text-center text-base">
-                      Try on Amazon
-                    </div>
-                  </a>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="w-full space-y-3 text-center">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {data.name || data.original_name || itemName}
-                </h4>
-
-                <div className="space-y-1">
-                  {data.first_air_date && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      First Aired: {new Date(data.first_air_date).getFullYear()}
-                    </p>
-                  )}
-                  {data.vote_average && data.vote_average > 0 && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Rating: {data.vote_average.toFixed(1)}/10 ({data.vote_count || 0} votes)
-                    </p>
-                  )}
-                  {data.origin_country && data.origin_country.length > 0 && (
-                    <p className="text-base text-gray-600 dark:text-gray-400">
-                      Country: {data.origin_country.join(', ')}
-                    </p>
-                  )}
-                </div>
-
-                {data.overview && (
-                  <div className="text-base text-gray-700 dark:text-gray-300">
-                    <p className="leading-relaxed font-semibold">
-                      {limitToSentences(data.overview)}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div>
-              <h4 className="font-semibold text-gray-900 dark:text-white">{data.title || data.name || itemName}</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{data.description ? limitToSentences(data.description) : `Details for ${itemName} would appear here.`}</p>
-              <div className="mt-3">
-                <a
-                  href={`https://www.amazon.com/s?k=${encodeURIComponent(itemName)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block w-24 hover:opacity-80 transition-opacity"
-                >
-                  <div className="bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold py-2 px-3 rounded text-center text-sm">
-                    Try on Amazon
-                  </div>
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
+      {!loading && !error && (!category || RICH_WIKIPEDIA_CATEGORIES.includes(category) || forceWikipedia) && (
+        <WikipediaFallback itemName={itemName} category={category} fallback={fallbackData} />
       )}
 
-      {!loading && !error && !data && (
-        <WikipediaFallback itemName={itemName} category={category} />
+      {zoomImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setZoomImage(null)}
+        >
+          <div
+            className="relative max-h-full max-w-5xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="absolute -top-3 -right-3 rounded-full bg-white/90 p-2 text-gray-700 shadow hover:bg-white"
+              onClick={() => setZoomImage(null)}
+              aria-label="Close enlarged image"
+            >
+              <X size={18} />
+            </button>
+            <img
+              src={zoomImage.src}
+              alt={zoomImage.alt}
+              className="max-h-[80vh] w-auto cursor-zoom-out rounded-lg shadow-2xl"
+              onClick={() => setZoomImage(null)}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
 }
 
-function WikipediaFallback({ itemName, category }: { itemName: string; category?: string }) {
+function WikipediaFallback({ itemName, category, fallback }: { itemName: string; category?: string; fallback?: any }) {
   const [wikiData, setWikiData] = useState<any>(null);
   const [wikiLoading, setWikiLoading] = useState(true);
+  const [zoomImage, setZoomImage] = useState<ZoomImage | null>(null);
 
   useEffect(() => {
     const fetchWikipediaData = async () => {
       try {
         setWikiLoading(true);
 
-        // Try to fetch from Wikipedia API
         const searchQuery = encodeURIComponent(itemName.replace(/\s+/g, '_'));
         const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${searchQuery}`);
 
@@ -970,113 +1105,79 @@ function WikipediaFallback({ itemName, category }: { itemName: string; category?
     fetchWikipediaData();
   }, [itemName]);
 
+  useEffect(() => {
+    if (!zoomImage) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setZoomImage(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [zoomImage]);
+
   if (wikiLoading) {
     return (
       <div className="flex items-center justify-center py-4">
         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
-        <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-          Searching Wikipedia...
-        </span>
+        <span className="ml-2 text-base text-gray-600 dark:text-gray-400">Searching Wikipedia...</span>
       </div>
     );
   }
 
-  if (!wikiData) {
-    return (
-      <p className="text-gray-600 dark:text-gray-400">No details found for &quot;{itemName}&quot;</p>
-    );
-  }
+  const finalTitle = wikiData?.title || fallback?.name || itemName;
+  const finalDescription = wikiData?.description || fallback?.description || '';
+  const finalImage = wikiData?.thumbnail || fallback?.image || fallback?.artwork || null;
+  const finalUrl = wikiData?.url || fallback?.sourceUrl || null;
+  const finalSourceName = wikiData ? 'Wikipedia' : fallback?.sourceName || 'Wikipedia';
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      {/* Wikipedia thumbnail */}
-      <div className="flex-shrink-0 flex flex-col items-center">
-        {wikiData.thumbnail ? (
-          <img
-            src={wikiData.thumbnail}
-            alt={wikiData.title}
-            className="w-48 h-48 object-contain rounded shadow-md bg-white dark:bg-gray-800"
-            style={{ objectFit: 'contain' }}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              console.log('Wikipedia image failed to load:', target.src);
-              target.style.display = 'none';
-              const placeholder = target.parentElement?.querySelector('.wiki-placeholder');
-              if (placeholder) {
-                (placeholder as HTMLElement).style.display = 'flex';
-              }
-            }}
-          />
-        ) : null}
-        <div className="wiki-placeholder w-48 h-48 bg-gradient-to-br from-blue-500 to-purple-600 rounded shadow-md flex items-center justify-center text-white font-bold text-2xl" style={{display: wikiData.thumbnail ? 'none' : 'flex'}}>
-          {itemName.substring(0, 2).toUpperCase()}
-        </div>
-
-        {/* Amazon button under cover */}
-        <div className="mt-2 w-48">
-          <a
-            href={(() => {
-              const searchTerm = encodeURIComponent(itemName);
-              if (category === 'Music' || category === 'Podcasts') {
-                return `https://music.amazon.com/search/${searchTerm}`;
-              } else if (category === 'TV Shows' || category === 'Movies') {
-                return `https://www.amazon.com/gp/video/search?phrase=${searchTerm}`;
-              } else if (category === 'Books') {
-                return `https://www.amazon.com/s?k=${searchTerm}&i=stripbooks`;
-              } else if (category === 'Games') {
-                return `https://www.amazon.com/s?k=${searchTerm}&i=videogames`;
-              } else {
-                return `https://www.amazon.com/s?k=${searchTerm}`;
-              }
-            })()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block hover:opacity-80 transition-opacity"
-          >
-            <div className="bg-yellow-500 text-white font-semibold py-2 px-3 rounded text-center text-base">
-              Try on Amazon
-            </div>
-          </a>
-        </div>
-      </div>
-
-      {/* Details */}
-      <div className="w-full text-center">
-        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          {wikiData.title}
-        </h4>
-
-        <div className="space-y-1 mb-3">
-          <p className="text-base text-gray-600 dark:text-gray-400">
-            Source: Wikipedia
-          </p>
-          {category && (
-            <div className="group flex items-center justify-center space-x-2 text-base text-gray-600 dark:text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
-              <span>Category:</span>
-              <div className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${getCategorySwatch(category)} transition-all duration-200 group-hover:scale-125 group-hover:shadow-lg`}></div>
-                <span className={`font-medium ${getCategoryText(category)} group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors`}>
-                  {category}
-                </span>
-              </div>
+    <div className="flex flex-col items-start gap-4">
+      <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+        {/* Left: Artwork with button below */}
+        <div className="flex-shrink-0 flex flex-col items-center gap-1">
+          {/* Top: Name */}
+          <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{finalTitle}</h4>
+          {finalImage ? (
+            <img
+              src={finalImage}
+              alt={finalTitle}
+              className="block w-full max-w-xs md:w-52 md:h-52 h-auto object-contain rounded shadow-md bg-white dark:bg-gray-800 cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              onClick={() => setZoomImage({ src: finalImage, alt: finalTitle })}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  setZoomImage({ src: finalImage, alt: finalTitle });
+                }
+              }}
+              tabIndex={0}
+              role="button"
+            />
+          ) : (
+            <div className="wiki-placeholder w-full max-w-xs md:w-52 md:h-52 h-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded shadow-md flex items-center justify-center text-white font-bold text-2xl">
+              {itemName.substring(0, 2).toUpperCase()}
             </div>
           )}
+          <AmazonButton category={category as AmazonCategory} itemName={itemName} />
         </div>
 
-        <div className="text-base text-gray-700 dark:text-gray-300">
-          <p className="leading-relaxed">
-            {limitToSentences(wikiData.description)}
-          </p>
-        </div>
+        {/* Right: Description aligned with artwork */}
+        <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
+          {finalDescription && (
+            <div className="text-base text-gray-700 dark:text-gray-300">
+              <p className="leading-relaxed">{limitToSentences(finalDescription)}</p>
+            </div>
+          )}
 
-        <div className="mt-3 space-y-2">
-          {wikiData.url && (
-            <div>
+          {finalUrl && (
+            <div className="mt-2">
               <a
-                href={wikiData.url}
+                href={finalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-base"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-lg"
               >
                 Read more on Wikipedia →
               </a>
@@ -1084,6 +1185,43 @@ function WikipediaFallback({ itemName, category }: { itemName: string; category?
           )}
         </div>
       </div>
+
+      {zoomImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setZoomImage(null)}
+        >
+          <div
+            className="relative max-h-full max-w-4xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="absolute -top-3 -right-3 rounded-full bg-white/90 p-2 text-gray-700 shadow hover:bg-white"
+              onClick={() => setZoomImage(null)}
+              aria-label="Close enlarged image"
+            >
+              <X size={18} />
+            </button>
+            <img
+              src={zoomImage.src}
+              alt={zoomImage.alt}
+              className="max-h-[80vh] w-auto cursor-zoom-out rounded-lg shadow-2xl"
+              onClick={() => setZoomImage(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+  const normalizeMusicImage = (input: any): string | undefined => {
+    if (!input) return undefined;
+    if (typeof input === 'string' && input.trim()) return input;
+    if (typeof input === 'object') {
+      if (input.url && typeof input.url === 'string') return input.url;
+      if (input.artworkUrl && typeof input.artworkUrl === 'string') return input.artworkUrl;
+      if (input.image && typeof input.image === 'string') return input.image;
+    }
+    return undefined;
+  };

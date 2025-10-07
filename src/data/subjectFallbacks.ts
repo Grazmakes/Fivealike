@@ -1,6 +1,7 @@
 export interface SubjectFallback {
   description: string;
   image?: string;
+  poster_path?: string;
   sourceName: string;
   sourceUrl: string;
   id?: string;
@@ -19,24 +20,28 @@ export const subjectFallbacks: Record<string, SubjectFallback> = {
   [normalizeKey('The Beatles', 'Music')]: {
     description: 'The Beatles were an English rock band formed in Liverpool in 1960. Regarded as the most influential band of all time, they helped shape pop music as a serious art form.',
     image: 'https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/df/db/61/dfdb615d-47f8-06e9-9533-b96daccc029f/18UMGIM31076.rgb.jpg/600x600bb.jpg',
+    artwork: 'https://is1-ssl.mzstatic.com/image/thumb/Music112/v4/df/db/61/dfdb615d-47f8-06e9-9533-b96daccc029f/18UMGIM31076.rgb.jpg/600x600bb.jpg',
     sourceName: 'Apple Music',
     sourceUrl: 'https://music.apple.com/us/artist/the-beatles/136975'
   },
   [normalizeKey('The Rolling Stones', 'Music')]: {
     description: 'The Rolling Stones are an English rock band formed in London in 1962, famous for their gritty, blues-influenced rock sound and legendary live performances.',
     image: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/3c/7f/b9/3c7fb969-9497-fffd-0dee-ead68bbe10b3/25UM1IM23176.rgb.jpg/600x600bb.jpg',
+    artwork: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/3c/7f/b9/3c7fb969-9497-fffd-0dee-ead68bbe10b3/25UM1IM23176.rgb.jpg/600x600bb.jpg',
     sourceName: 'Apple Music',
     sourceUrl: 'https://music.apple.com/us/artist/the-rolling-stones/4273569'
   },
   [normalizeKey('Radiohead', 'Music')]: {
     description: 'Radiohead are an English rock band formed in Abingdon in 1985, renowned for their experimental approach and influential albums that pushed the boundaries of modern rock.',
     image: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/07/60/ba/0760ba0f-148c-b18f-d0ff-169ee96f3af5/634904078164.png/600x600bb.jpg',
+    artwork: 'https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/07/60/ba/0760ba0f-148c-b18f-d0ff-169ee96f3af5/634904078164.png/600x600bb.jpg',
     sourceName: 'Apple Music',
     sourceUrl: 'https://music.apple.com/us/artist/radiohead/657515'
   },
   [normalizeKey('Taylor Swift', 'Music')]: {
     description: 'Taylor Swift is an American singer-songwriter known for her narrative songwriting and genre-spanning albums, making her one of the most successful artists of her generation.',
     image: 'https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/32/b5/6b/32b56b49-0075-7128-e6ec-7c3c4c697242/00843930000821.rgb.jpg/600x600bb.jpg',
+    artwork: 'https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/32/b5/6b/32b56b49-0075-7128-e6ec-7c3c4c697242/00843930000821.rgb.jpg/600x600bb.jpg',
     sourceName: 'Apple Music',
     sourceUrl: 'https://music.apple.com/us/artist/taylor-swift/159260351'
   },
@@ -57,6 +62,54 @@ export const subjectFallbacks: Record<string, SubjectFallback> = {
     image: 'https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg',
     sourceName: 'TMDB',
     sourceUrl: 'https://www.themoviedb.org/movie/120'
+  },
+  [normalizeKey('Breaking Bad', 'TV Shows')]: {
+    description: 'Breaking Bad is an American neo-Western crime drama following Walter White, a chemistry teacher who turns to manufacturing methamphetamine with former student Jesse Pinkman.',
+    image: 'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
+    poster_path: '/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Breaking_Bad',
+    id: '1396'
+  },
+  [normalizeKey('Better Call Saul', 'TV Shows')]: {
+    description: 'Better Call Saul chronicles the transformation of earnest lawyer Jimmy McGill into the morally flexible attorney Saul Goodman in the years leading up to Breaking Bad.',
+    image: 'https://image.tmdb.org/t/p/w500/fC2HDm5t0kHl7mTm7jxMR31b7by.jpg',
+    poster_path: '/fC2HDm5t0kHl7mTm7jxMR31b7by.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Better_Call_Saul',
+    id: '60059'
+  },
+  [normalizeKey('The Sopranos', 'TV Shows')]: {
+    description: 'The Sopranos explores the life of mob boss Tony Soprano as he balances family responsibilities with running a criminal organization in New Jersey.',
+    image: 'https://image.tmdb.org/t/p/w500/ivtY9lZ7DAGg5yO9Dzh9O8zC0Tm.jpg',
+    poster_path: '/ivtY9lZ7DAGg5yO9Dzh9O8zC0Tm.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/The_Sopranos',
+    id: '1398'
+  },
+  [normalizeKey('Ozark', 'TV Shows')]: {
+    description: 'Ozark follows financial planner Marty Byrde as he relocates his family to the Ozarks, laundering money for a Mexican drug cartel with dire consequences.',
+    image: 'https://image.tmdb.org/t/p/w500/84XPpjGvxNyExjSuLQe0SzioErt.jpg',
+    poster_path: '/84XPpjGvxNyExjSuLQe0SzioErt.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Ozark_(TV_series)',
+    id: '69740'
+  },
+  [normalizeKey('Narcos', 'TV Shows')]: {
+    description: 'Narcos is a crime drama detailing the rise of drug kingpins such as Pablo Escobar and the efforts of law enforcement to bring them down in Colombia.',
+    image: 'https://image.tmdb.org/t/p/w500/rTmal9fDbwh5F0waol2hq35U4ah.jpg',
+    poster_path: '/rTmal9fDbwh5F0waol2hq35U4ah.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Narcos',
+    id: '63351'
+  },
+  [normalizeKey('Succession', 'TV Shows')]: {
+    description: 'Succession follows the Roy family as they navigate power struggles inside their global media empire, blending biting satire with high-stakes corporate drama.',
+    image: 'https://image.tmdb.org/t/p/w500/7HWetDpyqZQ45zh1Bz5o3Z4cM0q.jpg',
+    poster_path: '/7HWetDpyqZQ45zh1Bz5o3Z4cM0q.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Succession_(TV_series)',
+    id: '76331'
   },
   [normalizeKey('Portrait Photography', 'Photography')]: {
     description: 'Portrait photography focuses on capturing the personality, expressions, and mood of a person or group through thoughtful composition, lighting, and direction.',
@@ -103,11 +156,21 @@ Object.values(artistFallbacks).forEach((artist) => {
   subjectFallbacks[normalizeKey(artist.name, 'Music')] = {
     description: artist.biography,
     image: artist.image,
+    artwork: artist.image,
     sourceName: sourceName,
     sourceUrl: artist.sourceUrl || '',
     id: artist.id,
     spotifyId: artist.id
   };
 });
+
+// Add Wordle with a square icon
+subjectFallbacks[normalizeKey('Wordle', 'Games')] = {
+  description: 'Wordle - a word puzzle game. Find the words by moving the mouse among the letters represented. There are many thematic exercises to choose from and they smoothly increase the complexity of the puzzle. Work your head hard or use hints.',
+  image: 'https://www.nytimes.com/games-assets/v2/metadata/nyt-wordle-logo.png',
+  artwork: 'https://www.nytimes.com/games-assets/v2/metadata/nyt-wordle-logo.png',
+  sourceName: 'New York Times Games',
+  sourceUrl: 'https://www.nytimes.com/games/wordle/index.html'
+};
 
 export const normalizeSubjectKey = normalizeKey;

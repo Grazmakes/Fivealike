@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         if (response.ok) {
           const data = await response.json();
           const results = data.results || [];
-          return NextResponse.json(results.slice(0, limit));
+          return NextResponse.json({ results: results.slice(0, limit) });
         }
       } catch (error) {
         console.error('TMDB API error:', error);
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
         )
       : mockMovies;
 
-    return NextResponse.json(filteredMovies.slice(0, limit));
+    return NextResponse.json({ results: filteredMovies.slice(0, limit) });
   } catch (error) {
     console.error('Movies search error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

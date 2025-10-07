@@ -70,6 +70,7 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
   'Taylor Swift': {
     name: 'Taylor Swift',
     biography: 'Taylor Swift is an American singer-songwriter celebrated for her narrative songwriting and genre-spanning reinventions.',
+    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/32/b5/6b/32b56b49-0075-7128-e6ec-7c3c4c697242/00843930000821.rgb.jpg/600x600bb.jpg',
     formed: '2006',
     genres: ['Pop', 'Country', 'Indie Folk'],
     members: ['Taylor Swift'],

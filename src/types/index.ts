@@ -385,8 +385,8 @@ export interface HistoryItem {
   listTitle: string;
   listAuthor: string;
   listCategory: string;
-  rating?: 'up' | 'down'; // Only for item type
-  action: 'saved' | 'tried' | 'unsaved'; // Action taken
+  rating?: 'up' | 'down'; // Rating applied to item or list
+  action: 'saved' | 'tried' | 'unsaved' | 'rated'; // Action taken
   savedAt: string;
   triedAt?: string; // Only for item type
   listId: number;

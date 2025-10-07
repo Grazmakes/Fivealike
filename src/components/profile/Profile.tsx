@@ -37,6 +37,8 @@ interface ProfileProps {
   viewingProfile?: string;
   onBack?: () => void;
   antiSocialMode?: boolean;
+  onAddListToHistory?: (listId: number) => void;
+  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 const avatarOptions = ['⭐', '🎵', '📚', '🎬', '🎮', '💻', '🎨', '⚽', '🍕', '✈️'];
@@ -62,7 +64,9 @@ export default function Profile({
   onAuthorClick,
   viewingProfile,
   onBack,
-  antiSocialMode = false
+  antiSocialMode = false,
+  onAddListToHistory,
+  onRateList
 }: ProfileProps) {
   // All hooks must be declared before any early returns
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -997,12 +1001,14 @@ export default function Profile({
                   itemVotes={itemVotes[list.id.toString()] || {}}
                   onListVote={onListVote}
                   onItemVote={onItemVote}
-                  onHighFive={onHighFive}
-                  onTitleClick={onTitleClick}
-                  onSaveList={handleSaveList}
-                  isSaved={savedLists.includes(list.id)}
-                  antiSocialMode={antiSocialMode}
-                />
+                onHighFive={onHighFive}
+                onTitleClick={onTitleClick}
+                onSaveList={handleSaveList}
+                isSaved={savedLists.includes(list.id)}
+                antiSocialMode={antiSocialMode}
+                onAddListToHistory={onAddListToHistory}
+                onRateList={onRateList}
+              />
               ))}
             </div>
           ) : (

@@ -21,11 +21,16 @@ export default function History({
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedRating, setSelectedRating] = useState<'' | 'up' | 'down'>('');
   const [viewMode, setViewMode] = useState<'list' | 'stats'>('list');
+  const [historyTab, setHistoryTab] = useState<'lists' | 'items'>('lists');
 
   // Defensive check for historyItems
   const safeHistoryItems = historyItems || [];
 
-  const filteredItems = safeHistoryItems.filter(item => {
+  const tabFilteredItems = historyTab === 'lists'
+    ? safeHistoryItems.filter(item => item.type === 'list')
+    : safeHistoryItems.filter(item => item.type === 'item');
+
+  const filteredItems = tabFilteredItems.filter(item => {
     const searchText = item.type === 'item' ? item.itemName : item.listTitle;
     const matchesSearch = !searchQuery ||
       (searchText && searchText.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -38,7 +43,7 @@ export default function History({
     return matchesSearch && matchesCategory && matchesRating;
   });
 
-  const categories = Array.from(new Set(safeHistoryItems.map(item => item.listCategory)));
+  const categories = Array.from(new Set(tabFilteredItems.map(item => item.listCategory)));
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -49,13 +54,19 @@ export default function History({
   };
 
   // Calculate stats
-  const totalInteractions = safeHistoryItems.length;
-  const itemInteractions = safeHistoryItems.filter(item => item.type === 'item');
-  const listInteractions = safeHistoryItems.filter(item => item.type === 'list');
-  const lovedItems = itemInteractions.filter(item => item.rating === 'up').length;
-  const dislikedItems = itemInteractions.filter(item => item.rating === 'down').length;
+  const totalInteractions = tabFilteredItems.length;
+  const itemInteractions = tabFilteredItems.filter(item => item.type === 'item');
+  const listInteractions = tabFilteredItems.filter(item => item.type === 'list');
+  const ratedListInteractions = listInteractions.filter(item => item.action === 'rated' && item.rating);
+  const lovedItems = historyTab === 'items'
+    ? itemInteractions.filter(item => item.rating === 'up').length
+    : ratedListInteractions.filter(item => item.rating === 'up').length;
+  const dislikedItems = historyTab === 'items'
+    ? itemInteractions.filter(item => item.rating === 'down').length
+    : ratedListInteractions.filter(item => item.rating === 'down').length;
   const savedLists = listInteractions.filter(item => item.action === 'saved').length;
-  const successRate = itemInteractions.length > 0 ? Math.round((lovedItems / itemInteractions.length) * 100) : 0;
+  const successRateBase = historyTab === 'items' ? itemInteractions.length : ratedListInteractions.length;
+  const successRate = successRateBase > 0 ? Math.round((lovedItems / successRateBase) * 100) : 0;
 
   const categoryStats = categories.map(category => {
     const categoryItems = safeHistoryItems.filter(item => item.listCategory === category);
@@ -81,6 +92,29 @@ export default function History({
         <p className="text-gray-600 dark:text-gray-400">
           Your journey through all the lists and items you&apos;ve saved and tried
         </p>
+      </div>
+
+      <div className="flex space-x-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 w-fit">
+        <button
+          onClick={() => setHistoryTab('lists')}
+          className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            historyTab === 'lists'
+              ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+          }`}
+        >
+          Lists
+        </button>
+        <button
+          onClick={() => setHistoryTab('items')}
+          className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+            historyTab === 'items'
+              ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+          }`}
+        >
+          Items
+        </button>
       </div>
 
       {/* Stats Overview */}
@@ -301,7 +335,25 @@ export default function History({
 
                       {/* Action Badge */}
                       <div className="mb-3">
-                        {item.type === 'item' && item.rating ? (
+                        {item.rating && item.action === 'rated' ? (
+                          <span className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium ${
+                            item.rating === 'up'
+                              ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'
+                              : 'bg-red-100 text-red-700 dark:bg-red-900/20 dark:text-red-300'
+                          }`}>
+                            {item.rating === 'up' ? (
+                              <>
+                                <ThumbsUp size={12} />
+                                <span>Loved it</span>
+                              </>
+                            ) : (
+                              <>
+                                <ThumbsDown size={12} />
+                                <span>Not for me</span>
+                              </>
+                            )}
+                          </span>
+                        ) : item.type === 'item' && item.action === 'tried' && item.rating ? (
                           <span className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-sm font-medium ${
                             item.rating === 'up'
                               ? 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-300'

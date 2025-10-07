@@ -21,6 +21,8 @@ interface SavedListsProps {
   onItemBookmark?: (listId: number, itemIndex: number) => void;
   bookmarkState?: { [key: string]: boolean };
   antiSocialMode?: boolean;
+  onAddListToHistory?: (listId: number) => void;
+  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 export default function SavedLists({
@@ -37,7 +39,9 @@ export default function SavedLists({
   onMessage,
   onItemBookmark,
   bookmarkState = {},
-  antiSocialMode = false
+  antiSocialMode = false,
+  onAddListToHistory,
+  onRateList
 }: SavedListsProps) {
   const [selectedGenre, setSelectedGenre] = useState<string>('');
   
@@ -123,6 +127,9 @@ export default function SavedLists({
               onSaveList={handleSaveList}
               isSaved={true}
               antiSocialMode={antiSocialMode}
+              onAddListToHistory={onAddListToHistory}
+              onRateList={onRateList}
+              showSaveButton
             />
           ))}
         </div>

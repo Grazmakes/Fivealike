@@ -38,6 +38,8 @@ interface FavoritesProps {
 
   // Antisocial mode
   antiSocialMode?: boolean;
+  onAddListToHistory?: (listId: number) => void;
+  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 type FavoritesTab = 'lists' | 'items' | 'history';
@@ -63,7 +65,9 @@ export default function Favorites({
   onAddToHistory,
   historyItems,
   onBack,
-  antiSocialMode = false
+  antiSocialMode = false,
+  onAddListToHistory,
+  onRateList
 }: FavoritesProps) {
   const [selectedTab, setSelectedTab] = useState<FavoritesTab>('lists');
   const [searchQuery, setSearchQuery] = useState('');
@@ -202,7 +206,7 @@ export default function Favorites({
           }`}
         >
           <List size={18} className="lg:w-4 lg:h-4" />
-          <span className="truncate mt-1 lg:mt-0 text-xs lg:text-sm">Save...</span>
+          <span className="mt-1 lg:mt-0 text-xs lg:text-sm whitespace-nowrap">Saved Lists</span>
           <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5 lg:mt-0 ${
             selectedTab === 'lists'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
@@ -221,7 +225,7 @@ export default function Favorites({
           }`}
         >
           <Bookmark size={18} className="lg:w-4 lg:h-4" />
-          <span className="truncate mt-1 lg:mt-0 text-xs lg:text-sm">Book...</span>
+          <span className="mt-1 lg:mt-0 text-xs lg:text-sm whitespace-nowrap">Bookmarked Items</span>
           <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5 lg:mt-0 ${
             selectedTab === 'items'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
@@ -240,7 +244,7 @@ export default function Favorites({
           }`}
         >
           <HistoryIcon size={18} className="lg:w-4 lg:h-4" />
-          <span className="truncate mt-1 lg:mt-0 text-xs lg:text-sm">Hist...</span>
+          <span className="mt-1 lg:mt-0 text-xs lg:text-sm whitespace-nowrap">History</span>
           <span className={`px-1.5 py-0.5 text-xs rounded-full flex-shrink-0 mt-0.5 lg:mt-0 ${
             selectedTab === 'history'
               ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
@@ -266,13 +270,16 @@ export default function Favorites({
                     onTitleClick={onTitleClick}
                     onAuthorClick={onAuthorClick}
                     onMessage={onMessage}
-                    onItemBookmark={onItemBookmark}
-                    onAddToHistory={onAddToHistory}
-                    bookmarkState={bookmarkState}
-                    onSaveList={handleSaveList}
-                    isSaved={true}
-                    antiSocialMode={antiSocialMode}
-                  />
+                  onItemBookmark={onItemBookmark}
+                  onAddToHistory={onAddToHistory}
+                  bookmarkState={bookmarkState}
+                  onSaveList={handleSaveList}
+                  isSaved={true}
+                  antiSocialMode={antiSocialMode}
+                  onAddListToHistory={onAddListToHistory}
+                  onRateList={onRateList}
+                  showSaveButton
+                />
                 </div>
               ))
             ) : (

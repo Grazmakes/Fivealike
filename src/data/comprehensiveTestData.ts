@@ -2930,27 +2930,6 @@ export const comprehensiveTestLists: List[] = [
     isRejected: false
   },
   {
-    id: 203,
-    title: 'If you like "Wordle", try these FIVE ALIKE...',
-    author: '@puzzle_master',
-    category: 'Games',
-    date: '12/27/2024',
-    votes: 178,
-    upvotes: 186,
-    downvotes: 8,
-    userVote: null,
-    highFives: 134,
-    userHighFived: false,
-    items: ['Connections', 'Heardle', 'Quordle', 'Spelling Bee', 'Mini Crossword'],
-    description: 'Daily word puzzles and brain teasers that are perfect for your morning routine.',
-    comments: [
-      { id: 1, user: '@word_nerd', content: 'Connections is so addictive', time: '5 hours ago', avatar: '🧩' },
-      { id: 2, user: '@daily_player', content: 'I do all of these every morning with coffee', time: '3 hours ago', avatar: '☕' }
-    ],
-    saves: 167,
-    isRejected: false
-  },
-  {
     id: 204,
     title: 'If you like "Dune", try these FIVE ALIKE...',
     author: '@sci_fi_sage',
@@ -3011,27 +2990,6 @@ export const comprehensiveTestLists: List[] = [
       { id: 2, user: '@noodle_lover', content: 'Laksa is so underrated', time: '6 hours ago', avatar: '🌶️' }
     ],
     saves: 176,
-    isRejected: false
-  },
-  {
-    id: 207,
-    title: 'If you like "Studio Ghibli", try these FIVE ALIKE...',
-    author: '@anime_dreams',
-    category: 'Movies',
-    date: '12/31/2024',
-    votes: 267,
-    upvotes: 275,
-    downvotes: 8,
-    userVote: null,
-    highFives: 223,
-    userHighFived: false,
-    items: ['Your Name', 'Wolf Children', 'The Secret World of Arrietty', 'A Silent Voice', 'Weathering with You'],
-    description: 'Beautiful hand-drawn animation with emotional storytelling and magical realism.',
-    comments: [
-      { id: 1, user: '@miyazaki_fan', content: 'Your Name made me cry for hours', time: '9 hours ago', avatar: '🌟' },
-      { id: 2, user: '@animation_lover', content: 'Wolf Children is so underrated', time: '7 hours ago', avatar: '🐺' }
-    ],
-    saves: 254,
     isRejected: false
   },
   {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, memo, useMemo, useCallback } from 'react';
-import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, History, ExternalLink, RefreshCw, Edit3 } from 'lucide-react';
+import { ArrowUp, ArrowDown, Bookmark, Play, ChevronDown, ChevronUp, MessageSquare, X, Send, ChevronRight, Bell, Download, FileText, FileDown, Share, MessageCircle, History, ExternalLink, RefreshCw, Edit3, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { List, ItemVotes as ItemVoteData, Comment, UserBadge } from '@/types';
 import { mockTMDbData, mockArtistData } from '@/data/mockData';
 import { subjectFallbacks, normalizeSubjectKey } from '@/data/subjectFallbacks';
@@ -31,11 +31,14 @@ interface ListCardProps {
   onItemBookmark?: (listId: number, itemIndex: number) => void;
   onMessage?: (username: string) => void;
   onAddToHistory?: (listId: number, itemIndex: number) => void;
+  onAddListToHistory?: (listId: number) => void;
+  onRateList?: (listId: number, rating: 'up' | 'down') => void;
   onEditList?: (listId: number) => void;
   bookmarkState?: { [key: string]: boolean };
   isSaved: boolean;
   antiSocialMode?: boolean;
   currentUser?: string; // Username of the current user to determine edit permissions
+  showSaveButton?: boolean;
 }
 
 // Mock function to get user badges - in a real app this would be an API call
@@ -81,6 +84,7 @@ interface SubjectInfo {
   sourceName?: string;
   sourceUrl?: string;
   id?: string;
+  spotifyId?: string;
 }
 
 const subjectInfoCache = new Map<string, SubjectInfo>();
@@ -123,11 +127,14 @@ function ListCard({
   onItemBookmark,
   onMessage,
   onAddToHistory,
+  onAddListToHistory,
+  onRateList,
   onEditList,
   bookmarkState = {},
   isSaved,
   antiSocialMode = false,
-  currentUser = '@graz' // Default to graz for demo purposes
+  currentUser = '@graz', // Default to graz for demo purposes
+  showSaveButton = false
 }: ListCardProps) {
   const [showDescription, setShowDescription] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -897,18 +904,20 @@ function ListCard({
             </div>
             <span>•</span>
             <span>{list.date}</span>
-            <button
-              onClick={() => onSaveList(list.id)}
-              className={`flex items-center space-x-1 px-2 py-1 rounded-lg transition-colors text-xs ${
-                isSaved
-                  ? 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900'
-                  : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-              title={isSaved ? 'Unsave list' : 'Save List'}
-            >
-              <Bookmark size={16} fill={isSaved ? 'currentColor' : 'none'} />
-              <span className="font-medium">{isSaved ? 'Saved' : 'Save List'}</span>
-            </button>
+            {showSaveButton && (
+              <button
+                onClick={() => onSaveList(list.id)}
+                className={`flex items-center space-x-1 px-2 py-1 rounded-lg transition-colors text-xs ${
+                  isSaved
+                    ? 'text-primary-600 dark:text-primary-400 bg-primary-100 dark:bg-primary-900'
+                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+                title={isSaved ? 'Unsave list' : 'Save List'}
+              >
+                <Bookmark size={16} fill={isSaved ? 'currentColor' : 'none'} />
+                <span className="font-medium">{isSaved ? 'Saved' : 'Save List'}</span>
+              </button>
+            )}
             {list.isRejected && (
               <span className="ml-2 text-xs bg-red-600 text-white px-2 py-1 rounded-full">
                 {Math.round((list.downvotes / (list.upvotes + list.downvotes)) * 100)}% ⬇️
@@ -979,11 +988,23 @@ function ListCard({
               <span>{list.category}</span>
             </button>
 
+            {onAddListToHistory && (
+              <button
+                onClick={() => onAddListToHistory(list.id)}
+                className="absolute top-3 right-3 flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-900/80 text-white text-xs font-medium hover:bg-gray-900 transition-colors"
+                title="Add entire list to history"
+              >
+                <History size={14} className="text-white" />
+                <span>Save to History</span>
+              </button>
+            )}
+
             <div className="flex flex-col items-center space-y-4">
               <SimpleItemDetails
                 itemName={mainSubjectName}
                 category={list.category}
                 showCloseButton={false}
+                hideSpotifyEmbed
               />
             </div>
           </div>
@@ -1047,34 +1068,24 @@ function ListCard({
                   </button>
                 </div>
 
-                <div className="flex items-center space-x-2 flex-shrink-0">
-                  {onItemBookmark && (
-                    <button
-                      onClick={() => onItemBookmark(list.id, index)}
-                      className={`p-2.5 lg:p-2 rounded-full text-sm font-medium transition-colors ${
+              <div className="flex items-center space-x-2 flex-shrink-0">
+                {onItemBookmark && (
+                  <button
+                    onClick={() => onItemBookmark(list.id, index)}
+                    className={`p-2.5 lg:p-2 rounded-full transition-colors ${
                         bookmarkState[`${list.id}-${index}`]
                           ? 'bg-green-500 text-white hover:bg-green-600'
-                          : 'bg-gray-100 text-gray-600 hover:bg-green-500 hover:text-white dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-green-500 dark:hover:text-white'
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600'
                       }`}
                       title={bookmarkState[`${list.id}-${index}`] ? 'Saved to your bookmarks' : 'Save Item'}
                     >
-                      <Bookmark size={18} className={`lg:w-4 lg:h-4 ${bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''}`} />
+                      <Bookmark size={18} className={`${bookmarkState[`${list.id}-${index}`] ? 'fill-current' : ''}`} />
                     </button>
                   )}
 
-                  {onAddToHistory && (
-                    <button
-                      onClick={() => onAddToHistory(list.id, index)}
-                      className="hidden lg:flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-purple-100 hover:text-purple-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-purple-900 dark:hover:text-purple-300 transition-colors"
-                      title="Add to history"
-                    >
-                      <History size={14} />
-                      <span>Add to History</span>
-                    </button>
-                  )}
                 </div>
               </div>
-              
+
               {/* Enhanced Item Details Dropdown */}
               {isExpanded && (
                 <div className="px-3 pb-3">
@@ -1192,7 +1203,7 @@ function ListCard({
         </div>
 
         {/* Right side - High Fived Badge and Comments */}
-        <div className="flex items-center space-x-4">
+        <div className="hidden lg:flex items-center space-x-4">
           {!antiSocialMode && list.highFives >= 10 && (
             <HighFivedBadge count={list.highFives} size="md" showCount={true} />
           )}
@@ -1208,6 +1219,42 @@ function ListCard({
           )}
         </div>
       </div>
+
+      {!antiSocialMode && (
+        <div className="lg:hidden flex items-center justify-between mt-2">
+          <div className="flex items-center">
+            {list.highFives >= 10 && (
+              <HighFivedBadge count={list.highFives} size="sm" showCount={false} />
+            )}
+          </div>
+          <button
+            onClick={() => setShowComments(!showComments)}
+            className="flex items-center space-x-2 px-3 py-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors"
+          >
+            <MessageSquare size={18} />
+            <span className="text-xs font-medium">{list.comments.length}</span>
+          </button>
+        </div>
+      )}
+
+      {onRateList && (
+        <div className="flex justify-end gap-2 mt-2">
+          <button
+            onClick={() => onRateList(list.id, 'up')}
+            className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-800/40 text-xs font-medium transition-colors"
+          >
+            <ThumbsUp size={14} />
+            <span>Loved it</span>
+          </button>
+          <button
+            onClick={() => onRateList(list.id, 'down')}
+            className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-800/40 text-xs font-medium transition-colors"
+          >
+            <ThumbsDown size={14} />
+            <span>Not for me</span>
+          </button>
+        </div>
+      )}
 
       {/* Comments Section */}
       {!antiSocialMode && showComments && (

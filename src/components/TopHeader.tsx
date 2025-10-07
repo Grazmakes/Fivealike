@@ -178,7 +178,7 @@ export default function TopHeader({
             <div className="relative" ref={notificationsRef}>
               <button
                 onClick={() => setShowNotifications?.(!showNotifications)}
-                className={`relative p-2 rounded-md transition-colors ${
+                className={`relative hidden sm:inline-flex p-2 rounded-md transition-colors ${
                   showNotifications
                     ? 'bg-primary-100 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
                     : unreadCount > 0

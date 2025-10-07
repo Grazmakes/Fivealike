@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { MessageCircle, ChevronUp, Home as HomeIcon, Search, Plus, Bookmark, Menu, Trophy, Users, Layers, Calendar, Headphones, MapPin, TrendingUp, Music, Film, BookOpen, Tv, Gamepad2, Mic, Laptop, Utensils, Plane, Palette, Dumbbell, Microscope, ScrollText, Landmark, Smile, Ghost, Heart, Map, Dice5, Camera, Shirt } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { MessageCircle, ChevronUp, Home as HomeIcon, Search, Plus, Bookmark, Menu, Trophy, Users, Layers, Calendar, Headphones, MapPin, TrendingUp, Music, Film, BookOpen, Tv, Gamepad2, Mic, Laptop, Utensils, Plane, Palette, Dumbbell, Microscope, ScrollText, Landmark, Smile, Ghost, Heart, Map, Dice5, Camera, Shirt, Bell } from 'lucide-react';
 import { User, ViewType, FeedTab, TrendingTab, List, Notification, ItemVotes, SocialEvent, BookmarkedItem, BookmarkState, HistoryItem } from '@/types';
 import { comprehensiveTestLists as mockLists, testNotifications as mockNotifications } from '@/data/comprehensiveTestData';
 import { categories, categoryEmojis } from '@/data/mockData';
@@ -285,6 +285,11 @@ function HomeContent() {
     dismiss: dismissMention,
     addNotification: addMentionNotification
   } = useMentionNotifications(userProfile.username);
+  const unreadNotificationsCount = useMemo(() => {
+    const regularUnread = notifications.filter((n) => n.unread).length;
+    const mentionUnread = mentionNotifications.filter((n) => !n.isRead).length;
+    return regularUnread + mentionUnread;
+  }, [notifications, mentionNotifications]);
   const [savedLists, setSavedLists] = useState<number[]>([]);
   const [itemVotes, setItemVotes] = useState<ItemVotes>({});
   const [bookmarkedItems, setBookmarkedItems] = useState<BookmarkedItem[]>([]);
@@ -1746,6 +1751,43 @@ function HomeContent() {
     );
   };
 
+  const handleAddListToHistoryLog = (listId: number) => {
+    const list = allLists.find((l) => l.id === listId);
+    if (!list) return;
+
+    const historyItem: HistoryItem = {
+      id: `manual-list-${listId}-${Date.now()}`,
+      type: 'list',
+      listId,
+      listTitle: list.title,
+      listAuthor: list.author,
+      listCategory: list.category,
+      action: 'saved',
+      savedAt: new Date().toISOString()
+    };
+
+    setHistoryItems((prev) => [...prev, historyItem]);
+  };
+
+  const handleRateList = (listId: number, rating: 'up' | 'down') => {
+    const list = allLists.find((l) => l.id === listId);
+    if (!list) return;
+
+    const historyItem: HistoryItem = {
+      id: `rated-list-${listId}-${Date.now()}`,
+      type: 'list',
+      listId,
+      listTitle: list.title,
+      listAuthor: list.author,
+      listCategory: list.category,
+      action: 'rated',
+      rating,
+      savedAt: new Date().toISOString()
+    };
+
+    setHistoryItems((prev) => [...prev, historyItem]);
+  };
+
   // Handle claiming early adopter rewards
   const handleClaimReward = (rewardId: string) => {
     debugLog('Claiming reward:', rewardId);
@@ -2062,6 +2104,8 @@ function HomeContent() {
               onSearchSettingsChange={handleSearchSettingsChange}
               onRandomList={handleRandomList}
               onClearSearch={handleClearSearch}
+              onAddListToHistory={handleAddListToHistoryLog}
+              onRateList={handleRateList}
           />
         );
       case 'discover':
@@ -2119,6 +2163,8 @@ function HomeContent() {
             setSavedLists={setSavedLists}
             antiSocialMode={userProfile.antiSocialMode}
             onBack={() => setCurrentView('home')}
+            onAddListToHistory={handleAddListToHistoryLog}
+            onRateList={handleRateList}
           />
         );
       case 'local':
@@ -2142,6 +2188,8 @@ function HomeContent() {
             events={events}
             onJoinEvent={handleJoinEvent}
             onBack={() => setCurrentView('home')}
+            onAddListToHistory={handleAddListToHistoryLog}
+            onRateList={handleRateList}
           />
         );
       case 'favorites':
@@ -2168,6 +2216,8 @@ function HomeContent() {
             historyItems={historyItems}
             onBack={() => setCurrentView('home')}
             antiSocialMode={userProfile.antiSocialMode}
+            onAddListToHistory={handleAddListToHistoryLog}
+            onRateList={handleRateList}
           />
         );
       case 'messages':
@@ -2242,6 +2292,8 @@ function HomeContent() {
               viewingProfile={viewingProfile}
               onBack={() => setCurrentView('home')}
               antiSocialMode={profileToShow.antiSocialMode}
+              onAddListToHistory={handleAddListToHistoryLog}
+              onRateList={handleRateList}
             />
           </ProfileErrorBoundary>
         );
@@ -2463,10 +2515,10 @@ function HomeContent() {
                       }}
                       className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     >
-                      <div className="flex items-center space-x-3">
-                        <IconComponent size={20} className="text-gray-600 dark:text-gray-400" />
-                        <span className="text-sm text-gray-900 dark:text-white">{category}</span>
-                      </div>
+                    <div className="flex items-center space-x-3">
+                      <IconComponent size={20} className="text-gray-600 dark:text-gray-400" />
+                      <span className="text-base text-gray-900 dark:text-white">{category}</span>
+                    </div>
                       <span className="text-xs text-gray-500 dark:text-gray-400">{listCount}</span>
                     </button>
                   );
@@ -2495,13 +2547,33 @@ function HomeContent() {
               <div className="space-y-1 max-h-[50vh] overflow-y-auto">
                 <button
                   onClick={() => {
+                    const shouldShow = !showNotifications;
+                    setShowNotifications(shouldShow);
+                    setShowMobileMenu(false);
+                    setShowMobileGenres(false);
+                    setShowRedditChat(false);
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Bell size={20} className="text-gray-700 dark:text-gray-300" />
+                    <span className="text-base text-gray-900 dark:text-white">Notifications</span>
+                  </div>
+                  {unreadNotificationsCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1.5 font-medium">
+                      {unreadNotificationsCount > 99 ? '99+' : unreadNotificationsCount}
+                    </span>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
                     setCurrentView('trending');
                     setShowMobileMenu(false);
                   }}
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <TrendingUp size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Trending</span>
+                  <span className="text-base text-gray-900 dark:text-white">Trending</span>
                 </button>
 
                 <button
@@ -2512,7 +2584,7 @@ function HomeContent() {
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Trophy size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Leaderboards</span>
+                  <span className="text-base text-gray-900 dark:text-white">Leaderboards</span>
                 </button>
 
                 <button
@@ -2523,7 +2595,7 @@ function HomeContent() {
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Users size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Friends</span>
+                  <span className="text-base text-gray-900 dark:text-white">Friends</span>
                 </button>
 
                 <button
@@ -2534,7 +2606,7 @@ function HomeContent() {
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Layers size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Groups</span>
+                  <span className="text-base text-gray-900 dark:text-white">Groups</span>
                 </button>
 
                 <button
@@ -2545,7 +2617,7 @@ function HomeContent() {
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Calendar size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Social Events</span>
+                  <span className="text-base text-gray-900 dark:text-white">Social Events</span>
                 </button>
 
                 <button
@@ -2556,7 +2628,7 @@ function HomeContent() {
                   className="w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                 >
                   <Headphones size={20} className="text-gray-700 dark:text-gray-300" />
-                  <span className="text-sm text-gray-900 dark:text-white">Podcast</span>
+                  <span className="text-base text-gray-900 dark:text-white">Podcast</span>
                 </button>
               </div>
             </div>
@@ -2568,46 +2640,50 @@ function HomeContent() {
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
         <div className="flex justify-around items-center h-16 px-1">
           <button
-            onClick={() => {
-              setShowMobileMenu(!showMobileMenu);
-              setShowMobileGenres(false);
-              setShowRedditChat(false);
-            }}
+          onClick={() => {
+            setShowMobileMenu(!showMobileMenu);
+            setShowMobileGenres(false);
+            setShowRedditChat(false);
+            setShowNotifications(false);
+          }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
             <Menu size={20} />
             <span className="text-xs mt-1">Menu</span>
           </button>
           <button
-            onClick={() => {
-              setShowMobileGenres(!showMobileGenres);
-              setShowMobileMenu(false);
-              setShowRedditChat(false);
-            }}
+          onClick={() => {
+            setShowMobileGenres(!showMobileGenres);
+            setShowMobileMenu(false);
+            setShowRedditChat(false);
+            setShowNotifications(false);
+          }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
             <Search size={20} />
             <span className="text-xs mt-1">Genres</span>
           </button>
           <button
-            onClick={() => {
-              setCurrentView('local');
-              setShowMobileMenu(false);
-              setShowMobileGenres(false);
-              setShowRedditChat(false);
-            }}
+          onClick={() => {
+            setCurrentView('local');
+            setShowMobileMenu(false);
+            setShowMobileGenres(false);
+            setShowRedditChat(false);
+            setShowNotifications(false);
+          }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
             <MapPin size={20} />
             <span className="text-xs mt-1">Local</span>
           </button>
           <button
-            onClick={() => {
-              setShowNewListForm(true);
-              setShowMobileMenu(false);
-              setShowMobileGenres(false);
-              setShowRedditChat(false);
-            }}
+          onClick={() => {
+            setShowNewListForm(true);
+            setShowMobileMenu(false);
+            setShowMobileGenres(false);
+            setShowRedditChat(false);
+            setShowNotifications(false);
+          }}
             className="flex flex-col items-center justify-center flex-1 py-3 bg-green-500 text-white rounded-lg mx-1 shadow-lg hover:bg-green-600 transition-colors"
           >
             <Plus size={24} />
@@ -2618,6 +2694,7 @@ function HomeContent() {
               setShowRedditChat(!showRedditChat);
               setShowMobileMenu(false);
               setShowMobileGenres(false);
+              setShowNotifications(false);
             }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400 relative"
           >
@@ -2634,20 +2711,22 @@ function HomeContent() {
               setCurrentView('favorites');
               setShowMobileMenu(false);
               setShowMobileGenres(false);
-              setShowRedditChat(false);
-            }}
+            setShowRedditChat(false);
+            setShowNotifications(false);
+          }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
             <Bookmark size={20} />
             <span className="text-xs mt-1">Saved</span>
           </button>
           <button
-            onClick={() => {
-              setCurrentView('home');
-              setShowMobileMenu(false);
-              setShowMobileGenres(false);
-              setShowRedditChat(false);
-            }}
+          onClick={() => {
+            setCurrentView('home');
+            setShowMobileMenu(false);
+            setShowMobileGenres(false);
+            setShowRedditChat(false);
+            setShowNotifications(false);
+          }}
             className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
           >
             <HomeIcon size={20} />
@@ -2656,6 +2735,7 @@ function HomeContent() {
         </div>
       </nav>
 
+      {/* Floating Chat Button - Desktop only */}
       {/* Floating Chat Button - Desktop only */}
       {!showRedditChat && (
         <button
