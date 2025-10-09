@@ -1751,24 +1751,6 @@ function HomeContent() {
     );
   };
 
-  const handleAddListToHistoryLog = (listId: number) => {
-    const list = allLists.find((l) => l.id === listId);
-    if (!list) return;
-
-    const historyItem: HistoryItem = {
-      id: `manual-list-${listId}-${Date.now()}`,
-      type: 'list',
-      listId,
-      listTitle: list.title,
-      listAuthor: list.author,
-      listCategory: list.category,
-      action: 'saved',
-      savedAt: new Date().toISOString()
-    };
-
-    setHistoryItems((prev) => [...prev, historyItem]);
-  };
-
   const handleRateList = (listId: number, rating: 'up' | 'down') => {
     const list = allLists.find((l) => l.id === listId);
     if (!list) return;
@@ -1786,6 +1768,8 @@ function HomeContent() {
     };
 
     setHistoryItems((prev) => [...prev, historyItem]);
+
+    setSavedLists((prev) => prev.filter((id) => id !== listId));
   };
 
   // Handle claiming early adopter rewards
@@ -2104,8 +2088,6 @@ function HomeContent() {
               onSearchSettingsChange={handleSearchSettingsChange}
               onRandomList={handleRandomList}
               onClearSearch={handleClearSearch}
-              onAddListToHistory={handleAddListToHistoryLog}
-              onRateList={handleRateList}
           />
         );
       case 'discover':
@@ -2163,8 +2145,6 @@ function HomeContent() {
             setSavedLists={setSavedLists}
             antiSocialMode={userProfile.antiSocialMode}
             onBack={() => setCurrentView('home')}
-            onAddListToHistory={handleAddListToHistoryLog}
-            onRateList={handleRateList}
           />
         );
       case 'local':
@@ -2188,8 +2168,6 @@ function HomeContent() {
             events={events}
             onJoinEvent={handleJoinEvent}
             onBack={() => setCurrentView('home')}
-            onAddListToHistory={handleAddListToHistoryLog}
-            onRateList={handleRateList}
           />
         );
       case 'favorites':
@@ -2216,7 +2194,6 @@ function HomeContent() {
             historyItems={historyItems}
             onBack={() => setCurrentView('home')}
             antiSocialMode={userProfile.antiSocialMode}
-            onAddListToHistory={handleAddListToHistoryLog}
             onRateList={handleRateList}
           />
         );
@@ -2292,8 +2269,6 @@ function HomeContent() {
               viewingProfile={viewingProfile}
               onBack={() => setCurrentView('home')}
               antiSocialMode={profileToShow.antiSocialMode}
-              onAddListToHistory={handleAddListToHistoryLog}
-              onRateList={handleRateList}
             />
           </ProfileErrorBoundary>
         );

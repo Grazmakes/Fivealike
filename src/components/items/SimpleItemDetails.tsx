@@ -74,10 +74,10 @@ const buildSpotifyEmbedUrl = (options: { type: 'artist' | 'show'; id?: string; f
 
   if (id && id.trim().length > 0) {
     const pathSegment = type === 'show' ? 'show' : 'artist';
-    return `https://open.spotify.com/embed/${pathSegment}/${id}?utm_source=generator&theme=0`;
+    return `https://open.spotify.com/embed/${pathSegment}/${id}?utm_source=generator&theme=0&compact=1`;
   }
 
-  return `https://open.spotify.com/embed/search/${encodeURIComponent(fallbackQuery)}?utm_source=generator&theme=0`;
+  return `https://open.spotify.com/embed/search/${encodeURIComponent(fallbackQuery)}?utm_source=generator&theme=0&compact=1`;
 };
 
 const buildAmazonUrl = (category: AmazonCategory, itemName: string): string => {
@@ -695,13 +695,13 @@ export default function SimpleItemDetails({
 
         {/* Music Player - Full width below everything */}
         {!hideSpotifyEmbed && (
-          <div className="w-full px-1 md:px-0 mt-4 flex justify-center">
+          <div className="w-full px-1 md:px-0 mt-4">
             <iframe
               title={`${data.name || itemName} on Spotify`}
-              style={{ borderRadius: '12px', minWidth: '320px', maxWidth: '480px' }}
+              style={{ borderRadius: '12px' }}
               src={spotifyEmbedSrc}
               width="100%"
-              height="152"
+              height="80"
               frameBorder="0"
               allowFullScreen={false}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -944,10 +944,10 @@ export default function SimpleItemDetails({
         </div>
 
         {!hideSpotifyEmbed && (
-          <div className="w-full px-1 md:px-0 mt-4 flex justify-center">
+          <div className="w-full px-1 md:px-0 mt-4">
             <iframe
               title={`${data.name || itemName} on Spotify`}
-              style={{ borderRadius: '12px', minWidth: '320px', maxWidth: '480px' }}
+              style={{ borderRadius: '12px' }}
               src={spotifyEmbedSrc}
               width="100%"
               height="80"
