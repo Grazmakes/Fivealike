@@ -173,5 +173,150 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     members: ['Lorde'],
     sourceUrl: 'https://music.apple.com/us/artist/lorde/456610732',
     id: '163tK9Wjr9P9DmM0AVK7lm'
+  },
+  'Lana Del Rey': {
+    name: 'Lana Del Rey',
+    biography: 'Lana Del Rey is an American singer-songwriter known for her cinematic quality, exploration of tragic romance and melancholia, and references to pop culture and 1950s–1960s Americana.',
+    image: 'https://i.scdn.co/image/ab6761610000e5ebb99cacf8acd537820676726',
+    formed: '2011',
+    genres: ['Indie Pop', 'Dream Pop', 'Alternative'],
+    members: ['Lana Del Rey'],
+    sourceUrl: 'https://music.apple.com/us/artist/lana-del-rey/464296584',
+    id: '00FQb4jTyendYWaN8pK0wa'
+  },
+  'The Get Up Kids': {
+    name: 'The Get Up Kids',
+    biography: 'The Get Up Kids are an American rock band from Kansas City. Formed in 1995, the band was a major influence on the mid-1990s emo scene and helped define the sound of the genre.',
+    formed: '1995',
+    genres: ['Emo', 'Indie Rock', 'Alternative Rock'],
+    members: ['Matt Pryor', 'Jim Suptic', 'Rob Pope', 'Ryan Pope'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-get-up-kids/78722635',
+    id: '54Bjxn26WsjfslQbNVtSCm'
+  },
+  'Piebald': {
+    name: 'Piebald',
+    biography: 'Piebald was an American rock band from Boston, Massachusetts. Formed in 1994, they were known for their energetic indie rock sound and thoughtful lyrics.',
+    formed: '1994',
+    genres: ['Indie Rock', 'Emo', 'Alternative Rock'],
+    members: ['Travis Shettel', 'Aaron Stuart', 'Andrew Bonner', 'Luke Garro'],
+    sourceUrl: 'https://music.apple.com/us/artist/piebald/5371911',
+    id: '4rOGGTXaYygtFIHsPgLKJv'
+  },
+  'The Promise Ring': {
+    name: 'The Promise Ring',
+    biography: 'The Promise Ring is an American rock band from Milwaukee, Wisconsin, formed in 1995. They are considered one of the pioneering bands of the emo and indie rock movements.',
+    formed: '1995',
+    genres: ['Emo', 'Indie Rock', 'Power Pop'],
+    members: ['Davey von Bohlen', 'Jason Gnewikow', 'Scott Schoenbeck', 'Dan Didier'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-promise-ring/15426791',
+    id: '5li5GfWFVl73vu7r2bGitu'
+  },
+  'Jets to Brazil': {
+    name: 'Jets to Brazil',
+    biography: 'Jets to Brazil was an American indie rock band formed in 1997 by Blake Schwarzenbach, previously of Jawbreaker. They combined emotional lyrics with melodic punk and indie rock.',
+    formed: '1997',
+    genres: ['Indie Rock', 'Emo', 'Post-Hardcore'],
+    members: ['Blake Schwarzenbach', 'Jeremy Chatelain', 'Chris Daly'],
+    sourceUrl: 'https://music.apple.com/us/artist/jets-to-brazil/2717181',
+    id: '03xcT10aipgYbYqusG7GWY'
+  },
+  'Texas Is the Reason': {
+    name: 'Texas Is the Reason',
+    biography: 'Texas Is the Reason was an American post-hardcore band founded by former Shelter guitarist Norman Brannon. Active from 1994-1997, they were highly influential in the emo and post-hardcore scenes.',
+    formed: '1994',
+    genres: ['Post-Hardcore', 'Emo', 'Indie Rock'],
+    members: ['Garrett Klahn', 'Norman Brannon', 'Scott Winegard', 'Chris Daly'],
+    sourceUrl: 'https://music.apple.com/us/artist/texas-is-the-reason/84282103',
+    id: '7rXo5QTwwFBYZ5Z3veUVg8'
+  },
+  'Portishead': {
+    name: 'Portishead',
+    biography: 'Portishead is an English band formed in 1991 in Bristol. Pioneers of trip hop, they are known for their dark, cinematic sound combining hip-hop beats with atmospheric production.',
+    formed: '1991',
+    genres: ['Trip Hop', 'Electronic', 'Alternative'],
+    members: ['Beth Gibbons', 'Geoff Barrow', 'Adrian Utley'],
+    sourceUrl: 'https://music.apple.com/us/artist/portishead/712435',
+    id: '6liAMWkVf5LH7YR9yfFy1Y'
+  },
+  'Massive Attack': {
+    name: 'Massive Attack',
+    biography: 'Massive Attack are an English trip hop collective formed in 1988 in Bristol, consisting of Robert "3D" Del Naja and Grant "Daddy G" Marshall. Pioneers of the trip hop genre.',
+    formed: '1988',
+    genres: ['Trip Hop', 'Electronic', 'Alternative'],
+    members: ['Robert Del Naja', 'Grant Marshall'],
+    sourceUrl: 'https://music.apple.com/us/artist/massive-attack/712433',
+    id: '6FXMGgJwohJLUSr5nVlf9X'
+  },
+  'Thom Yorke': {
+    name: 'Thom Yorke',
+    biography: 'Thom Yorke is an English musician and the main vocalist and songwriter of Radiohead. Known for his experimental solo work exploring electronic music and art rock.',
+    formed: '2006',
+    genres: ['Electronic', 'Art Rock', 'Experimental'],
+    members: ['Thom Yorke'],
+    sourceUrl: 'https://music.apple.com/us/artist/thom-yorke/152285',
+    id: '4CvTDPKA6W06DRfBnZKrau'
+  },
+  'Sigur Rós': {
+    name: 'Sigur Rós',
+    biography: 'Sigur Rós is an Icelandic post-rock band formed in 1994. Known for their ethereal sound, falsetto vocals, and use of bowed guitar, creating atmospheric and cinematic music.',
+    formed: '1994',
+    genres: ['Post-Rock', 'Ambient', 'Art Rock'],
+    members: ['Jón Þór Birgisson', 'Georg Hólm', 'Kjartan Sveinsson'],
+    sourceUrl: 'https://music.apple.com/us/artist/sigur-rós/3410835',
+    id: '6UUrUCIZtQeOf8tC0WuzRy'
+  },
+  'Aphex Twin': {
+    name: 'Aphex Twin',
+    biography: 'Aphex Twin is the alias of Richard D. James, a British musician known for his influential and idiosyncratic work in electronic music, particularly IDM and ambient techno.',
+    formed: '1985',
+    genres: ['Electronic', 'IDM', 'Ambient'],
+    members: ['Richard D. James'],
+    sourceUrl: 'https://music.apple.com/us/artist/aphex-twin/5524',
+    id: '6kBDZFXuLrZgHnvmPu9NsG'
+  },
+  'J. Cole': {
+    name: 'J. Cole',
+    biography: 'J. Cole is an American rapper, singer, and record producer. Known for his thoughtful, introspective lyrics and storytelling ability, he\'s one of hip-hop\'s most respected artists.',
+    formed: '2007',
+    genres: ['Hip-Hop', 'Rap', 'Conscious Rap'],
+    members: ['J. Cole'],
+    sourceUrl: 'https://music.apple.com/us/artist/j-cole/154991896',
+    id: '6l3HvQ5sa6mXTsMTB19rO5'
+  },
+  'Joey Bada$$': {
+    name: 'Joey Bada$$',
+    biography: 'Joey Bada$$ is an American rapper and actor. A founding member of Pro Era, he\'s known for his conscious lyrics and 1990s boom bap-inspired production style.',
+    formed: '2010',
+    genres: ['Hip-Hop', 'Rap', 'Boom Bap'],
+    members: ['Joey Bada$$'],
+    sourceUrl: 'https://music.apple.com/us/artist/joey-bada/542648826',
+    id: '2P5sC9cVZDToPxyomzF1UH'
+  },
+  'Danny Brown': {
+    name: 'Danny Brown',
+    biography: 'Danny Brown is an American rapper known for his unique vocal style, experimental production choices, and honest exploration of drug use and depression.',
+    formed: '2007',
+    genres: ['Hip-Hop', 'Experimental Hip-Hop', 'Alternative Rap'],
+    members: ['Danny Brown'],
+    sourceUrl: 'https://music.apple.com/us/artist/danny-brown/255933609',
+    id: '7aA592KWirLsnfb5ulGWvU'
+  },
+  'Earl Sweatshirt': {
+    name: 'Earl Sweatshirt',
+    biography: 'Earl Sweatshirt is an American rapper and record producer. A former member of Odd Future, he\'s known for his introspective lyrics and experimental production.',
+    formed: '2008',
+    genres: ['Hip-Hop', 'Alternative Rap', 'Experimental'],
+    members: ['Earl Sweatshirt'],
+    sourceUrl: 'https://music.apple.com/us/artist/earl-sweatshirt/315221706',
+    id: '3A5tHz1SfngyOZM2gItYKu'
+  },
+  'Vince Staples': {
+    name: 'Vince Staples',
+    biography: 'Vince Staples is an American rapper and singer. Known for his deadpan delivery, dark production, and socially conscious lyrics about life in Long Beach, California.',
+    formed: '2011',
+    genres: ['Hip-Hop', 'Rap', 'West Coast Hip-Hop'],
+    members: ['Vince Staples'],
+    sourceUrl: 'https://music.apple.com/us/artist/vince-staples/452135075',
+    id: '68kEuyFKyqrdQQLLsmiatm'
   }
 };
