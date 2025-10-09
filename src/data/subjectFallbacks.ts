@@ -57,6 +57,12 @@ export const subjectFallbacks: Record<string, SubjectFallback> = {
     sourceName: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/The_Hunger_Games'
   },
+  [normalizeKey('Dune', 'Books')]: {
+    description: 'Dune is a 1965 epic science fiction novel by Frank Herbert, set in the distant future amidst a huge interstellar empire. It is considered one of the greatest science fiction novels of all time.',
+    image: 'https://upload.wikimedia.org/wikipedia/en/d/de/Dune-Frank_Herbert_%281965%29_First_edition.jpg',
+    sourceName: 'Wikipedia',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Dune_(novel)'
+  },
   [normalizeKey('The Lord of the Rings', 'Movies')]: {
     description: 'The Lord of the Rings is an epic fantasy adventure film trilogy based on J.R.R. Tolkien\'s novels, directed by Peter Jackson and produced by New Line Cinema.',
     image: 'https://image.tmdb.org/t/p/w500/6oom5QYQ2yQTMJIbnvbkBL9cHo6.jpg',
@@ -105,8 +111,8 @@ export const subjectFallbacks: Record<string, SubjectFallback> = {
   },
   [normalizeKey('Succession', 'TV Shows')]: {
     description: 'Succession follows the Roy family as they navigate power struggles inside their global media empire, blending biting satire with high-stakes corporate drama.',
-    image: 'https://image.tmdb.org/t/p/w500/7HWetDpyqZQ45zh1Bz5o3Z4cM0q.jpg',
-    poster_path: '/7HWetDpyqZQ45zh1Bz5o3Z4cM0q.jpg',
+    image: 'https://image.tmdb.org/t/p/w500/z0XiwdrCQ9yVIr4O0pxzaAYRxdW.jpg',
+    poster_path: '/z0XiwdrCQ9yVIr4O0pxzaAYRxdW.jpg',
     sourceName: 'Wikipedia',
     sourceUrl: 'https://en.wikipedia.org/wiki/Succession_(TV_series)',
     id: '76331'
