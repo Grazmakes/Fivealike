@@ -513,6 +513,12 @@ export default function SimpleItemDetails({
         }
 
         if (category === 'Music') {
+          // For music with fallback data, prioritize it to ensure artwork displays
+          if (fallbackData) {
+            setData(fallbackData);
+            return;
+          }
+
           try {
             const response = await fetch('/api/subject-info', {
               method: 'POST',
@@ -523,11 +529,6 @@ export default function SimpleItemDetails({
 
             if (!response.ok) {
               if (response.status === 404) {
-                if (fallbackData) {
-                  setData(fallbackData);
-                  return;
-                }
-
                 setData(null);
                 setError(null);
                 setForceWikipedia(true);
@@ -540,24 +541,15 @@ export default function SimpleItemDetails({
             const subjectData = await response.json();
 
             if (subjectData && (subjectData.spotifyId || subjectData.id || subjectData.image)) {
-              setData(mergeWithFallback(subjectData, fallbackData));
-              return;
-            }
-
-            if (fallbackData) {
-              setData(fallbackData);
+              setData(subjectData);
               return;
             }
 
             setData(null);
             return;
           } catch (err) {
-            if (fallbackData) {
-              setData(fallbackData);
-              setError(null);
-              return;
-            }
             console.error('[SimpleItemDetails] Music fetch error:', err);
+            setData(null);
             throw err;
           }
         }
@@ -661,15 +653,16 @@ export default function SimpleItemDetails({
     if (!data) return renderGeneric();
 
     const imageCandidates = [
+      // Check fallback data first for artists with comprehensive fallback data
+      fallbackData?.image,
+      fallbackData?.artwork,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.image,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.artwork,
       data.image,
       data.artwork,
       Array.isArray(data.images) ? data.images[0] : undefined,
       data.coverArt?.sources?.[0]?.url,
-      Array.isArray(data.albums) ? data.albums[0] : undefined,
-      fallbackData?.image,
-      fallbackData?.artwork,
-      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.image,
-      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.artwork
+      Array.isArray(data.albums) ? data.albums[0] : undefined
     ];
 
     const imageUrl = imageCandidates.map(normalizeMusicImage).find(Boolean);
@@ -919,14 +912,15 @@ export default function SimpleItemDetails({
     if (!data) return renderGeneric();
 
     const podcastImageCandidates = [
-      data.artwork,
-      data.image,
-      Array.isArray(data.images) ? data.images[0] : undefined,
-      data.coverArt?.sources?.[0]?.url,
+      // Prioritize fallback data first since we have comprehensive fallbacks
       fallbackData?.image,
       fallbackData?.artwork,
       subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.image,
-      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.artwork
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.artwork,
+      data.image,
+      data.artwork,
+      Array.isArray(data.images) ? data.images[0] : undefined,
+      data.coverArt?.sources?.[0]?.url
     ];
 
     const artworkUrl = podcastImageCandidates.map(normalizeMusicImage).find(Boolean);
