@@ -179,4 +179,93 @@ subjectFallbacks[normalizeKey('Wordle', 'Games')] = {
   sourceUrl: 'https://www.nytimes.com/games/wordle/index.html'
 };
 
+// Add popular podcasts
+subjectFallbacks[normalizeKey('Lex Fridman Podcast', 'Podcasts')] = {
+  description: 'Conversations about the nature of intelligence, consciousness, love, and power. Lex Fridman is a scientist and AI researcher at MIT.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8aaf81dbc5688c67c63a1cdca5',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/2MAi0BvDc6GTFvKFPXnkCL',
+  id: '2MAi0BvDc6GTFvKFPXnkCL'
+};
+
+subjectFallbacks[normalizeKey('The Tim Ferriss Show', 'Podcasts')] = {
+  description: 'Tim Ferriss deconstructs world-class performers from eclectic areas to extract the tactics, tools, and routines you can use.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a20d84595a00631e41d24f4ab',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/5qSUyCrk9KR69lEiXbjwXM',
+  id: '5qSUyCrk9KR69lEiXbjwXM'
+};
+
+subjectFallbacks[normalizeKey('Huberman Lab', 'Podcasts')] = {
+  description: 'Neuroscience and science-based tools for everyday life. Hosted by Dr. Andrew Huberman, a neuroscientist and professor at Stanford University.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a2dcb895475520a152d56dd1d',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/79CkJF3UJTHFV8Dse3Oy0P',
+  id: '79CkJF3UJTHFV8Dse3Oy0P'
+};
+
+subjectFallbacks[normalizeKey('Conan Needs a Friend', 'Podcasts')] = {
+  description: 'After 25 years at the Late Night desk, Conan realized that the only people at his holiday party are the men and women who work for him. So he started a podcast to do what he does best: have long, in-depth conversations.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8ad2b78a2a674fa0c801f6c0a9',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/5TXKxbKFmBKSDEPKH5oSHU',
+  id: '5TXKxbKFmBKSDEPKH5oSHU'
+};
+
+subjectFallbacks[normalizeKey('SmartLess', 'Podcasts')] = {
+  description: 'A podcast that connects and unites people from all walks of life to learn about shared experiences through thoughtful dialogue and organic hilarity. Hosted by Jason Bateman, Sean Hayes, and Will Arnett.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a7a24e50979b1f553d7a48dd3',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/5HRqAJ1BfdYEFJy4B9H5p4',
+  id: '5HRqAJ1BfdYEFJy4B9H5p4'
+};
+
+subjectFallbacks[normalizeKey('Call Her Daddy', 'Podcasts')] = {
+  description: 'A female-hosted podcast covering relationships, sex, health, and pop culture. Hosted by Alex Cooper.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a94c384f98d250e9ba87fbe73',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/1iQV5VBiNDVvhPK01gpobR',
+  id: '1iQV5VBiNDVvhPK01gpobR'
+};
+
+subjectFallbacks[normalizeKey('My Favorite Murder', 'Podcasts')] = {
+  description: 'Karen Kilgariff and Georgia Hardstark tell each other their favorite true crime murder stories. Stay sexy and don\'t get murdered!',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a8dbe3e41bfe53c08e8a06b56',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/0U9S5J2ltMaKdxIfLuEjzE',
+  id: '0U9S5J2ltMaKdxIfLuEjzE'
+};
+
+subjectFallbacks[normalizeKey('Crime Junkie', 'Podcasts')] = {
+  description: 'If you can never get enough true crime... Congratulations, you\'ve found your people. Hosted by Ashley Flowers.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8af0e6e41e6becea740870fe80',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/4WvCVSH4X3IveQBZX7wtHu',
+  id: '4WvCVSH4X3IveQBZX7wtHu'
+};
+
+subjectFallbacks[normalizeKey('Serial', 'Podcasts')] = {
+  description: 'Serial is a podcast from the creators of This American Life, hosted by Sarah Koenig. Serial unfolds one story—a true story—over the course of a whole season.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a19cfdf5e99f0629c63f3aa3e',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/52U3kWGcxRy97TsZ8mP49T',
+  id: '52U3kWGcxRy97TsZ8mP49T'
+};
+
+subjectFallbacks[normalizeKey('Radiolab', 'Podcasts')] = {
+  description: 'Radiolab is on a curiosity bender. We ask deep questions and use investigative journalism to get the answers. A two-time Peabody Award winner.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a4d4ddb5766eb3caa2ca86c84',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/2hmkzUtix0qTqvtpPcMzEL',
+  id: '2hmkzUtix0qTqvtpPcMzEL'
+};
+
+subjectFallbacks[normalizeKey('WTF with Marc Maron', 'Podcasts')] = {
+  description: 'Comedian and actor Marc Maron conducts in-depth interviews with comedians, actors, directors, writers, authors, musicians and folks from all walks of life.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a1bc18767aed2c61822fe85c1',
+  sourceName: 'Spotify',
+  sourceUrl: 'https://open.spotify.com/show/4Nd4RDCFqRqBFGw0tXqCXI',
+  id: '4Nd4RDCFqRqBFGw0tXqCXI'
+};
+
 export const normalizeSubjectKey = normalizeKey;

@@ -74,10 +74,10 @@ const buildSpotifyEmbedUrl = (options: { type: 'artist' | 'show'; id?: string; f
 
   if (id && id.trim().length > 0) {
     const pathSegment = type === 'show' ? 'show' : 'artist';
-    return `https://open.spotify.com/embed/${pathSegment}/${id}?utm_source=generator&theme=0&compact=1`;
+    return `https://open.spotify.com/embed/${pathSegment}/${id}?utm_source=generator&theme=0&compact=1&autoplay=0`;
   }
 
-  return `https://open.spotify.com/embed/search/${encodeURIComponent(fallbackQuery)}?utm_source=generator&theme=0&compact=1`;
+  return `https://open.spotify.com/embed/search/${encodeURIComponent(fallbackQuery)}?utm_source=generator&theme=0&compact=1&autoplay=0`;
 };
 
 const buildAmazonUrl = (category: AmazonCategory, itemName: string): string => {
@@ -963,9 +963,9 @@ export default function SimpleItemDetails({
 
           {/* Right: Description aligned with artwork */}
           <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left">
-            {data.description && (
+            {(data.description || fallbackData?.description) && (
               <div className="text-base text-gray-700 dark:text-gray-300">
-                <p className="leading-relaxed">{limitToSentences(data.description)}</p>
+                <p className="leading-relaxed">{limitToSentences(data.description || fallbackData?.description || '')}</p>
               </div>
             )}
           </div>
