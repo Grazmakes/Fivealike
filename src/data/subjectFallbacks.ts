@@ -179,93 +179,261 @@ subjectFallbacks[normalizeKey('Wordle', 'Games')] = {
   sourceUrl: 'https://www.nytimes.com/games/wordle/index.html'
 };
 
-// Add popular podcasts
+// Add comprehensive podcast fallbacks with Wikipedia descriptions
 subjectFallbacks[normalizeKey('Lex Fridman Podcast', 'Podcasts')] = {
-  description: 'Conversations about the nature of intelligence, consciousness, love, and power. Lex Fridman is a scientist and AI researcher at MIT.',
+  description: 'A podcast where Lex Fridman interviews notable figures from various fields such as science, technology, sports, the arts, and politics, originally titled "The Artificial Intelligence Podcast" before being renamed in 2020.',
   image: 'https://i.scdn.co/image/ab6765630000ba8aaf81dbc5688c67c63a1cdca5',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/2MAi0BvDc6GTFvKFPXnkCL',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Lex_Fridman_Podcast',
   id: '2MAi0BvDc6GTFvKFPXnkCL'
 };
 
 subjectFallbacks[normalizeKey('The Tim Ferriss Show', 'Podcasts')] = {
-  description: 'Tim Ferriss deconstructs world-class performers from eclectic areas to extract the tactics, tools, and routines you can use.',
+  description: 'A podcast hosted by Tim Ferriss that features weekly interviews with successful people who share how they\'ve achieved success in their profession.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a20d84595a00631e41d24f4ab',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/5qSUyCrk9KR69lEiXbjwXM',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Tim_Ferriss_Show',
+  id: '5qSUyCrk9KR69lEiXbjwXM'
+};
+
+subjectFallbacks[normalizeKey('Tim Ferriss Show', 'Podcasts')] = {
+  description: 'A podcast hosted by Tim Ferriss that features weekly interviews with successful people who share how they\'ve achieved success in their profession.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a20d84595a00631e41d24f4ab',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Tim_Ferriss_Show',
   id: '5qSUyCrk9KR69lEiXbjwXM'
 };
 
 subjectFallbacks[normalizeKey('Huberman Lab', 'Podcasts')] = {
-  description: 'Neuroscience and science-based tools for everyday life. Hosted by Dr. Andrew Huberman, a neuroscientist and professor at Stanford University.',
+  description: 'A health and science-focused podcast hosted by Andrew Huberman, a neuroscientist and Stanford University associate professor, covering topics like neuroscience, stress management, and wellness.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a2dcb895475520a152d56dd1d',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/79CkJF3UJTHFV8Dse3Oy0P',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Huberman_Lab',
   id: '79CkJF3UJTHFV8Dse3Oy0P'
 };
 
 subjectFallbacks[normalizeKey('Conan Needs a Friend', 'Podcasts')] = {
-  description: 'After 25 years at the Late Night desk, Conan realized that the only people at his holiday party are the men and women who work for him. So he started a podcast to do what he does best: have long, in-depth conversations.',
+  description: 'A weekly comedy podcast hosted by Conan O\'Brien, along with his executive assistant Sona Movsesian and producer Matt Gourley, featuring interviews with comedians, actors, and other notable personalities in casual, often humorous conversations.',
   image: 'https://i.scdn.co/image/ab6765630000ba8ad2b78a2a674fa0c801f6c0a9',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/5TXKxbKFmBKSDEPKH5oSHU',
-  id: '5TXKxbKFmBKSDEPKH5oSHU'
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Conan_O%27Brien_Needs_a_Friend',
+  id: '3u26tlz7A3WyWRtXliX9a9'
 };
 
 subjectFallbacks[normalizeKey('SmartLess', 'Podcasts')] = {
-  description: 'A podcast that connects and unites people from all walks of life to learn about shared experiences through thoughtful dialogue and organic hilarity. Hosted by Jason Bateman, Sean Hayes, and Will Arnett.',
+  description: 'A comedy podcast hosted by actors Jason Bateman, Sean Hayes, and Will Arnett that features a unique format where one host reveals a mystery guest to the other two hosts each episode, and they then interview the guest together.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a7a24e50979b1f553d7a48dd3',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/5HRqAJ1BfdYEFJy4B9H5p4',
-  id: '5HRqAJ1BfdYEFJy4B9H5p4'
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/SmartLess',
+  id: '0Yzd0g8NYmn27k2HFNplv7'
 };
 
 subjectFallbacks[normalizeKey('Call Her Daddy', 'Podcasts')] = {
-  description: 'A female-hosted podcast covering relationships, sex, health, and pop culture. Hosted by Alex Cooper.',
+  description: 'A sex advice and comedy podcast created and hosted by Alex Cooper that discusses sexuality, relationships, and culture, with episodes typically running 30-60 minutes.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a94c384f98d250e9ba87fbe73',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/1iQV5VBiNDVvhPK01gpobR',
-  id: '1iQV5VBiNDVvhPK01gpobR'
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Call_Her_Daddy',
+  id: '7bnjJ7Va1nM07Um4Od55dW'
 };
 
 subjectFallbacks[normalizeKey('My Favorite Murder', 'Podcasts')] = {
-  description: 'Karen Kilgariff and Georgia Hardstark tell each other their favorite true crime murder stories. Stay sexy and don\'t get murdered!',
+  description: 'A weekly true crime comedy podcast hosted by American comedians Karen Kilgariff and Georgia Hardstark that features the hosts discussing true crime stories with a comedic approach.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a8dbe3e41bfe53c08e8a06b56',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/0U9S5J2ltMaKdxIfLuEjzE',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/My_Favorite_Murder',
   id: '0U9S5J2ltMaKdxIfLuEjzE'
 };
 
 subjectFallbacks[normalizeKey('Crime Junkie', 'Podcasts')] = {
-  description: 'If you can never get enough true crime... Congratulations, you\'ve found your people. Hosted by Ashley Flowers.',
+  description: 'A true crime podcast hosted by Ashley Flowers and Brit Prawat, based in Indianapolis, Indiana, that covers murder, missing persons, and serial killer cases in episodes typically 30 minutes to an hour long.',
   image: 'https://i.scdn.co/image/ab6765630000ba8af0e6e41e6becea740870fe80',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/4WvCVSH4X3IveQBZX7wtHu',
-  id: '4WvCVSH4X3IveQBZX7wtHu'
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Crime_Junkie',
+  id: '3DgfoleqaW61T2amZQKINx'
 };
 
 subjectFallbacks[normalizeKey('Serial', 'Podcasts')] = {
-  description: 'Serial is a podcast from the creators of This American Life, hosted by Sarah Koenig. Serial unfolds one story—a true story—over the course of a whole season.',
+  description: 'An investigative journalism podcast hosted by Sarah Koenig and co-produced by Koenig and Julie Snyder that tells a nonfiction story over multiple episodes, with each season exploring a different true story.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a19cfdf5e99f0629c63f3aa3e',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/52U3kWGcxRy97TsZ8mP49T',
-  id: '52U3kWGcxRy97TsZ8mP49T'
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Serial_(podcast)',
+  id: '2AWznEM757Yb1csHPzUnhw'
 };
 
 subjectFallbacks[normalizeKey('Radiolab', 'Podcasts')] = {
-  description: 'Radiolab is on a curiosity bender. We ask deep questions and use investigative journalism to get the answers. A two-time Peabody Award winner.',
+  description: 'A radio program and podcast produced by WNYC and hosted by Latif Nasser and Lulu Miller that focuses on scientific, philosophical, and political topics, attempting to approach broad subjects in an accessible manner.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a4d4ddb5766eb3caa2ca86c84',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/2hmkzUtix0qTqvtpPcMzEL',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Radiolab',
   id: '2hmkzUtix0qTqvtpPcMzEL'
 };
 
 subjectFallbacks[normalizeKey('WTF with Marc Maron', 'Podcasts')] = {
-  description: 'Comedian and actor Marc Maron conducts in-depth interviews with comedians, actors, directors, writers, authors, musicians and folks from all walks of life.',
+  description: 'A weekly podcast and radio show hosted by stand-up comedian Marc Maron, launched in September 2009, featuring in-depth interviews and produced by Brendan McDonald.',
   image: 'https://i.scdn.co/image/ab6765630000ba8a1bc18767aed2c61822fe85c1',
-  sourceName: 'Spotify',
-  sourceUrl: 'https://open.spotify.com/show/4Nd4RDCFqRqBFGw0tXqCXI',
-  id: '4Nd4RDCFqRqBFGw0tXqCXI'
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/WTF_with_Marc_Maron',
+  id: '6L47MDMO3xuN2XBed7miEI'
+};
+
+subjectFallbacks[normalizeKey('Armchair Expert', 'Podcasts')] = {
+  description: 'A weekly comedy podcast hosted by actors Dax Shepard and Monica Padman that features interviews with celebrities, journalists, and academics about "the messiness of being human."',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a8fe9742f42e4ee57e73b820d',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Armchair_Expert',
+  id: '6kAsbP8pxwaU2kPibKTuHE'
+};
+
+subjectFallbacks[normalizeKey('Casefile', 'Podcasts')] = {
+  description: 'An Australian true crime podcast hosted by an anonymous male narrator that covers solved and cold criminal cases, primarily focusing on murders and serial crimes through fully scripted episodes based on original documents and recordings.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a77ab03830e5be0f8a8db69a1',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Casefile_True_Crime_Podcast',
+  id: '4V3K3zyD0k789eaSWFXzhc'
+};
+
+subjectFallbacks[normalizeKey('Criminal', 'Podcasts')] = {
+  description: 'A true crime podcast hosted by Phoebe Judge that tells "stories of people who\'ve done wrong, been wronged, or gotten caught somewhere in the middle."',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a03e5b196d5a1bb2bea17d324',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Criminal_(podcast)',
+  id: '3ictIqfumbmEuWdt9xWQp5'
+};
+
+subjectFallbacks[normalizeKey('Doughboys', 'Podcasts')] = {
+  description: 'A comedy podcast hosted by Mike Mitchell and Nick Wiger that reviews chain restaurants, featuring a weekly guest and rating restaurants on a "fork" scale.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a70ec4855f1b1c4ed0a8e5c11',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Doughboys_(podcast)',
+  id: '5fRBo7ROBQNq8IAavbO64H'
+};
+
+subjectFallbacks[normalizeKey('Fresh Air', 'Podcasts')] = {
+  description: 'An American radio talk show broadcast on NPR, hosted by Terry Gross and Tonya Mosley, primarily featuring interviews with prominent figures in entertainment, arts, culture, and current affairs.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a9e0c5b826c7b0e6d6f96789f',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Fresh_Air',
+  id: '0HF5T1BVjaUR6dMlAamdB5'
+};
+
+subjectFallbacks[normalizeKey('Hollywood Handbook', 'Podcasts')] = {
+  description: 'A weekly comedy podcast hosted by Sean Clements and Hayes Davenport that satirically offers "advice, telling stories, and doing segments" in an absurdist style, featuring celebrity guests in what\'s been described as "essentially a mockery of entertainment niceties."',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a63cb83df5b7acf84e01e04ac',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Hollywood_Handbook',
+  id: '41zLPN9dAphB9zrJx3KVo5'
+};
+
+subjectFallbacks[normalizeKey('How Did This Get Made?', 'Podcasts')] = {
+  description: 'A comedy podcast hosted by Paul Scheer, June Diane Raphael, and Jason Mantzoukas that features "the deconstruction and mockery of outlandish films that are widely considered to be the worst."',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a3d7f8920860f8bcee415f1a3',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/How_Did_This_Get_Made%3F',
+  id: '7imJ7yoSPaYJGZtxH1EFve'
+};
+
+subjectFallbacks[normalizeKey('In the Dark', 'Podcasts')] = {
+  description: 'An investigative journalism podcast hosted by Madeleine Baran that focuses on examining law enforcement and prosecutorial conduct in high-profile criminal cases.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a99583c78b1e8f7e80f8b35ae',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/In_the_Dark_(podcast)',
+  id: '1aFyRYDJ1pHEaPMnZAGaOr'
+};
+
+subjectFallbacks[normalizeKey('Invisibilia', 'Podcasts')] = {
+  description: 'An NPR podcast that explores "the intangible forces that shape human behavior—things like ideas, beliefs, assumptions and emotions," hosted by Kia Miakka Natisse and Yowei Shaw.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a0c0f2ecebb51c0e3e67dfb1d',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Invisibilia',
+  id: '1Tgsr2BDHLSQ44YsOwoguj'
+};
+
+subjectFallbacks[normalizeKey('Making Sense', 'Podcasts')] = {
+  description: 'A podcast hosted by neuroscientist and philosopher Sam Harris that explores important and controversial questions about the mind, society, current events, moral philosophy, religion, and rationality.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a39583e93f42dfce68e3b72d8',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Making_Sense',
+  id: '5rgumWEx4FsqIY8e1wJNAk'
+};
+
+subjectFallbacks[normalizeKey('On Being', 'Podcasts')] = {
+  description: 'A podcast hosted by Krista Tippett that examines what it calls the "animating questions at the center of human life: What does it mean to be human, and how do we want to live?" featuring interviews with a wide range of guests from poets to physicists.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a3f7f5c41fbb6612976da3efa',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/On_Being',
+  id: '08F60fHBihlcqWZTr7Thzc'
+};
+
+subjectFallbacks[normalizeKey('Planet Money', 'Podcasts')] = {
+  description: 'An NPR podcast that aims to explain economics through "creative and entertaining" storytelling, hosted by a team including Amanda Aronczyk, Mary Childs, Nick Fountain, and Kenny Malone.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8ae4e3f9bbaaef3a8e20c878d7',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Planet_Money',
+  id: '4FYpq3lSeQMAhqNI81O0Cn'
+};
+
+subjectFallbacks[normalizeKey('Reply All', 'Podcasts')] = {
+  description: 'An American podcast about "how people shape the internet, and how the internet shapes people" hosted by Alex Goldman, PJ Vogt, and Emmanuel Dzotsi from 2014 to 2022.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a2fa0b0f82c80d8f5c9b5e1b6',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Reply_All_(podcast)',
+  id: '7gozmLqbcbr6PScMjc0Zl4'
+};
+
+subjectFallbacks[normalizeKey('S-Town', 'Podcasts')] = {
+  description: 'An investigative journalism podcast hosted by Brian Reed about John B. McLemore, a horologist from Woodstock, Alabama, who initially contacts the podcast to investigate an alleged murder, created by the producers of Serial and This American Life.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a4c92f9083d8a035e2aa1d50e',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/S-Town',
+  id: '1KPTM79Wn9vkWX0UoMYyrd'
+};
+
+subjectFallbacks[normalizeKey('The Hilarious World of Depression', 'Podcasts')] = {
+  description: 'A comedy interview podcast hosted by John Moe, featuring conversations with comedians and entertainers about their experiences with major depressive disorder, distributed by American Public Media from November 2016 to June 2020.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a0b8fcef03c35bb4e6c2e6d7e',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Hilarious_World_of_Depression',
+  id: '0nVNURZtqEoycVvrsIWAM5'
+};
+
+subjectFallbacks[normalizeKey('The Jordan Harbinger Show', 'Podcasts')] = {
+  description: 'A podcast hosted by Jordan Harbinger featuring in-depth conversations with people at the top of their game where he unpacks guests\' wisdom into practical nuggets, interviewing scientists, entertainers, athletes, artists, leaders, and spies.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a2e9a4b8e84f8b5e5f6d8e0c8',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Jordan_Harbinger_Show',
+  id: '5RVoEOIACQbBDZnGBJ7Ec2'
+};
+
+subjectFallbacks[normalizeKey('The Moth', 'Podcasts')] = {
+  description: 'A nonprofit organization that builds empathy through live storytelling shows, presenting thousands of true stories told live and without notes to audiences worldwide since 1997, available through The Moth Radio Hour and podcast.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a61dbe0b0b7ae8e5e5c7f8b8c',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Moth',
+  id: '5UKrcYdaGbq10z97yqi81N'
+};
+
+subjectFallbacks[normalizeKey('The Murder Squad', 'Podcasts')] = {
+  description: 'A true crime podcast where retired cold case investigator Paul Holes and investigative journalist Billy Jensen examine unsolved murders, unidentified remains and missing persons cases (the podcast ended in May 2022).',
+  image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/The_Murder_Squad_podcast_logo.png/440px-The_Murder_Squad_podcast_logo.png',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Murder_Squad',
+  id: ''
+};
+
+subjectFallbacks[normalizeKey('U Talkin U2 To Me?', 'Podcasts')] = {
+  description: 'A comedy podcast hosted by Adam Scott and Scott Aukerman, ostensibly devoted to discussing the music and impact of U2, combining discussion of the band with running gags and comedy bits only marginally related to the band.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a8c5b8e6d6e8f8e8e8f8e8e8e',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/U_Talkin%27_U2_To_Me%3F',
+  id: '6NDRHxCmNlSjMoUAFzRkwE'
+};
+
+subjectFallbacks[normalizeKey('Comedy Death-Ray', 'Podcasts')] = {
+  description: 'An improvisational comedy podcast hosted by Scott Aukerman, which began on May 1, 2009 as Comedy Death-Ray (later renamed Comedy Bang! Bang!), featuring celebrity interviews and comedians performing character-based comedy with largely improvised conversations.',
+  image: 'https://i.scdn.co/image/ab6765630000ba8a9e8c8e8e8e8e8e8e8e8e8e8e',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Comedy_Bang!_Bang!_(podcast)',
+  id: '1tnKU0o0aXq2iGHdMy44jm'
 };
 
 export const normalizeSubjectKey = normalizeKey;
