@@ -35,7 +35,15 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: '*.tmdb.org',
+      },
+      {
+        protocol: 'https',
         hostname: 'books.google.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'covers.openlibrary.org',
       },
       {
         protocol: 'https',
