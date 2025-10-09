@@ -601,16 +601,19 @@ export default function SimpleItemDetails({
 
             // Merge API data with fallback, using API images when available (iTunes has real artwork)
             if (subjectData && (subjectData.spotifyId || subjectData.image || subjectData.description)) {
+              // For podcasts, always prefer Spotify/iTunes artwork over placeholder
               const merged = {
-                ...fallbackData,
+                name: itemName,
                 ...subjectData,
-                // For podcasts, prefer API artwork (iTunes/Spotify) but use placeholders as fallback
+                // Ensure API artwork takes priority
                 image: subjectData.image || fallbackData?.image,
                 artwork: subjectData.image || subjectData.artwork || fallbackData?.image,
                 description: subjectData.description || fallbackData?.description,
-                id: subjectData.id || fallbackData?.id,
+                id: subjectData.spotifyId || subjectData.id || fallbackData?.id,
                 spotifyId: subjectData.spotifyId || subjectData.id || fallbackData?.spotifyId || fallbackData?.id
               };
+              console.log('[Podcast merge] subjectData.image:', subjectData.image);
+              console.log('[Podcast merge] merged.image:', merged.image);
               setData(merged);
               return;
             }
