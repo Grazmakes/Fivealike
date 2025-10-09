@@ -513,12 +513,6 @@ export default function SimpleItemDetails({
         }
 
         if (category === 'Music') {
-          // For music with fallback data, prioritize it to ensure artwork displays
-          if (fallbackData) {
-            setData(fallbackData);
-            return;
-          }
-
           try {
             const response = await fetch('/api/subject-info', {
               method: 'POST',
@@ -529,6 +523,10 @@ export default function SimpleItemDetails({
 
             if (!response.ok) {
               if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  return;
+                }
                 setData(null);
                 setError(null);
                 setForceWikipedia(true);
@@ -540,8 +538,24 @@ export default function SimpleItemDetails({
 
             const subjectData = await response.json();
 
+            // Merge API data with fallback, but don't let undefined fields override fallback
             if (subjectData && (subjectData.spotifyId || subjectData.id || subjectData.image)) {
-              setData(subjectData);
+              const merged = {
+                ...fallbackData,
+                ...subjectData,
+                // Explicitly handle fields that shouldn't be undefined
+                image: subjectData.image || fallbackData?.image,
+                artwork: subjectData.artwork || subjectData.image || fallbackData?.image,
+                description: subjectData.description || fallbackData?.description,
+                id: subjectData.id || fallbackData?.id,
+                spotifyId: subjectData.spotifyId || fallbackData?.spotifyId || fallbackData?.id
+              };
+              setData(merged);
+              return;
+            }
+
+            if (fallbackData) {
+              setData(fallbackData);
               return;
             }
 
@@ -549,18 +563,17 @@ export default function SimpleItemDetails({
             return;
           } catch (err) {
             console.error('[SimpleItemDetails] Music fetch error:', err);
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
             setData(null);
             throw err;
           }
         }
 
         if (category === 'Podcasts') {
-          // For podcasts, prioritize fallback data since we have comprehensive fallbacks
-          if (fallbackData) {
-            setData(fallbackData);
-            return;
-          }
-
           try {
             const response = await fetch('/api/subject-info', {
               method: 'POST',
@@ -571,6 +584,10 @@ export default function SimpleItemDetails({
 
             if (!response.ok) {
               if (response.status === 404) {
+                if (fallbackData) {
+                  setData(fallbackData);
+                  return;
+                }
                 setData(null);
                 setError(null);
                 setForceWikipedia(true);
@@ -582,8 +599,24 @@ export default function SimpleItemDetails({
 
             const subjectData = await response.json();
 
+            // Merge API data with fallback, prioritizing fallback for podcasts since we have comprehensive fallbacks
             if (subjectData && (subjectData.spotifyId || subjectData.image || subjectData.description)) {
-              setData(subjectData);
+              const merged = {
+                ...subjectData,
+                ...fallbackData,
+                // For podcasts, strongly prefer fallback data since we have good placeholder images
+                image: fallbackData?.image || subjectData.image,
+                artwork: fallbackData?.image || subjectData.artwork || subjectData.image,
+                description: fallbackData?.description || subjectData.description,
+                id: fallbackData?.id || subjectData.id,
+                spotifyId: fallbackData?.spotifyId || fallbackData?.id || subjectData.spotifyId
+              };
+              setData(merged);
+              return;
+            }
+
+            if (fallbackData) {
+              setData(fallbackData);
               return;
             }
 
@@ -591,6 +624,11 @@ export default function SimpleItemDetails({
             return;
           } catch (err) {
             console.error('[SimpleItemDetails] Podcast fetch error:', err);
+            if (fallbackData) {
+              setData(fallbackData);
+              setError(null);
+              return;
+            }
             setData(null);
             throw err;
           }
@@ -653,16 +691,15 @@ export default function SimpleItemDetails({
     if (!data) return renderGeneric();
 
     const imageCandidates = [
-      // Check fallback data first for artists with comprehensive fallback data
-      fallbackData?.image,
-      fallbackData?.artwork,
-      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.image,
-      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.artwork,
       data.image,
       data.artwork,
       Array.isArray(data.images) ? data.images[0] : undefined,
       data.coverArt?.sources?.[0]?.url,
-      Array.isArray(data.albums) ? data.albums[0] : undefined
+      Array.isArray(data.albums) ? data.albums[0] : undefined,
+      fallbackData?.image,
+      fallbackData?.artwork,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.image,
+      subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.artwork
     ];
 
     const imageUrl = imageCandidates.map(normalizeMusicImage).find(Boolean);
@@ -912,13 +949,12 @@ export default function SimpleItemDetails({
     if (!data) return renderGeneric();
 
     const podcastImageCandidates = [
-      // Prioritize fallback data first since we have comprehensive fallbacks
+      data.image,
+      data.artwork,
       fallbackData?.image,
       fallbackData?.artwork,
       subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.image,
       subjectFallbacks[normalizeSubjectKey(itemName, category || 'Podcasts')]?.artwork,
-      data.image,
-      data.artwork,
       Array.isArray(data.images) ? data.images[0] : undefined,
       data.coverArt?.sources?.[0]?.url
     ];
