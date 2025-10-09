@@ -729,7 +729,8 @@ export default function SimpleItemDetails({
               style={{ borderRadius: '12px' }}
               src={spotifyEmbedSrc}
               width="100%"
-              height="80"
+              height="152"
+              className="md:h-[152px] h-[152px]"
               frameBorder="0"
               allowFullScreen={false}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -978,7 +979,8 @@ export default function SimpleItemDetails({
               style={{ borderRadius: '12px' }}
               src={spotifyEmbedSrc}
               width="100%"
-              height="80"
+              height="152"
+              className="md:h-[152px] h-[152px]"
               frameBorder="0"
               allowFullScreen={false}
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
