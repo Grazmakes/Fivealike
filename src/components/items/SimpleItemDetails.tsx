@@ -948,6 +948,9 @@ export default function SimpleItemDetails({
   const renderPodcasts = () => {
     if (!data) return renderGeneric();
 
+    console.log('[renderPodcasts] data:', JSON.stringify(data, null, 2));
+    console.log('[renderPodcasts] fallbackData:', JSON.stringify(fallbackData, null, 2));
+
     const podcastImageCandidates = [
       data.image,
       data.artwork,
@@ -959,7 +962,9 @@ export default function SimpleItemDetails({
       data.coverArt?.sources?.[0]?.url
     ];
 
+    console.log('[renderPodcasts] podcastImageCandidates:', podcastImageCandidates);
     const artworkUrl = podcastImageCandidates.map(normalizeMusicImage).find(Boolean);
+    console.log('[renderPodcasts] artworkUrl:', artworkUrl);
     const spotifyEmbedSrc = buildSpotifyEmbedUrl({
       type: 'show',
       id: data.spotifyId || data.id,
