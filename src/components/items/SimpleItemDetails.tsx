@@ -563,6 +563,12 @@ export default function SimpleItemDetails({
         }
 
         if (category === 'Podcasts') {
+          // For podcasts, prioritize fallback data since we have comprehensive fallbacks
+          if (fallbackData) {
+            setData(fallbackData);
+            return;
+          }
+
           try {
             const response = await fetch('/api/subject-info', {
               method: 'POST',
@@ -573,11 +579,6 @@ export default function SimpleItemDetails({
 
             if (!response.ok) {
               if (response.status === 404) {
-                if (fallbackData) {
-                  setData(fallbackData);
-                  return;
-                }
-
                 setData(null);
                 setError(null);
                 setForceWikipedia(true);
@@ -589,25 +590,16 @@ export default function SimpleItemDetails({
 
             const subjectData = await response.json();
 
-            if (subjectData && (subjectData.spotifyId || subjectData.image)) {
-              setData(mergeWithFallback(subjectData, fallbackData));
-              return;
-            }
-
-            if (fallbackData) {
-              setData(fallbackData);
+            if (subjectData && (subjectData.spotifyId || subjectData.image || subjectData.description)) {
+              setData(subjectData);
               return;
             }
 
             setData(null);
             return;
           } catch (err) {
-            if (fallbackData) {
-              setData(fallbackData);
-              setError(null);
-              return;
-            }
             console.error('[SimpleItemDetails] Podcast fetch error:', err);
+            setData(null);
             throw err;
           }
         }
