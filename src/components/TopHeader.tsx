@@ -88,9 +88,9 @@ export default function TopHeader({
   const searchSettingsRef = useRef<HTMLDivElement>(null);
   const unreadCount = notifications.filter(n => n.unread).length;
 
-  // Handle click outside to close dropdowns
+  // Handle click outside to close dropdowns (including mobile touch)
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: MouseEvent | TouchEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowUserDropdown(false);
       }
@@ -102,8 +102,13 @@ export default function TopHeader({
       }
     }
 
+    // Add both mouse and touch event listeners for desktop and mobile
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
   }, [setShowNotifications]);
 
   return (
