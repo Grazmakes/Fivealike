@@ -133,5 +133,45 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     members: ['Allan Clarke', 'Graham Nash', 'Tony Hicks', 'Eric Haydock', 'Bobby Elliott'],
     sourceUrl: 'https://music.apple.com/us/artist/the-hollies/156488',
     id: '6waa8mKu91GjzD4NlONlNJ'
+  },
+  'Phoebe Bridgers': {
+    name: 'Phoebe Bridgers',
+    biography: 'Phoebe Bridgers is an American singer-songwriter from Los Angeles. She made her solo debut with Stranger in the Alps (2017), followed by Punisher (2020), which earned widespread critical acclaim and four Grammy Award nominations.',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb88dfee0c7adf1f75be3b217b',
+    formed: '2017',
+    genres: ['Indie Rock', 'Indie Folk', 'Singer-Songwriter'],
+    members: ['Phoebe Bridgers'],
+    sourceUrl: 'https://music.apple.com/us/artist/phoebe-bridgers/1168416245',
+    id: '1r1uxoy19fzMxunt3ONAkG'
+  },
+  'Clairo': {
+    name: 'Clairo',
+    biography: 'Claire Elizabeth Cottrill, known professionally as Clairo, is an American singer-songwriter. Born in Atlanta and raised in Massachusetts, she rose to prominence with her lo-fi single "Pretty Girl".',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb0c9e9878430a1c6c6cf6c5cb',
+    formed: '2017',
+    genres: ['Indie Pop', 'Bedroom Pop', 'Alternative'],
+    members: ['Clairo'],
+    sourceUrl: 'https://music.apple.com/us/artist/clairo/1239571943',
+    id: '3l0CmX0FvP2TTD5kQFJ9Ka'
+  },
+  'Mitski': {
+    name: 'Mitski',
+    biography: 'Mitski Miyawaki, known mononymously as Mitski, is a Japanese-American singer-songwriter. Known for her emotionally intense indie rock and art pop, she has released critically acclaimed albums including "Puberty 2" and "Be the Cowboy".',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb40b5c07ab77b6b1a9075fdc0',
+    formed: '2012',
+    genres: ['Indie Rock', 'Art Pop', 'Alternative'],
+    members: ['Mitski'],
+    sourceUrl: 'https://music.apple.com/us/artist/mitski/757990028',
+    id: '2uYWxilOVlUdk4oV9DvwqK'
+  },
+  'Lorde': {
+    name: 'Lorde',
+    biography: 'Ella Marija Lani Yelich-O\'Connor, known professionally as Lorde, is a New Zealand singer-songwriter. She gained international fame with her debut single "Royals" and album "Pure Heroine" at age 16.',
+    image: 'https://i.scdn.co/image/ab6761610000e5ebb99cacf8acd537820676726',
+    formed: '2013',
+    genres: ['Indie Pop', 'Art Pop', 'Electropop'],
+    members: ['Lorde'],
+    sourceUrl: 'https://music.apple.com/us/artist/lorde/456610732',
+    id: '163tK9Wjr9P9DmM0AVK7lm'
   }
 };
