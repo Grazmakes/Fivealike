@@ -72,6 +72,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'en.wikipedia.org',
       }
     ],
     formats: ['image/webp', 'image/avif'],
