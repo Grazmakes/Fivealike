@@ -35,8 +35,6 @@ interface HomeFeedProps {
   onSearchSettingsChange?: (settings: any) => void;
   onRandomList?: () => void;
   onClearSearch?: () => void;
-  onAddListToHistory?: (listId: number) => void;
-  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 const feedTabs = [
@@ -82,9 +80,7 @@ export default function HomeFeed({
   },
   onSearchSettingsChange,
   onRandomList,
-  onClearSearch,
-  onAddListToHistory,
-  onRateList
+  onClearSearch
 }: HomeFeedProps) {
   const [showFeedDropdown, setShowFeedDropdown] = useState(false);
   const [showSearchSettings, setShowSearchSettings] = useState(false);
@@ -277,8 +273,7 @@ export default function HomeFeed({
                 onSaveList={handleSaveList}
                 isSaved={savedLists.includes(list.id)}
                 antiSocialMode={userProfile.antiSocialMode}
-                onAddListToHistory={onAddListToHistory}
-                onRateList={onRateList}
+                showSaveButton
               />
               </div>
             </ListErrorBoundary>

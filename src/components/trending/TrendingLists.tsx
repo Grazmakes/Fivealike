@@ -21,8 +21,6 @@ interface TrendingListsProps {
   savedLists: number[];
   setSavedLists: (lists: number[]) => void;
   antiSocialMode?: boolean;
-  onAddListToHistory?: (listId: number) => void;
-  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 const trendingTabs = [
@@ -47,9 +45,7 @@ export default function TrendingLists({
   bookmarkState = {},
   savedLists,
   setSavedLists,
-  antiSocialMode = false,
-  onAddListToHistory,
-  onRateList
+  antiSocialMode = false
 }: TrendingListsProps) {
   
   const getFilteredLists = () => {
@@ -121,15 +117,14 @@ export default function TrendingLists({
             onTitleClick={onTitleClick}
             onAuthorClick={onAuthorClick}
             onMessage={onMessage}
-            onItemBookmark={onItemBookmark}
-            bookmarkState={bookmarkState}
-            onSaveList={handleSaveList}
-            isSaved={savedLists.includes(list.id)}
-            antiSocialMode={antiSocialMode}
-            onAddListToHistory={onAddListToHistory}
-            onRateList={onRateList}
-          />
-        ))}
+          onItemBookmark={onItemBookmark}
+          bookmarkState={bookmarkState}
+          onSaveList={handleSaveList}
+          isSaved={savedLists.includes(list.id)}
+          antiSocialMode={antiSocialMode}
+          showSaveButton
+        />
+      ))}
       </div>
     </div>
   );

@@ -38,7 +38,6 @@ interface FavoritesProps {
 
   // Antisocial mode
   antiSocialMode?: boolean;
-  onAddListToHistory?: (listId: number) => void;
   onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
@@ -66,7 +65,6 @@ export default function Favorites({
   historyItems,
   onBack,
   antiSocialMode = false,
-  onAddListToHistory,
   onRateList
 }: FavoritesProps) {
   const [selectedTab, setSelectedTab] = useState<FavoritesTab>('lists');
@@ -270,16 +268,16 @@ export default function Favorites({
                     onTitleClick={onTitleClick}
                     onAuthorClick={onAuthorClick}
                     onMessage={onMessage}
-                  onItemBookmark={onItemBookmark}
-                  onAddToHistory={onAddToHistory}
-                  bookmarkState={bookmarkState}
-                  onSaveList={handleSaveList}
-                  isSaved={true}
-                  antiSocialMode={antiSocialMode}
-                  onAddListToHistory={onAddListToHistory}
-                  onRateList={onRateList}
-                  showSaveButton
-                />
+                    onItemBookmark={onItemBookmark}
+                    onAddToHistory={onAddToHistory}
+                    bookmarkState={bookmarkState}
+                    onSaveList={handleSaveList}
+                    isSaved={true}
+                    antiSocialMode={antiSocialMode}
+                    onRateList={onRateList}
+                    ratingPlacement="hero"
+                    showSaveButton
+                  />
                 </div>
               ))
             ) : (

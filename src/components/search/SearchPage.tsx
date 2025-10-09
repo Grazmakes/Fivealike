@@ -37,8 +37,6 @@ interface SearchPageProps {
   antiSocialMode?: boolean;
   searchSettings?: SearchSettings;
   randomTrigger?: number;
-  onAddListToHistory?: (listId: number) => void;
-  onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
 type SortOption = 'mostLikes' | 'bestOverall' | 'mostHighFives' | 'mostComments' | 'recent';
@@ -64,8 +62,6 @@ export default function SearchPage({
   antiSocialMode = false,
   searchSettings,
   randomTrigger,
-  onAddListToHistory,
-  onRateList
 }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [forceRandomList, setForceRandomList] = useState<List | null>(null);
@@ -318,8 +314,7 @@ export default function SearchPage({
               onSaveList={handleSaveList}
               isSaved={savedLists.includes(list.id)}
               antiSocialMode={antiSocialMode}
-              onAddListToHistory={onAddListToHistory}
-              onRateList={onRateList}
+              showSaveButton
             />
           ))
         ) : (

@@ -49,6 +49,14 @@ export const bookFallbacks: Record<string, BookFallback> = {
     thumbnail: withHttps('https://upload.wikimedia.org/wikipedia/en/3/3c/The_Fault_in_Our_Stars.jpg'),
     publishedDate: '2012',
     pageCount: 313
+  },
+  'Dune': {
+    title: 'Dune',
+    authors: ['Frank Herbert'],
+    description: 'Dune is a 1965 epic science fiction novel by Frank Herbert, set in the distant future amidst a huge interstellar empire. It is considered one of the greatest science fiction novels of all time.',
+    thumbnail: withHttps('https://upload.wikimedia.org/wikipedia/en/d/de/Dune-Frank_Herbert_%281965%29_First_edition.jpg'),
+    publishedDate: '1965',
+    pageCount: 688
   }
 };
 

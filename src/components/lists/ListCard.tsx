@@ -31,7 +31,6 @@ interface ListCardProps {
   onItemBookmark?: (listId: number, itemIndex: number) => void;
   onMessage?: (username: string) => void;
   onAddToHistory?: (listId: number, itemIndex: number) => void;
-  onAddListToHistory?: (listId: number) => void;
   onRateList?: (listId: number, rating: 'up' | 'down') => void;
   onEditList?: (listId: number) => void;
   bookmarkState?: { [key: string]: boolean };
@@ -39,6 +38,7 @@ interface ListCardProps {
   antiSocialMode?: boolean;
   currentUser?: string; // Username of the current user to determine edit permissions
   showSaveButton?: boolean;
+  ratingPlacement?: 'bottom' | 'hero';
 }
 
 // Mock function to get user badges - in a real app this would be an API call
@@ -127,14 +127,14 @@ function ListCard({
   onItemBookmark,
   onMessage,
   onAddToHistory,
-  onAddListToHistory,
   onRateList,
   onEditList,
   bookmarkState = {},
   isSaved,
   antiSocialMode = false,
   currentUser = '@graz', // Default to graz for demo purposes
-  showSaveButton = false
+  showSaveButton = false,
+  ratingPlacement = 'bottom'
 }: ListCardProps) {
   const [showDescription, setShowDescription] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -194,6 +194,11 @@ function ListCard({
   const mainSubjectAbortRef = useRef(false);
   const authorTooltipRef = useRef<HTMLDivElement>(null);
   const [hasHydrated, setHasHydrated] = useState(false);
+  const isHeroRatingPlacement = ratingPlacement === 'hero';
+  const bottomRatingAlignmentClass = ratingPlacement === 'hero' ? '' : 'justify-end';
+  const heroRatingAlignmentClass = ratingPlacement === 'hero'
+    ? 'inset-x-0 flex flex-col sm:flex-row items-center justify-center gap-3'
+    : 'right-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3';
 
   // Extract main subject from title
   const mainSubjectName = useMemo(() => {
@@ -988,18 +993,26 @@ function ListCard({
               <span>{list.category}</span>
             </button>
 
-            {onAddListToHistory && (
-              <button
-                onClick={() => onAddListToHistory(list.id)}
-                className="absolute top-3 right-3 flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-900/80 text-white text-xs font-medium hover:bg-gray-900 transition-colors"
-                title="Add entire list to history"
-              >
-                <History size={14} className="text-white" />
-                <span>Save to History</span>
-              </button>
+            {onRateList && ratingPlacement === 'hero' && (
+              <div className="absolute inset-x-0 top-3 flex flex-col sm:flex-row items-center justify-center gap-3 z-10">
+                <button
+                  onClick={() => onRateList(list.id, 'up')}
+                  className="flex items-center justify-center space-x-2 px-5 py-2 rounded-full bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-800/40 text-base font-semibold transition-colors shadow-lg"
+                >
+                  <ThumbsUp size={18} />
+                  <span>Loved it</span>
+                </button>
+                <button
+                  onClick={() => onRateList(list.id, 'down')}
+                  className="flex items-center justify-center space-x-2 px-5 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-800/40 text-base font-semibold transition-colors shadow-lg"
+                >
+                  <ThumbsDown size={18} />
+                  <span>Not for me</span>
+                </button>
+              </div>
             )}
 
-            <div className="flex flex-col items-center space-y-4">
+            <div className={`flex flex-col items-center space-y-4 ${ratingPlacement === 'hero' ? 'pt-12 sm:pt-10' : ''}`}>
               <SimpleItemDetails
                 itemName={mainSubjectName}
                 category={list.category}
@@ -1238,7 +1251,7 @@ function ListCard({
       )}
 
       {onRateList && (
-        <div className="flex justify-end gap-2 mt-2">
+        <div className={`flex ${bottomRatingAlignmentClass} gap-2 mt-2`}>
           <button
             onClick={() => onRateList(list.id, 'up')}
             className="flex items-center space-x-1 px-3 py-1.5 rounded-full bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-800/40 text-xs font-medium transition-colors"

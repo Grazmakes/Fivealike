@@ -234,6 +234,7 @@ export default function RejectLists({
                 onSaveList={handleSaveList}
                 isSaved={savedLists.includes(list.id)}
                 antiSocialMode={antiSocialMode}
+                showSaveButton
               />
             </div>
           ))

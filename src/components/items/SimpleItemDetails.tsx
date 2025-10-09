@@ -283,19 +283,23 @@ export default function SimpleItemDetails({
             const book = results?.[0];
 
             if (book) {
-              setData({
+              // Merge book data with fallbackData (from subject-info API which includes subjectFallbacks)
+              const mergedData = {
                 volumeInfo: {
                   title: book.title,
                   authors: book.authors,
-                  description: book.description,
-                  imageLinks: book.thumbnail ? { thumbnail: book.thumbnail } : undefined,
+                  description: book.description || fallbackData?.description,
+                  imageLinks: book.thumbnail
+                    ? { thumbnail: book.thumbnail }
+                    : (fallbackData?.image ? { thumbnail: fallbackData.image } : undefined),
                   publishedDate: book.publishedDate,
                   pageCount: book.pageCount,
                   categories: book.categories,
                   language: book.language,
                   infoLink: book.infoLink
                 }
-              });
+              };
+              setData(mergedData);
               return;
             }
 
@@ -308,6 +312,17 @@ export default function SimpleItemDetails({
                   imageLinks: fallback.thumbnail ? { thumbnail: fallback.thumbnail } : undefined,
                   publishedDate: fallback.publishedDate,
                   pageCount: fallback.pageCount
+                }
+              });
+              return;
+            }
+
+            if (fallbackData) {
+              setData({
+                volumeInfo: {
+                  title: itemName,
+                  description: fallbackData.description,
+                  imageLinks: fallbackData.image ? { thumbnail: fallbackData.image } : undefined
                 }
               });
               return;
@@ -330,6 +345,19 @@ export default function SimpleItemDetails({
               setError(null);
               return;
             }
+
+            if (fallbackData) {
+              setData({
+                volumeInfo: {
+                  title: itemName,
+                  description: fallbackData.description,
+                  imageLinks: fallbackData.image ? { thumbnail: fallbackData.image } : undefined
+                }
+              });
+              setError(null);
+              return;
+            }
+
             throw err;
           }
         }

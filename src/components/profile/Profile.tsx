@@ -37,7 +37,6 @@ interface ProfileProps {
   viewingProfile?: string;
   onBack?: () => void;
   antiSocialMode?: boolean;
-  onAddListToHistory?: (listId: number) => void;
   onRateList?: (listId: number, rating: 'up' | 'down') => void;
 }
 
@@ -65,7 +64,6 @@ export default function Profile({
   viewingProfile,
   onBack,
   antiSocialMode = false,
-  onAddListToHistory,
   onRateList
 }: ProfileProps) {
   // All hooks must be declared before any early returns
@@ -1006,8 +1004,6 @@ export default function Profile({
                 onSaveList={handleSaveList}
                 isSaved={savedLists.includes(list.id)}
                 antiSocialMode={antiSocialMode}
-                onAddListToHistory={onAddListToHistory}
-                onRateList={onRateList}
               />
               ))}
             </div>
