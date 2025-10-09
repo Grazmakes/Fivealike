@@ -779,12 +779,16 @@ export async function POST(request: Request) {
         }
       }
     } else {
-      // For non-music, use fallbacks first
-      const fallbackKey = normalizeSubjectKey(subject, category);
-      if (subjectFallbacks[fallbackKey]) {
-        return NextResponse.json(subjectFallbacks[fallbackKey], { status: 200 });
-      }
+      // For non-music categories, fetch from APIs first (e.g., Spotify for podcasts)
       categoryDetails = await fetchCategoryArtwork(subject, category);
+
+      // Only use fallbacks if API fetch failed
+      if (!categoryDetails) {
+        const fallbackKey = normalizeSubjectKey(subject, category);
+        if (subjectFallbacks[fallbackKey]) {
+          return NextResponse.json(subjectFallbacks[fallbackKey], { status: 200 });
+        }
+      }
     }
 
     // If we have category details, use them
