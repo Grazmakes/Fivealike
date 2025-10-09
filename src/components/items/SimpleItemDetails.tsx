@@ -599,17 +599,17 @@ export default function SimpleItemDetails({
 
             const subjectData = await response.json();
 
-            // Merge API data with fallback, prioritizing fallback for podcasts since we have comprehensive fallbacks
+            // Merge API data with fallback, using API images when available (iTunes has real artwork)
             if (subjectData && (subjectData.spotifyId || subjectData.image || subjectData.description)) {
               const merged = {
-                ...subjectData,
                 ...fallbackData,
-                // For podcasts, strongly prefer fallback data since we have good placeholder images
-                image: fallbackData?.image || subjectData.image,
-                artwork: fallbackData?.image || subjectData.artwork || subjectData.image,
-                description: fallbackData?.description || subjectData.description,
-                id: fallbackData?.id || subjectData.id,
-                spotifyId: fallbackData?.spotifyId || fallbackData?.id || subjectData.spotifyId
+                ...subjectData,
+                // For podcasts, prefer API artwork (iTunes/Spotify) but use placeholders as fallback
+                image: subjectData.image || fallbackData?.image,
+                artwork: subjectData.image || subjectData.artwork || fallbackData?.image,
+                description: subjectData.description || fallbackData?.description,
+                id: subjectData.id || fallbackData?.id,
+                spotifyId: subjectData.spotifyId || subjectData.id || fallbackData?.spotifyId || fallbackData?.id
               };
               setData(merged);
               return;
@@ -670,22 +670,22 @@ export default function SimpleItemDetails({
     if (!fallback) return primary;
     if (!primary) return fallback;
 
-  return {
-    ...fallback,
-    ...primary,
-    description: primary.description || fallback.description,
-    image: primary.image || primary.artwork || fallback.image,
-    artwork: primary.artwork || primary.image || fallback.image,
-    poster_path: primary.poster_path || fallback.poster_path,
-    genres: primary.genres || fallback.genres,
-    bio: primary.bio || fallback.bio,
-    coverArt: primary.coverArt || fallback.coverArt,
-    images: primary.images || fallback.images,
-    albums: primary.albums || fallback.albums,
-    id: primary.id || fallback.id,
-    spotifyId: primary.spotifyId || fallback.spotifyId
+    return {
+      ...fallback,
+      ...primary,
+      description: primary.description || fallback.description,
+      image: primary.image || primary.artwork || fallback.image,
+      artwork: primary.artwork || primary.image || fallback.image,
+      poster_path: primary.poster_path || fallback.poster_path,
+      genres: primary.genres || fallback.genres,
+      bio: primary.bio || fallback.bio,
+      coverArt: primary.coverArt || fallback.coverArt,
+      images: primary.images || fallback.images,
+      albums: primary.albums || fallback.albums,
+      id: primary.id || fallback.id,
+      spotifyId: primary.spotifyId || fallback.spotifyId
+    };
   };
-};
 
   const renderMusic = () => {
     if (!data) return renderGeneric();
