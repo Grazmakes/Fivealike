@@ -668,9 +668,10 @@ const fetchCategoryArtwork = async (subject: string, category?: string): Promise
 
     // If we have Spotify data with an ID, use it
     if (spotifyShowData?.id) {
+      // Prioritize iTunes artwork over Spotify since iTunes always has high-quality square podcast artwork
       const result = {
         description: spotifyShowData.description || itunesData?.description || '',
-        image: spotifyShowData.image || itunesData?.image,
+        image: itunesData?.image || spotifyShowData.image,
         sourceName: 'Spotify',
         sourceUrl: spotifyShowData.sourceUrl || `https://open.spotify.com/show/${spotifyShowData.id}`,
         id: spotifyShowData.id,

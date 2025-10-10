@@ -954,6 +954,8 @@ export default function SimpleItemDetails({
     console.log('[renderPodcasts] data:', JSON.stringify(data, null, 2));
     console.log('[renderPodcasts] fallbackData:', JSON.stringify(fallbackData, null, 2));
 
+    // For podcasts, image URLs are always simple strings from APIs (Spotify/iTunes)
+    // Don't use normalizeMusicImage which is designed for complex music objects
     const podcastImageCandidates = [
       data.image,
       data.artwork,
@@ -966,7 +968,8 @@ export default function SimpleItemDetails({
     ];
 
     console.log('[renderPodcasts] podcastImageCandidates:', podcastImageCandidates);
-    const artworkUrl = podcastImageCandidates.map(normalizeMusicImage).find(Boolean);
+    // For podcasts, find the first valid string URL directly (no normalization needed)
+    const artworkUrl = podcastImageCandidates.find(img => typeof img === 'string' && img.trim().length > 0);
     console.log('[renderPodcasts] artworkUrl:', artworkUrl);
     const spotifyEmbedSrc = buildSpotifyEmbedUrl({
       type: 'show',
