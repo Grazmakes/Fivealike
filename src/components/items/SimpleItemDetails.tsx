@@ -1022,6 +1022,45 @@ export default function SimpleItemDetails({
     );
   };
 
+  const renderFood = () => {
+    if (!data) return renderGeneric();
+
+    console.log('[renderFood] data:', data);
+    const imageUrl = data.image || data.artwork || null;
+    console.log('[renderFood] imageUrl:', imageUrl);
+    const description = data.description ? limitToSentences(String(data.description)) : null;
+
+    return (
+      <div className="flex flex-col items-start gap-4">
+        <div className="flex flex-col md:flex-row items-center md:items-center gap-4 w-full">
+          {/* Left: Artwork with button below */}
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
+            {/* Top: Name */}
+            <h4 className="text-xl font-bold text-gray-900 dark:text-white w-full max-w-xs md:w-52 text-center">{data.name || itemName}</h4>
+            <Artwork
+              src={imageUrl}
+              alt={data.name || itemName}
+              sizeClass="w-full max-w-xs md:w-52 md:h-52 h-auto"
+              placeholderClass="w-full max-w-xs md:w-52 md:h-52 h-auto bg-gradient-to-br from-orange-400 to-red-500"
+              placeholderText={(data.name || itemName).substring(0, 2).toUpperCase()}
+              onExpand={handleZoom}
+            />
+            <AmazonButton category={category as AmazonCategory} itemName={itemName} />
+          </div>
+
+          {/* Right: Description aligned with artwork */}
+          <div className="flex-1 flex flex-col justify-start items-center md:items-start text-center md:text-left w-full px-4 md:px-0">
+            {description && (
+              <div className="text-base text-gray-700 dark:text-gray-300 mb-4">
+                <p className="leading-relaxed">{description}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderGeneric = () => {
     if (!data) {
       return null;
@@ -1062,6 +1101,8 @@ export default function SimpleItemDetails({
         return renderTVShows();
       case 'Games':
         return renderGames();
+      case 'Food':
+        return renderFood();
       default:
         return renderGeneric();
     }

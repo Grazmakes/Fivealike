@@ -585,6 +585,53 @@ const fetchCategoryArtwork = async (subject: string, category?: string): Promise
     return null;
   }
 
+  // For Food, Travel, Art, and other general categories, use Wikipedia first as it has good images
+  if (['food', 'foods', 'cuisine', 'dish', 'dishes', 'restaurants', 'restaurant'].includes(normalized)) {
+    // Try Wikipedia first for food items as it has good images
+    const wikiData = await fetchWikipedia(subject);
+    if (wikiData?.image) {
+      return wikiData;
+    }
+    // Fall back to DuckDuckGo for food
+    return fetchDuckDuckGo(subject, category);
+  }
+
+  if (['travel', 'destination', 'destinations', 'places', 'place', 'location', 'locations'].includes(normalized)) {
+    // Wikipedia is great for travel destinations
+    const wikiData = await fetchWikipedia(subject);
+    if (wikiData?.image) {
+      return wikiData;
+    }
+    return fetchDuckDuckGo(subject, category);
+  }
+
+  if (['art', 'artist', 'artists', 'painting', 'paintings', 'sculpture'].includes(normalized)) {
+    // Wikipedia excellent for art and artists
+    const wikiData = await fetchWikipedia(subject);
+    if (wikiData?.image) {
+      return wikiData;
+    }
+    return fetchDuckDuckGo(subject, category);
+  }
+
+  if (['games', 'game', 'gaming', 'video games', 'videogame', 'videogames'].includes(normalized)) {
+    // Wikipedia good for video games
+    const wikiData = await fetchWikipedia(subject);
+    if (wikiData?.image) {
+      return wikiData;
+    }
+    return fetchDuckDuckGo(subject, category);
+  }
+
+  if (['board games', 'boardgame', 'boardgames', 'tabletop'].includes(normalized)) {
+    // Wikipedia good for board games
+    const wikiData = await fetchWikipedia(subject);
+    if (wikiData?.image) {
+      return wikiData;
+    }
+    return fetchDuckDuckGo(subject, category);
+  }
+
   if (['podcasts', 'podcast'].includes(normalized)) {
     // For podcasts, fetch iTunes podcast data differently
     const fetchItunesPodcast = async (): Promise<any> => {
@@ -765,41 +812,46 @@ export async function POST(request: Request) {
     let data: SubjectInfo | null = null;
     let categoryDetails: SubjectInfo | null = null;
 
+    // Check for fallback data first
+    const fallbackKey = normalizeSubjectKey(subject, category);
+    const fallbackData = subjectFallbacks[fallbackKey];
+
     if (isMusicCategory) {
       // Try live APIs first for music
       categoryDetails = await fetchCategoryArtwork(subject, category);
       if (categoryDetails?.image) {
         // Use live API data
         data = categoryDetails;
-      } else {
+      } else if (fallbackData) {
         // Fall back to static data if APIs fail
-        const fallbackKey = normalizeSubjectKey(subject, category);
-        if (subjectFallbacks[fallbackKey]) {
-          return NextResponse.json(subjectFallbacks[fallbackKey], { status: 200 });
-        }
+        return NextResponse.json(fallbackData, { status: 200 });
       }
     } else {
-      // For non-music categories, fetch from APIs first (e.g., Spotify for podcasts)
-      categoryDetails = await fetchCategoryArtwork(subject, category);
-
-      // Only use fallbacks if API fetch failed
-      if (!categoryDetails) {
-        const fallbackKey = normalizeSubjectKey(subject, category);
-        if (subjectFallbacks[fallbackKey]) {
-          return NextResponse.json(subjectFallbacks[fallbackKey], { status: 200 });
-        }
+      // For non-music categories, use fallback if available, otherwise fetch from APIs
+      if (fallbackData) {
+        return NextResponse.json(fallbackData, { status: 200 });
       }
+
+      categoryDetails = await fetchCategoryArtwork(subject, category);
     }
 
     // If we have category details, use them
     if (!data && categoryDetails) {
+      // Check if we need to supplement with fallback data (e.g., if image is missing)
+      const fallbackKey = normalizeSubjectKey(subject, category);
+      const fallbackData = subjectFallbacks[fallbackKey];
+
       data = {
-        description: cleanDescription(categoryDetails.description) || '',
-        ...(categoryDetails.image && { image: categoryDetails.image }),
-        sourceName: categoryDetails.sourceName || 'External Source',
-        sourceUrl: categoryDetails.sourceUrl,
+        description: cleanDescription(categoryDetails.description) || (fallbackData?.description) || '',
+        // Use API image if available, otherwise use fallback image
+        image: categoryDetails.image || fallbackData?.image || undefined,
+        sourceName: categoryDetails.sourceName || fallbackData?.sourceName || 'External Source',
+        sourceUrl: categoryDetails.sourceUrl || fallbackData?.sourceUrl,
         ...(categoryDetails.id && { id: categoryDetails.id }),
-        ...(categoryDetails.spotifyId && { spotifyId: categoryDetails.spotifyId })
+        ...(categoryDetails.spotifyId && { spotifyId: categoryDetails.spotifyId }),
+        // Pass through TMDB-specific fields if they exist
+        ...(categoryDetails.poster_path && { poster_path: categoryDetails.poster_path }),
+        ...(categoryDetails.overview && { overview: categoryDetails.overview })
       };
     }
 

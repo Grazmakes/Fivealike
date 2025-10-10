@@ -437,4 +437,298 @@ subjectFallbacks[normalizeKey('Comedy Death-Ray', 'Podcasts')] = {
   id: '1tnKU0o0aXq2iGHdMy44jm'
 };
 
+// Food fallbacks - using placeholder images to avoid CORS issues
+subjectFallbacks[normalizeKey('Japanese Mochi', 'Food')] = {
+  description: 'Mochi is a Japanese rice cake made of mochigome, a short-grain japonica glutinous rice, and sometimes other ingredients such as water, sugar, and cornstarch. The rice is pounded into paste and molded into the desired shape.',
+  image: 'https://images.unsplash.com/photo-1582716401301-b2407dc7563d?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Mochi'
+};
+
+subjectFallbacks[normalizeKey('Italian Gelato', 'Food')] = {
+  description: 'Gelato is a frozen dessert of Italian origin. Artisanal gelato in Italy generally contains 6-9% butterfat, which is lower than other styles of frozen dessert. Gelato typically contains 35% air and more flavoring than other types of frozen desserts.',
+  image: 'https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Gelato'
+};
+
+subjectFallbacks[normalizeKey('Middle Eastern Baklava', 'Food')] = {
+  description: 'Baklava is a layered pastry dessert made of filo pastry, filled with chopped nuts, and sweetened with syrup or honey. It was one of the most popular sweet pastries of Ottoman cuisine.',
+  image: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Baklava'
+};
+
+subjectFallbacks[normalizeKey('Austrian Strudel', 'Food')] = {
+  description: 'A strudel is a type of layered pastry with a filling that is usually sweet, but savoury fillings are also common. It became popular in the 18th century throughout the Habsburg Empire. Strudel is part of Austrian cuisine and German cuisine.',
+  image: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Strudel'
+};
+
+subjectFallbacks[normalizeKey('Spanish Churros', 'Food')] = {
+  description: 'A churro is a type of fried dough from Spanish and Portuguese cuisine. They are also found in Latin American cuisine and in other areas that have received immigration from Spanish and Portuguese-speaking countries, especially in the Southwestern United States and France.',
+  image: 'https://images.unsplash.com/photo-1590791863668-0afdb07cfd90?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Churro'
+};
+
+subjectFallbacks[normalizeKey('French Pastries', 'Food')] = {
+  description: 'French pastries include a wide variety of baked goods made from ingredients such as flour, sugar, milk, butter, shortening, baking powder, and eggs. The term encompasses many different types including croissants, pain au chocolat, éclairs, and macarons.',
+  image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/French_cuisine#Pastries'
+};
+
+// Pizza list items
+subjectFallbacks[normalizeKey('Pizza', 'Food')] = {
+  description: 'Pizza is a dish of Italian origin consisting of a usually round, flat base of leavened wheat-based dough topped with tomatoes, cheese, and often various other ingredients, which is then baked at a high temperature, traditionally in a wood-fired oven.',
+  image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Pizza'
+};
+
+subjectFallbacks[normalizeKey('Pasta', 'Food')] = {
+  description: 'Pasta is a type of food typically made from an unleavened dough of wheat flour mixed with water or eggs, and formed into sheets or other shapes, then cooked by boiling or baking. Rice flour, or legumes such as beans or lentils, are sometimes used in place of wheat flour.',
+  image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Pasta'
+};
+
+subjectFallbacks[normalizeKey('Burgers', 'Food')] = {
+  description: 'A hamburger is a food consisting of fillings—usually a patty of ground meat, typically beef—placed inside a sliced bun or bread roll. Hamburgers are often served with cheese, lettuce, tomato, onion, pickles, bacon, or chilis.',
+  image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Hamburger'
+};
+
+subjectFallbacks[normalizeKey('Tacos', 'Food')] = {
+  description: 'A taco is a traditional Mexican food consisting of a small hand-sized corn- or wheat-based tortilla topped with a filling. The tortilla is then folded around the filling and eaten by hand. Tacos are a common form of antojitos, or Mexican street food.',
+  image: 'https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Taco'
+};
+
+subjectFallbacks[normalizeKey('Ramen', 'Food')] = {
+  description: 'Ramen is a Japanese noodle dish. It consists of Chinese-style wheat noodles served in a broth. Common flavors are soy sauce and miso, with typical toppings including sliced pork, nori, menma, and scallions.',
+  image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Ramen'
+};
+
+subjectFallbacks[normalizeKey('Sandwiches', 'Food')] = {
+  description: 'A sandwich is a food typically consisting of vegetables, sliced cheese or meat, placed on or between slices of bread, or more generally any dish wherein bread serves as a container or wrapper for another food type.',
+  image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Sandwich'
+};
+
+// Sushi list items
+subjectFallbacks[normalizeKey('Sushi', 'Food')] = {
+  description: 'Sushi is a Japanese dish of prepared vinegared rice, usually with some sugar and salt, accompanied by a variety of ingredients, such as seafood, often raw, and vegetables. Styles of sushi and its presentation vary widely.',
+  image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Sushi'
+};
+
+subjectFallbacks[normalizeKey('Poke', 'Food')] = {
+  description: 'Poke is a raw fish salad served as an appetizer in Hawaiian cuisine, and sometimes as a main course. Traditional forms are aku and heʻe. Heʻe poke is usually called by its Japanese name tako poke, except in places like the island of Niʻihau where the Hawaiian language is spoken.',
+  image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Poke_(Hawaiian_dish)'
+};
+
+subjectFallbacks[normalizeKey('Ceviche', 'Food')] = {
+  description: 'Ceviche is a South American seafood dish that originated in Peru, typically made from fresh raw fish cured in fresh citrus juices, most commonly lime or lemon. It is also spiced with ají, chili peppers or other seasonings, and julienned red onions, salt, and coriander are also added.',
+  image: 'https://images.unsplash.com/photo-1576866209830-589e1bfbaa4d?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Ceviche'
+};
+
+subjectFallbacks[normalizeKey('Tartare', 'Food')] = {
+  description: 'Steak tartare is a dish of raw ground beef. It is usually served with onions, capers, mushrooms, pepper, Worcestershire sauce, and other seasonings, often presented separately, to be added to taste. It is often served with a raw egg yolk on top.',
+  image: 'https://images.unsplash.com/photo-1625944525533-473f1a3d54e7?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Steak_tartare'
+};
+
+subjectFallbacks[normalizeKey('Crudo', 'Food')] = {
+  description: 'Crudo is an Italian method of preparing raw fish and shellfish. It is similar to sashimi and carpaccio. The fish or shellfish is sliced thinly and dressed with olive oil, citrus juice, salt, and sometimes chili peppers or herbs.',
+  image: 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Crudo'
+};
+
+subjectFallbacks[normalizeKey('Sashimi', 'Food')] = {
+  description: 'Sashimi is a Japanese delicacy consisting of fresh raw fish or meat sliced into thin pieces and often eaten with soy sauce. The word sashimi means "pierced body", i.e. "刺身" = sashimi, where 刺 = sashi (pierced, stuck) and 身 = mi (body, meat).',
+  image: 'https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Sashimi'
+};
+
+// BBQ list items
+subjectFallbacks[normalizeKey('BBQ', 'Food')] = {
+  description: 'Barbecue or barbeque is a term used with significant regional and national variations to describe various cooking methods that use live fire and smoke to cook the food. The term is also generally applied to the devices associated with those methods, the broader cuisines that these methods produce, and the meals or gatherings at which this style of food is cooked and served.',
+  image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Barbecue'
+};
+
+subjectFallbacks[normalizeKey('Korean BBQ', 'Food')] = {
+  description: 'Korean barbecue refers to the popular method in Korean cuisine of grilling meat, typically beef, pork or chicken. Such dishes are often prepared on gas or charcoal grills built into the dining table itself. Some Korean restaurants that do not have built-in grills provide customers with portable stoves for diners to use at their tables.',
+  image: 'https://images.unsplash.com/photo-1606850780554-b55ef18909c0?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Korean_barbecue'
+};
+
+subjectFallbacks[normalizeKey('Brazilian Churrasco', 'Food')] = {
+  description: 'Churrasco is a Portuguese and Spanish term for grilled meat. In Brazil, churrasco typically consists of various cuts of beef, pork, lamb, and chicken which may be cooked on a purpose-built churrasqueira, a barbecue grill. The meats are seasoned with coarse salt and cooked over wood or charcoal.',
+  image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Churrasco'
+};
+
+subjectFallbacks[normalizeKey('Argentinian Asado', 'Food')] = {
+  description: 'Asado is the technique and the social event of having or attending a barbecue in various South American countries, especially Argentina and Uruguay where it is also a traditional event. An asado usually consists of beef, pork, chicken, chorizo, and morcilla which are cooked on a grill, called a parrilla, or an open fire.',
+  image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Asado'
+};
+
+subjectFallbacks[normalizeKey('Jamaican Jerk', 'Food')] = {
+  description: 'Jerk is a style of cooking native to Jamaica, in which meat is dry-rubbed or wet marinated with a hot spice mixture called Jamaican jerk spice. The main ingredients of the spice mixture are allspice and Scotch bonnet peppers. Jerk chicken or pork is traditionally cooked over pimento wood.',
+  image: 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Jerk_(cooking)'
+};
+
+subjectFallbacks[normalizeKey('Turkish Kebab', 'Food')] = {
+  description: 'Kebab is a cooked meat dish, with its origins in Middle Eastern cuisines. Many variants are popular around the world. In Turkey, kebab is typically prepared with lamb, but beef, chicken, or fish may also be used. The meat is marinated with spices, threaded onto skewers, and grilled over a fire.',
+  image: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Kebab'
+};
+
+// Curry list items
+subjectFallbacks[normalizeKey('Indian Curry', 'Food')] = {
+  description: 'Curry is a variety of dishes originating in the Indian subcontinent. It uses a complex combination of spices or herbs, usually including ground turmeric, cumin, coriander, ginger, and fresh or dried chilies. Curry is generally prepared in a sauce.',
+  image: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Curry'
+};
+
+subjectFallbacks[normalizeKey('Thai Curry', 'Food')] = {
+  description: 'Thai curry refers to dishes in Thai cuisine that are made with various types of curry paste. Thai curries are typically made with curry paste, coconut milk, meat, seafood, vegetables and herbs. Different curry types are distinguished by their colors, which come from different curry paste ingredients.',
+  image: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Thai_curry'
+};
+
+subjectFallbacks[normalizeKey('Japanese Curry', 'Food')] = {
+  description: 'Japanese curry is commonly served in three main forms: curry over rice, curry udon, and curry bread. It is one of the most popular dishes in Japan. The curry sauce is usually made from curry powder or roux, which are combinations of spices such as turmeric, cumin, coriander, and cayenne pepper.',
+  image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Japanese_curry'
+};
+
+subjectFallbacks[normalizeKey('Ethiopian Stew', 'Food')] = {
+  description: 'Ethiopian stews, known as wat or wot, are thick stews served atop injera flatbread. The most popular is doro wat, a spicy chicken stew. Other varieties include key wat (red beef stew), alicha (mild yellow stew), and gomen (collard greens stew). Ethiopian stews feature berbere spice blend.',
+  image: 'https://images.unsplash.com/photo-1591218406539-bded6ec24601?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Ethiopian_cuisine'
+};
+
+subjectFallbacks[normalizeKey('Moroccan Tagine', 'Food')] = {
+  description: 'A tagine is a North African dish, named after the earthenware pot in which it is cooked. It is a slow-cooked stew that typically includes meat, poultry, or fish, along with vegetables, nuts, and dried fruits. The conical lid allows steam to circulate and creates moist, flavorful dishes.',
+  image: 'https://images.unsplash.com/photo-1580870069867-74c02987636b?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Tajine'
+};
+
+subjectFallbacks[normalizeKey('Caribbean Curry', 'Food')] = {
+  description: 'Caribbean curry is a curry dish popular throughout the Caribbean. Curries were brought to the Caribbean by Indian indentured laborers. Caribbean curries typically include curry powder, hot peppers, and coconut milk, and feature meats like goat, chicken, seafood, or vegetables.',
+  image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Curry#Caribbean'
+};
+
+// Additional Food Items
+subjectFallbacks[normalizeKey('Pho', 'Food')] = {
+  description: 'Pho is a Vietnamese soup dish consisting of broth, rice noodles, herbs, and meat (usually beef or chicken). Pho is a popular food in Vietnam where it is served in households, street stalls and restaurants countrywide. It is considered Vietnam\'s national dish.',
+  image: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Pho'
+};
+
+subjectFallbacks[normalizeKey('Udon', 'Food')] = {
+  description: 'Udon are thick noodles made from wheat flour, used in Japanese cuisine. They are thicker than soba noodles and are often served hot as a noodle soup in a mildly flavoured broth, in a dish called kake udon. The broth is usually made of dashi, soy sauce, and mirin.',
+  image: 'https://images.unsplash.com/photo-1618841557871-b4664fbf0cb3?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Udon'
+};
+
+subjectFallbacks[normalizeKey('Laksa', 'Food')] = {
+  description: 'Laksa is a spicy noodle dish popular in Southeast Asia. It consists of various types of noodles, most commonly thick rice noodles, in a rich and spicy curry or tamarind-based soup. Laksa is commonly served with ingredients such as chicken, prawn or fish, and garnished with ingredients such as bean sprouts and boiled egg.',
+  image: 'https://images.unsplash.com/photo-1569562211093-4ed0d0758f12?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Laksa'
+};
+
+subjectFallbacks[normalizeKey('Bun Bo Hue', 'Food')] = {
+  description: 'Bun bo Hue is a popular Vietnamese soup containing rice vermicelli and beef. Compared to pho, bun bo Hue has a spicy broth flavored with lemongrass and shrimp paste. The dish originates from Hue, a city in central Vietnam.',
+  image: 'https://images.unsplash.com/photo-1626201735092-29c7f0c1f31e?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/B%C3%BAn_b%C3%B2_Hu%E1%BA%BF'
+};
+
+subjectFallbacks[normalizeKey('Mazesoba', 'Food')] = {
+  description: 'Mazesoba is a type of dry ramen from Nagoya, Japan. Unlike traditional ramen served in broth, mazesoba features thick noodles tossed with a small amount of sauce, topped with ingredients like minced meat, scallions, and a raw egg yolk. Diners mix everything together before eating.',
+  image: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Mazesoba'
+};
+
+subjectFallbacks[normalizeKey('Well-done Wagyu', 'Food')] = {
+  description: 'Wagyu beef is a high-quality Japanese beef from specific cattle breeds known for intense marbling and tender texture. "Well-done" refers to cooking the meat until fully cooked through. While Wagyu is typically served medium-rare to preserve its tenderness and flavor, some prefer it well-done.',
+  image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Wagyu'
+};
+
+subjectFallbacks[normalizeKey('Ketchup on Steak', 'Food')] = {
+  description: 'Ketchup on steak refers to the practice of using tomato ketchup as a condiment on beef steak. While controversial among steak enthusiasts who prefer to taste the natural flavors of quality beef, ketchup remains a popular condiment choice for many diners.',
+  image: 'https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Steak'
+};
+
+subjectFallbacks[normalizeKey('Milk with Cereal', 'Food')] = {
+  description: 'Cereal with milk is a popular breakfast dish consisting of breakfast cereal (often cold) served with milk poured over it. The milk softens the cereal and creates a combined flavor. This classic breakfast combination has been enjoyed worldwide since the late 19th century.',
+  image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Breakfast_cereal'
+};
+
+subjectFallbacks[normalizeKey('Soggy Fries', 'Food')] = {
+  description: 'Soggy fries are french fries that have lost their crispness, typically from being undercooked, over-steamed, or sitting too long after cooking. While usually considered undesirable, some people actually prefer the softer texture of less-crispy fries.',
+  image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/French_fries'
+};
+
+subjectFallbacks[normalizeKey('Cold Coffee', 'Food')] = {
+  description: 'Cold coffee refers to coffee served cold or iced, including iced coffee, cold brew coffee, and other chilled coffee beverages. Cold brew is made by steeping coffee grounds in cold water for 12-24 hours, resulting in a smooth, less acidic flavor profile compared to traditional hot-brewed coffee.',
+  image: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Iced_coffee'
+};
+
+// TV Shows fallbacks
+subjectFallbacks[normalizeKey('The Sopranos', 'TV Shows')] = {
+  description: 'The Sopranos explores the life of mob boss Tony Soprano as he balances family responsibilities with running a criminal organization in New Jersey.',
+  image: 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=500',
+  sourceName: 'TMDB',
+  sourceUrl: 'https://www.themoviedb.org/tv/1398-the-sopranos'
+};
+
 export const normalizeSubjectKey = normalizeKey;
