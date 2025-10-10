@@ -58,7 +58,7 @@ const flattenTopics = (topics: DuckDuckGoTopic[] = []): DuckDuckGoTopic[] => {
   });
 };
 
-const DEFAULT_TIMEOUT = 5000; // 5 second timeout - allows APIs time to respond
+const DEFAULT_TIMEOUT = 15000; // 15 second timeout - gives APIs ample time to respond
 
 const fetchWithTimeout = async (input: string, init?: RequestInit, timeout = DEFAULT_TIMEOUT) => {
   const controller = new AbortController();
