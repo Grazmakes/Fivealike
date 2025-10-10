@@ -21,36 +21,36 @@ interface TutorialPopupProps {
 const tutorialSteps: TutorialStep[] = [
   {
     title: 'Welcome to Five Alike!',
-    description: 'Find "5 more just like it" for anything you love! Browse recommendation lists created by people with great taste, or make your own.',
+    description: 'Discover "5 more just like it" for anything you love. Browse curated recommendation lists across movies, music, books, TV shows, food, and more.',
     icon: <Sparkles size={48} className="text-emerald-600" />,
     color: 'emerald',
     gradient: 'from-emerald-500 to-teal-600',
     features: [
       'Browse "If you like X, try these FIVE ALIKE..." lists',
-      'Discover movies, music, books, games & more',
-      'Vote on recommendations you like',
-      'Create your own recommendation lists',
-      'Follow people with similar taste'
+      'Discover new favorites across all categories',
+      'Vote and comment on recommendations',
+      'Save lists to revisit later',
+      'Follow users with great taste'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-700">
         <div className="mb-3">
-          <div className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">How it Works</div>
+          <div className="font-semibold text-emerald-800 dark:text-emerald-200 mb-2">Example List</div>
           <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border">
             <div className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-              If you like &quot;Stranger Things&quot;, try these FIVE ALIKE...
+              If you like &quot;Breaking Bad&quot;, try these FIVE ALIKE...
             </div>
             <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
-              <div>1. Dark</div>
-              <div>2. The OA</div>
-              <div>3. Twin Peaks</div>
-              <div>4. Fringe</div>
-              <div>5. Black Mirror</div>
+              <div>1. The Sopranos</div>
+              <div>2. The Wire</div>
+              <div>3. Better Call Saul</div>
+              <div>4. Ozark</div>
+              <div>5. Succession</div>
             </div>
             <div className="flex items-center justify-between mt-3 pt-2 border-t border-gray-200 dark:border-gray-600">
               <span className="text-xs bg-purple-500 text-white px-2 py-1 rounded-full">TV Shows</span>
               <div className="flex items-center space-x-2 text-xs text-gray-500">
-                <span>↑ 445</span>
+                <span>↑ 180</span>
                 <span>by @tvfan</span>
               </div>
             </div>
@@ -60,141 +60,65 @@ const tutorialSteps: TutorialStep[] = [
     )
   },
   {
-    title: 'Navigation & Discovery',
-    description: 'Easy ways to find what you\'re looking for.',
+    title: 'Browse & Discover',
+    description: 'Find recommendations that match your interests.',
     icon: <Search size={48} className="text-blue-600" />,
     color: 'blue',
     gradient: 'from-blue-500 to-indigo-600',
     features: [
-      'Left sidebar: Home, Discovery, Events',
-      'Search bar: Find lists, users, or items',
-      'Right sidebar: Browse by category',
-      'Filters: Trending and Hot Lists'
+      'Search by keyword, category, or username',
+      'Browse categories: Movies, Music, Books, TV, Food, Travel, Games',
+      'Filter by trending or newest lists',
+      'Click any list to see full details and vote',
+      'Bookmark items to try later'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          <div className="bg-white dark:bg-gray-800 p-2 rounded border text-xs text-center">Home</div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded border text-xs text-center">Discover</div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded border text-xs text-center">Events</div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-2 rounded border text-sm">
-          🔍 Search anything...
+        <div className="space-y-2">
+          <div className="bg-white dark:bg-gray-800 p-2 rounded border text-sm">
+            🔍 Search lists, items, or users...
+          </div>
+          <div className="flex flex-wrap gap-1">
+            <span className="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded text-xs">Movies</span>
+            <span className="px-2 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded text-xs">TV Shows</span>
+            <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded text-xs">Music</span>
+            <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 rounded text-xs">Books</span>
+            <span className="px-2 py-1 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded text-xs">Food</span>
+          </div>
         </div>
       </div>
     )
   },
   {
-    title: 'Create & Share',
-    description: 'Make your own recommendation lists and share your taste with others.',
+    title: 'Create Your Own Lists',
+    description: 'Share your recommendations with the community.',
     icon: <Grid size={48} className="text-purple-600" />,
     color: 'purple',
     gradient: 'from-purple-500 to-pink-600',
     features: [
-      'Click "Create List" in the sidebar',
-      'Choose a category like Movies, Books, Music',
-      'Add your 5 recommendations',
-      'Mention other users with @username',
-      'See how people vote on your lists'
+      'Click "Create List" to get started',
+      'Pick a category and choose 5 items',
+      'Add descriptions to help others',
+      'Watch as people vote on your recommendations',
+      'Earn reputation by creating great lists'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-700">
         <div className="mb-3">
-          <div className="text-sm font-semibold mb-2">Create a list:</div>
+          <div className="text-sm font-semibold mb-2">Your List Title:</div>
           <div className="bg-white dark:bg-gray-800 p-2 rounded border text-sm mb-2">
-            &quot;If you like Inception, you&apos;ll love...&quot;
+            &quot;If you like The Matrix, try these FIVE ALIKE...&quot;
           </div>
-          <div className="flex flex-wrap gap-1">
-            <span className="px-2 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded text-xs">Movies</span>
-            <span className="px-2 py-1 bg-pink-100 dark:bg-pink-800 text-pink-800 dark:text-pink-200 rounded text-xs">@moviebuff</span>
+          <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400 mb-2">
+            <div>✓ Inception</div>
+            <div>✓ Blade Runner 2049</div>
+            <div>✓ Dark City</div>
+            <div>✓ Ex Machina</div>
+            <div>✓ Total Recall</div>
           </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: 'Social & Events',
-    description: 'Meet people who share your interests through local events and online community.',
-    icon: <Calendar size={48} className="text-green-600" />,
-    color: 'green',
-    gradient: 'from-green-500 to-emerald-600',
-    features: [
-      'Join local movie nights and book clubs',
-      'Create your own meetup events',
-      'Chat with other participants',
-      'Follow users you like',
-      'Turn on "anti-social mode" to browse quietly'
-    ],
-    demoElement: (
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-4 rounded-xl border border-green-200 dark:border-green-700">
-        <div className="mb-3">
-          <div className="flex items-center space-x-2 mb-2">
-            <Calendar className="w-4 h-4 text-green-600" />
-            <span className="text-sm font-semibold">Sci-Fi Movie Night</span>
-          </div>
-          <div className="text-xs text-gray-600 dark:text-gray-400 mb-2">Tonight at 7 PM • Online Event</div>
-          <div className="flex space-x-2">
-            <button className="px-2 py-1 bg-green-500 text-white rounded text-xs">Going (8)</button>
-            <button className="px-2 py-1 bg-gray-300 text-gray-700 rounded text-xs">Maybe (2)</button>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: 'Achievements & Leaderboards',
-    description: 'Earn badges and see how you rank against other users.',
-    icon: <Trophy size={48} className="text-yellow-600" />,
-    color: 'yellow',
-    gradient: 'from-yellow-500 to-orange-600',
-    features: [
-      'Earn badges for creating great lists',
-      'Climb leaderboards and compete with others',
-      'Set personal goals like "Create 10 lists"',
-      'See detailed stats about your activity',
-      'Get special rewards for being an early user'
-    ],
-    demoElement: (
-      <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 p-4 rounded-xl border border-yellow-200 dark:border-yellow-700">
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white dark:bg-gray-800 p-2 rounded text-center">
-            <Trophy className="w-4 h-4 mx-auto mb-1 text-yellow-600" />
-            <div className="text-xs font-semibold">Verified</div>
-          </div>
-          <div className="bg-white dark:bg-gray-800 p-2 rounded text-center">
-            <Star className="w-4 h-4 mx-auto mb-1 text-purple-600" />
-            <div className="text-xs font-semibold">Early Adopter</div>
-          </div>
-        </div>
-        <div className="mt-2 text-xs text-center">🎯 Goal: Create 10 lists (3/10)</div>
-      </div>
-    )
-  },
-  {
-    title: 'Tips & Features',
-    description: 'Extra features to make your experience even better.',
-    icon: <Target size={48} className="text-red-600" />,
-    color: 'red',
-    gradient: 'from-red-500 to-pink-600',
-    features: [
-      'Bookmark items from lists to try later',
-      'Get reminders to create seasonal lists',
-      'Check your taste profile in settings',
-      'Use "anti-social mode" for quiet browsing',
-      'High-fives are limited weekly to keep them special'
-    ],
-    demoElement: (
-      <div className="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 p-4 rounded-xl border border-red-200 dark:border-red-700">
-        <div className="mb-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-semibold">Your Impact</span>
-            <Zap className="w-4 h-4 text-red-600" />
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div>Lists Created: <span className="font-bold">3</span></div>
-            <div>High Fives: <span className="font-bold">12</span></div>
-            <div>Followers: <span className="font-bold">8</span></div>
-            <div>Saves Received: <span className="font-bold">47</span></div>
+          <div className="flex items-center space-x-2">
+            <button className="px-3 py-1 bg-purple-600 text-white rounded text-xs">Publish List</button>
+            <span className="text-xs text-gray-500">Category: Movies</span>
           </div>
         </div>
       </div>
