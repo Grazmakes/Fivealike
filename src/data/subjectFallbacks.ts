@@ -723,6 +723,49 @@ subjectFallbacks[normalizeKey('Cold Coffee', 'Food')] = {
   sourceUrl: 'https://en.wikipedia.org/wiki/Iced_coffee'
 };
 
+// Books fallbacks
+subjectFallbacks[normalizeKey('Gone Girl', 'Books')] = {
+  description: 'Gone Girl by Gillian Flynn is a psychological thriller about a woman who disappears on her fifth wedding anniversary, and her husband becomes the prime suspect. The novel explores themes of marriage, media manipulation, and the facades people present to the world.',
+  image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Gone_Girl_(novel)'
+};
+
+subjectFallbacks[normalizeKey('The Girl with the Dragon Tattoo', 'Books')] = {
+  description: 'The Girl with the Dragon Tattoo by Stieg Larsson is a psychological thriller about journalist Mikael Blomkvist and hacker Lisbeth Salander investigating a decades-old disappearance. The novel combines mystery with social commentary on violence against women in Sweden.',
+  image: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Girl_with_the_Dragon_Tattoo'
+};
+
+subjectFallbacks[normalizeKey('Big Little Lies', 'Books')] = {
+  description: 'Big Little Lies by Liane Moriarty follows three women whose seemingly perfect lives unravel to the point of murder. Set in a beachside Australian town, the novel explores themes of domestic violence, friendship, and the secrets people keep.',
+  image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Big_Little_Lies_(novel)'
+};
+
+subjectFallbacks[normalizeKey('Sharp Objects', 'Books')] = {
+  description: 'Sharp Objects by Gillian Flynn is a psychological thriller about reporter Camille Preaker who returns to her hometown to cover the murders of two young girls. The novel delves into her own troubled past and dysfunctional family relationships.',
+  image: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Sharp_Objects'
+};
+
+subjectFallbacks[normalizeKey('The Silent Patient', 'Books')] = {
+  description: 'The Silent Patient by Alex Michaelides is a psychological thriller about a woman who shoots her husband and then never speaks another word. A psychotherapist becomes obsessed with uncovering her motive, leading to a shocking twist.',
+  image: 'https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Silent_Patient'
+};
+
+subjectFallbacks[normalizeKey('In the Woods', 'Books')] = {
+  description: 'In the Woods by Tana French is a psychological mystery about detective Rob Ryan investigating a murder in the woods where he experienced a traumatic event as a child. The novel explores memory, trauma, and the unsolved mysteries of the past.',
+  image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/In_the_Woods'
+};
+
 // TV Shows fallbacks
 subjectFallbacks[normalizeKey('The Sopranos', 'TV Shows')] = {
   description: 'The Sopranos explores the life of mob boss Tony Soprano as he balances family responsibilities with running a criminal organization in New Jersey.',
