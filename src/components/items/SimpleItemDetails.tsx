@@ -272,7 +272,7 @@ export default function SimpleItemDetails({
 
           try {
             const response = await fetch(`/api/search/books?query=${encodeURIComponent(itemName)}&limit=1`, {
-              signal: AbortSignal.timeout(10000)
+              signal: AbortSignal.timeout(30000)
             });
 
             if (!response.ok) {
@@ -365,7 +365,7 @@ export default function SimpleItemDetails({
         if (category === 'Movies') {
           try {
             const response = await fetch(`/api/search/movies?query=${encodeURIComponent(itemName)}`, {
-              signal: AbortSignal.timeout(10000)
+              signal: AbortSignal.timeout(30000)
             });
 
             if (!response.ok) {
@@ -415,7 +415,7 @@ export default function SimpleItemDetails({
         if (category === 'TV Shows') {
           try {
             const response = await fetch(`/api/search/tvshows?query=${encodeURIComponent(itemName)}`, {
-              signal: AbortSignal.timeout(10000)
+              signal: AbortSignal.timeout(30000)
             });
 
             if (!response.ok) {
@@ -465,7 +465,7 @@ export default function SimpleItemDetails({
         if (category === 'Games') {
           try {
             const response = await fetch(`/api/search/games?query=${encodeURIComponent(itemName)}&limit=1`, {
-              signal: AbortSignal.timeout(10000)
+              signal: AbortSignal.timeout(30000)
             });
 
             if (!response.ok) {
@@ -518,7 +518,7 @@ export default function SimpleItemDetails({
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ subject: itemName, category: 'Music' }),
-              signal: AbortSignal.timeout(10000)
+              signal: AbortSignal.timeout(30000)
             });
 
             if (!response.ok) {
@@ -579,7 +579,7 @@ export default function SimpleItemDetails({
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ subject: itemName, category: 'Podcasts' }),
-              signal: AbortSignal.timeout(10000)
+              signal: AbortSignal.timeout(30000)
             });
 
             if (!response.ok) {
