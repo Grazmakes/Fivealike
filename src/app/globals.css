@@ -146,6 +146,20 @@
     animation: slideUp 0.3s ease-out;
   }
 
+  /* Slide in from left animation */
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slideInLeft {
+    animation: slideInLeft 0.25s ease-out;
+  }
+
   /* Scale in animation */
   @keyframes scaleIn {
     from {

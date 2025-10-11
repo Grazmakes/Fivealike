@@ -766,6 +766,65 @@ function HomeContent() {
     };
   }, [currentView, isLoggedIn]);
 
+  // Swipe gesture detection for mobile genres sidebar
+  useEffect(() => {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      touchEndX = e.touches[0].clientX;
+      touchEndY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = () => {
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      // Check if it's a horizontal swipe (more horizontal than vertical movement)
+      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+
+      // Check if swipe started from left edge (within 50px from left)
+      const startedFromLeftEdge = touchStartX < 50;
+
+      // Check if swipe moved right at least 100px
+      const swipedRight = deltaX > 100;
+
+      // Open genres sidebar if conditions met
+      if (isHorizontalSwipe && startedFromLeftEdge && swipedRight && !showMobileGenres) {
+        setShowMobileGenres(true);
+      }
+
+      // Reset values
+      touchStartX = 0;
+      touchStartY = 0;
+      touchEndX = 0;
+      touchEndY = 0;
+    };
+
+    // Only add listeners on mobile (screen width < 1024px)
+    const isMobile = window.innerWidth < 1024;
+    if (isMobile) {
+      document.addEventListener('touchstart', handleTouchStart, { passive: true });
+      document.addEventListener('touchmove', handleTouchMove, { passive: true });
+      document.addEventListener('touchend', handleTouchEnd);
+    }
+
+    return () => {
+      if (isMobile) {
+        document.removeEventListener('touchstart', handleTouchStart);
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [showMobileGenres]);
+
   // Handle scroll to top
   const scrollToTop = () => {
     const mainContent = document.querySelector('[data-main-content]');
@@ -2460,45 +2519,53 @@ function HomeContent() {
         />
       )}
 
-      {/* Mobile Genres Modal */}
+      {/* Mobile Genres Sidebar - Reddit Style */}
       {showMobileGenres && (
-        <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-50 animate-fadeIn" onClick={() => setShowMobileGenres(false)}>
-          <div className="fixed bottom-16 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-2xl shadow-2xl max-h-[60vh] animate-slideUp" onClick={(e) => e.stopPropagation()}>
-            <div className="px-4 py-4">
-              <div className="flex justify-between items-center mb-3">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Genres</h2>
-                <button
-                  onClick={() => setShowMobileGenres(false)}
-                  className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-                >
-                  <ChevronUp size={20} />
-                </button>
-              </div>
+        <div className="lg:hidden fixed inset-0 z-50" onClick={() => setShowMobileGenres(false)}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black bg-opacity-50 animate-fadeIn"></div>
 
-              <div className="space-y-1 max-h-[50vh] overflow-y-auto">
-                {categories.map((category) => {
-                  const listCount = allLists.filter(list => list.category === category && !list.isRejected).length;
-                  const IconComponent = categoryIcons[category] || BookOpen;
+          {/* Sidebar - covers left half of screen, full height */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-[65%] bg-white dark:bg-gray-900 shadow-2xl animate-slideInLeft overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-4 z-10">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Genres</h2>
+            </div>
 
-                  return (
-                    <button
-                      key={category}
-                      onClick={() => {
-                        setSelectedCategory(category);
-                        setCurrentView('discover');
-                        setShowMobileGenres(false);
-                      }}
-                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    >
+            {/* Genre List */}
+            <div className="px-2 py-2">
+              {categories.map((category) => {
+                const listCount = allLists.filter(list => list.category === category && !list.isRejected).length;
+                const IconComponent = categoryIcons[category] || BookOpen;
+                const isSelected = selectedCategory === category;
+
+                return (
+                  <button
+                    key={category}
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setCurrentView('discover');
+                      setShowMobileGenres(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
+                      isSelected
+                        ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                        : 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100'
+                    }`}
+                  >
                     <div className="flex items-center space-x-3">
-                      <IconComponent size={20} className="text-gray-600 dark:text-gray-400" />
-                      <span className="text-base text-gray-900 dark:text-white">{category}</span>
+                      <IconComponent size={22} className={isSelected ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'} />
+                      <span className="text-base font-medium">{category}</span>
                     </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">{listCount}</span>
-                    </button>
-                  );
-                })}
-              </div>
+                    <span className={`text-sm ${isSelected ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
+                      {listCount}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -2540,6 +2607,27 @@ function HomeContent() {
                     </span>
                   )}
                 </button>
+
+                <button
+                  onClick={() => {
+                    setShowRedditChat(!showRedditChat);
+                    setShowMobileMenu(false);
+                    setShowMobileGenres(false);
+                    setShowNotifications(false);
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <MessageCircle size={20} className="text-gray-700 dark:text-gray-300" />
+                    <span className="text-base text-gray-900 dark:text-white">Chat</span>
+                  </div>
+                  {unreadMessagesCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1.5 font-medium">
+                      {unreadMessagesCount > 99 ? '99+' : unreadMessagesCount}
+                    </span>
+                  )}
+                </button>
+
                 <button
                   onClick={() => {
                     setCurrentView('trending');
@@ -2614,98 +2702,90 @@ function HomeContent() {
       {/* Mobile Bottom Navigation - Only visible on mobile */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
         <div className="flex justify-around items-center h-16 px-1">
-          <button
-          onClick={() => {
-            setShowMobileMenu(!showMobileMenu);
-            setShowMobileGenres(false);
-            setShowRedditChat(false);
-            setShowNotifications(false);
-          }}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
-          >
-            <Menu size={20} />
-            <span className="text-xs mt-1">Menu</span>
-          </button>
-          <button
-          onClick={() => {
-            setShowMobileGenres(!showMobileGenres);
-            setShowMobileMenu(false);
-            setShowRedditChat(false);
-            setShowNotifications(false);
-          }}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
-          >
-            <Search size={20} />
-            <span className="text-xs mt-1">Genres</span>
-          </button>
-          <button
-          onClick={() => {
-            setCurrentView('local');
-            setShowMobileMenu(false);
-            setShowMobileGenres(false);
-            setShowRedditChat(false);
-            setShowNotifications(false);
-          }}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
-          >
-            <MapPin size={20} />
-            <span className="text-xs mt-1">Local</span>
-          </button>
-          <button
-          onClick={() => {
-            setShowNewListForm(true);
-            setShowMobileMenu(false);
-            setShowMobileGenres(false);
-            setShowRedditChat(false);
-            setShowNotifications(false);
-          }}
-            className="flex flex-col items-center justify-center flex-1 py-3 bg-green-500 text-white rounded-lg mx-1 shadow-lg hover:bg-green-600 transition-colors"
-          >
-            <Plus size={24} />
-            <span className="text-xs mt-1 font-semibold">Create</span>
-          </button>
+          {/* Home */}
           <button
             onClick={() => {
-              setShowRedditChat(!showRedditChat);
+              setCurrentView('home');
               setShowMobileMenu(false);
               setShowMobileGenres(false);
+              setShowRedditChat(false);
               setShowNotifications(false);
             }}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400 relative"
+            className={`flex flex-col items-center justify-center flex-1 py-2 ${
+              currentView === 'home'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-gray-600 dark:text-gray-400'
+            }`}
           >
-            <MessageCircle size={20} />
-            <span className="text-xs mt-1">Chat</span>
-            {unreadMessagesCount > 0 && (
-              <span className="absolute top-1 right-1/4 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {unreadMessagesCount}
-              </span>
-            )}
+            <HomeIcon size={22} />
+            <span className="text-xs mt-1">Home</span>
           </button>
+
+          {/* Menu */}
+          <button
+            onClick={() => {
+              setShowMobileMenu(!showMobileMenu);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+              setShowNotifications(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+          >
+            <Menu size={22} />
+            <span className="text-xs mt-1">Menu</span>
+          </button>
+
+          {/* Create - Green Button */}
+          <button
+            onClick={() => {
+              setShowNewListForm(true);
+              setShowMobileMenu(false);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+              setShowNotifications(false);
+            }}
+            className="flex flex-col items-center justify-center flex-1 py-3 bg-green-500 text-white rounded-lg mx-1 shadow-lg hover:bg-green-600 transition-colors"
+          >
+            <Plus size={26} />
+            <span className="text-xs mt-1 font-semibold">Create</span>
+          </button>
+
+          {/* Local */}
+          <button
+            onClick={() => {
+              setCurrentView('local');
+              setShowMobileMenu(false);
+              setShowMobileGenres(false);
+              setShowRedditChat(false);
+              setShowNotifications(false);
+            }}
+            className={`flex flex-col items-center justify-center flex-1 py-2 ${
+              currentView === 'local'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-gray-600 dark:text-gray-400'
+            }`}
+          >
+            <MapPin size={22} />
+            <span className="text-xs mt-1">Local</span>
+          </button>
+
+          {/* Saved */}
           <button
             onClick={() => {
               setCurrentView('favorites');
               setShowMobileMenu(false);
               setShowMobileGenres(false);
-            setShowRedditChat(false);
-            setShowNotifications(false);
-          }}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
+              setShowRedditChat(false);
+              setShowNotifications(false);
+            }}
+            className={`flex flex-col items-center justify-center flex-1 py-2 ${
+              currentView === 'favorites'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-gray-600 dark:text-gray-400'
+            }`}
           >
-            <Bookmark size={20} />
+            <Bookmark size={22} />
             <span className="text-xs mt-1">Saved</span>
-          </button>
-          <button
-          onClick={() => {
-            setCurrentView('home');
-            setShowMobileMenu(false);
-            setShowMobileGenres(false);
-            setShowRedditChat(false);
-            setShowNotifications(false);
-          }}
-            className="flex flex-col items-center justify-center flex-1 py-2 text-gray-600 dark:text-gray-400"
-          >
-            <HomeIcon size={20} />
-            <span className="text-xs mt-1">Home</span>
           </button>
         </div>
       </nav>
