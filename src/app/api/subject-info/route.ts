@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { subjectFallbacks, normalizeSubjectKey } from '@/data/subjectFallbacks';
+import { artistFallbacks } from '@/data/artistFallbacks';
 
 interface SubjectInfo {
   description: string;
@@ -533,8 +534,17 @@ const fetchCategoryArtwork = async (subject: string, category?: string): Promise
   }
 
   if (['music', 'artist', 'song', 'songs', 'album', 'albums'].includes(normalized)) {
-    // Try Spotify first to get artist ID for embed player
-    const spotifyData = await fetchFromSpotify(subject);
+    // Check artistFallbacks first for pre-defined Spotify IDs
+    const artistFallback = artistFallbacks[subject];
+    let spotifyData = null;
+
+    if (artistFallback?.id) {
+      // Use pre-defined Spotify ID from fallback
+      spotifyData = { id: artistFallback.id };
+    } else {
+      // Try Spotify API search
+      spotifyData = await fetchFromSpotify(subject);
+    }
 
     // Try AudioDB for the best music artwork coverage
     const audioDbData = await fetchFromAudioDB(subject);
