@@ -714,9 +714,19 @@ export default function SimpleItemDetails({
 
     // Check artistFallbacks for Spotify ID if API didn't provide one
     const fallbackArtist = artistFallbacks[itemName];
+    const finalSpotifyId = data.spotifyId || data.id || fallbackArtist?.id;
+
+    console.log('[Music Debug]', {
+      itemName,
+      dataSpotifyId: data.spotifyId,
+      dataId: data.id,
+      fallbackId: fallbackArtist?.id,
+      finalId: finalSpotifyId
+    });
+
     const spotifyEmbedSrc = buildSpotifyEmbedUrl({
       type: 'artist',
-      id: data.spotifyId || data.id || fallbackArtist?.id,
+      id: finalSpotifyId,
       fallbackQuery: data.name || itemName
     });
 

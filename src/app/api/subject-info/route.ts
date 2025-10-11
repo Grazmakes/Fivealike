@@ -538,12 +538,21 @@ const fetchCategoryArtwork = async (subject: string, category?: string): Promise
     const artistFallback = artistFallbacks[subject];
     let spotifyData = null;
 
+    console.log('[API Music Debug]', {
+      subject,
+      hasFallback: !!artistFallback,
+      fallbackId: artistFallback?.id
+    });
+
     if (artistFallback?.id) {
       // Use pre-defined Spotify ID from fallback
       spotifyData = { id: artistFallback.id };
+      console.log('[API] Using fallback Spotify ID:', artistFallback.id);
     } else {
       // Try Spotify API search
+      console.log('[API] No fallback found, searching Spotify API');
       spotifyData = await fetchFromSpotify(subject);
+      console.log('[API] Spotify API result:', spotifyData);
     }
 
     // Try AudioDB for the best music artwork coverage
