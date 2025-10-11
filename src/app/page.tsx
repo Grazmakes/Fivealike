@@ -88,7 +88,9 @@ function HomeContent() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showMobileGenres, setShowMobileGenres] = useState(false);
-  
+  const [genresSidebarOffset, setGenresSidebarOffset] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
+
   // State to track which item to highlight when navigating from mention notifications
   const [highlightedItem, setHighlightedItem] = useState<{type: 'list' | 'message' | 'comment', id: string} | null>(null);
 
@@ -766,64 +768,104 @@ function HomeContent() {
     };
   }, [currentView, isLoggedIn]);
 
-  // Swipe gesture detection for mobile genres sidebar
+  // Swipe gesture detection for mobile genres sidebar with animation
   useEffect(() => {
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchEndX = 0;
-    let touchEndY = 0;
+    let touchCurrentX = 0;
+    const sidebarWidth = window.innerWidth * 0.65; // 65% of screen width
 
     const handleTouchStart = (e: TouchEvent) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
+
+      // Check if starting from left edge or sidebar is already open
+      const startedFromLeftEdge = touchStartX < 50;
+      const startedFromSidebar = showMobileGenres && touchStartX < sidebarWidth;
+
+      if (startedFromLeftEdge || startedFromSidebar) {
+        setIsSwiping(true);
+      }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      touchEndX = e.touches[0].clientX;
-      touchEndY = e.touches[0].clientY;
+      if (!isSwiping) return;
+
+      touchCurrentX = e.touches[0].clientX;
+      const deltaX = touchCurrentX - touchStartX;
+      const deltaY = e.touches[0].clientY - touchStartY;
+
+      // Check if it's a horizontal swipe
+      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+
+      if (isHorizontalSwipe) {
+        if (showMobileGenres) {
+          // Sidebar is open, track closing gesture
+          if (deltaX < 0) {
+            // Swiping left to close
+            const offset = Math.max(deltaX, -sidebarWidth);
+            setGenresSidebarOffset(offset);
+          }
+        } else {
+          // Sidebar is closed, track opening gesture
+          if (deltaX > 0 && touchStartX < 50) {
+            // Swiping right from edge to open
+            const offset = Math.min(deltaX, sidebarWidth) - sidebarWidth;
+            setGenresSidebarOffset(offset);
+            if (deltaX > 20) {
+              setShowMobileGenres(true);
+            }
+          }
+        }
+      }
     };
 
     const handleTouchEnd = () => {
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
+      if (!isSwiping) return;
 
-      // Check if it's a horizontal swipe (more horizontal than vertical movement)
+      setIsSwiping(false);
+      const deltaX = touchCurrentX - touchStartX;
+      const deltaY = touchCurrentX - touchStartY;
+
+      // Check if it's a horizontal swipe
       const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
 
-      // Check if swipe started from left edge (within 50px from left)
-      const startedFromLeftEdge = touchStartX < 50;
+      if (showMobileGenres) {
+        // Decide whether to close based on swipe distance
+        if (deltaX < -sidebarWidth * 0.3) {
+          // Swiped more than 30% of sidebar width - close it
+          setShowMobileGenres(false);
+        }
+      } else {
+        // Check if should open
+        const startedFromLeftEdge = touchStartX < 50;
+        const swipedRight = deltaX > 100;
 
-      // Check if swipe moved right at least 100px
-      const swipedRight = deltaX > 100;
-
-      // Open genres sidebar if conditions met
-      if (isHorizontalSwipe && startedFromLeftEdge && swipedRight && !showMobileGenres) {
-        setShowMobileGenres(true);
+        if (isHorizontalSwipe && startedFromLeftEdge && swipedRight) {
+          setShowMobileGenres(true);
+        }
       }
 
-      // Reset values
-      touchStartX = 0;
-      touchStartY = 0;
-      touchEndX = 0;
-      touchEndY = 0;
+      // Reset offset with animation
+      setGenresSidebarOffset(0);
     };
 
     // Only add listeners on mobile (screen width < 1024px)
-    const isMobile = window.innerWidth < 1024;
-    if (isMobile) {
+    const isMobileDevice = window.innerWidth < 1024;
+    if (isMobileDevice) {
       document.addEventListener('touchstart', handleTouchStart, { passive: true });
       document.addEventListener('touchmove', handleTouchMove, { passive: true });
       document.addEventListener('touchend', handleTouchEnd);
     }
 
     return () => {
-      if (isMobile) {
+      if (isMobileDevice) {
         document.removeEventListener('touchstart', handleTouchStart);
         document.removeEventListener('touchmove', handleTouchMove);
         document.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [showMobileGenres]);
+  }, [showMobileGenres, isSwiping]);
 
   // Handle scroll to top
   const scrollToTop = () => {
@@ -2527,7 +2569,11 @@ function HomeContent() {
 
           {/* Sidebar - covers left half of screen, full height */}
           <div
-            className="absolute left-0 top-0 bottom-0 w-[65%] bg-white dark:bg-gray-900 shadow-2xl animate-slideInLeft overflow-y-auto"
+            className={`absolute left-0 top-0 bottom-0 w-[65%] bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto ${!isSwiping ? 'animate-slideInLeft' : ''}`}
+            style={{
+              transform: `translateX(${genresSidebarOffset}px)`,
+              transition: isSwiping ? 'none' : 'transform 0.25s ease-out'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
