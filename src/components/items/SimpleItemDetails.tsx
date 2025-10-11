@@ -712,9 +712,11 @@ export default function SimpleItemDetails({
       ? limitToSentences(data.bio.summary.replace(/<[^>]*>/g, ''))
       : null;
 
+    // Check artistFallbacks for Spotify ID if API didn't provide one
+    const fallbackArtist = artistFallbacks[itemName];
     const spotifyEmbedSrc = buildSpotifyEmbedUrl({
       type: 'artist',
-      id: data.spotifyId || data.id,
+      id: data.spotifyId || data.id || fallbackArtist?.id,
       fallbackQuery: data.name || itemName
     });
 
