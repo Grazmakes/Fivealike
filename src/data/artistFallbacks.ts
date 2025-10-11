@@ -318,5 +318,68 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     members: ['Vince Staples'],
     sourceUrl: 'https://music.apple.com/us/artist/vince-staples/452135075',
     id: '68kEuyFKyqrdQQLLsmiatm'
+  },
+  'Sleep': {
+    name: 'Sleep',
+    biography: 'Sleep is an American doom metal band from San Jose, California. Known for their incredibly heavy, slow riffs and cannabis-themed lyrics.',
+    formed: '1990',
+    genres: ['Doom Metal', 'Stoner Metal', 'Sludge Metal'],
+    members: ['Matt Pike', 'Al Cisneros', 'Jason Roeder'],
+    sourceUrl: 'https://music.apple.com/us/artist/sleep/76601459',
+    id: '4Mt6w4tDGcbFLw8duV5ZDJ'
+  },
+  'Pentagram': {
+    name: 'Pentagram',
+    biography: 'Pentagram is an American heavy metal band from Virginia, pioneers of doom metal formed in the early 1970s.',
+    formed: '1971',
+    genres: ['Doom Metal', 'Heavy Metal', 'Hard Rock'],
+    members: ['Bobby Liebling', 'Victor Griffin', 'Greg Turley', 'Pete Campbell'],
+    sourceUrl: 'https://music.apple.com/us/artist/pentagram/3375988',
+    id: '5FfcfY6Y69jCAdIzHfMCqt'
+  },
+  'Ne Obliviscaris': {
+    name: 'Ne Obliviscaris',
+    biography: 'Ne Obliviscaris is an Australian progressive metal band from Melbourne. Known for combining extreme metal with progressive and classical elements.',
+    formed: '2003',
+    genres: ['Progressive Metal', 'Extreme Progressive Metal', 'Melodic Death Metal'],
+    members: ['Xenoyr', 'Tim Charles', 'Benjamin Baret', 'Martino Garattoni', 'Dan Presland'],
+    sourceUrl: 'https://music.apple.com/us/artist/ne-obliviscaris/318998634',
+    id: '1aBEsbVxXmpLKVMO4bWPvH'
+  },
+  'Mr. Bungle': {
+    name: 'Mr. Bungle',
+    biography: 'Mr. Bungle is an American experimental rock band from California. Known for their genre-blending music incorporating metal, funk, jazz, and avant-garde.',
+    formed: '1985',
+    genres: ['Experimental Rock', 'Alternative Metal', 'Avant-Garde Metal'],
+    members: ['Mike Patton', 'Trey Spruance', 'Trevor Dunn'],
+    sourceUrl: 'https://music.apple.com/us/artist/mr-bungle/574726',
+    id: '6kOanyE6YECzCHDwYk6HQo'
+  },
+  'Loathe': {
+    name: 'Loathe',
+    biography: 'Loathe is a British heavy metal band from Liverpool. Known for their atmospheric blend of metalcore, shoegaze, and progressive elements.',
+    formed: '2014',
+    genres: ['Metalcore', 'Progressive Metalcore', 'Alternative Metal'],
+    members: ['Kadeem France', 'Erik Bickerstaffe', 'Connor Sweeney', 'Sean Radcliffe', 'Feisal El-Khazragi'],
+    sourceUrl: 'https://music.apple.com/us/artist/loathe/959976815',
+    id: '5G9wwzzGf0WSYy6VhaVjXG'
+  },
+  'Far': {
+    name: 'Far',
+    biography: 'Far is an American rock band from Sacramento, California. Known for their alternative metal sound with experimental and post-hardcore elements.',
+    formed: '1991',
+    genres: ['Alternative Metal', 'Post-Hardcore', 'Experimental Rock'],
+    members: ['Jonah Matranga', 'Shaun Lopez', 'John Gutenberger', 'Chris Robyn'],
+    sourceUrl: 'https://music.apple.com/us/artist/far/2723131',
+    id: '08qMEcfHdOY3LAjZBkJQJI'
+  },
+  'Hum': {
+    name: 'Hum',
+    biography: 'Hum is an American alternative rock band from Champaign, Illinois. Known for their heavy, space rock sound and loud, droning guitars.',
+    formed: '1989',
+    genres: ['Alternative Rock', 'Space Rock', 'Shoegaze'],
+    members: ['Matt Talbott', 'Tim Lash', 'Jeff Dimpsey', 'Bryan St. Pere'],
+    sourceUrl: 'https://music.apple.com/us/artist/hum/150387',
+    id: '22dGSRAi8vbIwnDPrXGIoC'
   }
 };
