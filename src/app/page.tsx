@@ -90,6 +90,7 @@ function HomeContent() {
   const [showMobileGenres, setShowMobileGenres] = useState(false);
   const [genresSidebarOffset, setGenresSidebarOffset] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
+  const [isClosingGenres, setIsClosingGenres] = useState(false);
 
   // State to track which item to highlight when navigating from mention notifications
   const [highlightedItem, setHighlightedItem] = useState<{type: 'list' | 'message' | 'comment', id: string} | null>(null);
@@ -850,6 +851,15 @@ function HomeContent() {
       }
     };
   }, []);
+
+  // Handle closing genres sidebar with animation
+  const handleCloseGenres = () => {
+    setIsClosingGenres(true);
+    setTimeout(() => {
+      setShowMobileGenres(false);
+      setIsClosingGenres(false);
+    }, 250); // Match animation duration
+  };
 
   // Handle scroll to top
   const scrollToTop = () => {
@@ -2547,16 +2557,22 @@ function HomeContent() {
 
       {/* Mobile Genres Sidebar - Reddit Style */}
       {showMobileGenres && (
-        <div className="lg:hidden fixed inset-0 z-50" onClick={() => setShowMobileGenres(false)}>
+        <div className="lg:hidden fixed inset-0 z-50" onClick={handleCloseGenres}>
           {/* Backdrop */}
           <div className="absolute inset-0 bg-black bg-opacity-50 animate-fadeIn"></div>
 
           {/* Sidebar - covers left half of screen, full height */}
           <div
-            className={`absolute left-0 top-0 bottom-0 w-[65%] bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto ${!isSwiping ? 'animate-slideInLeft' : ''}`}
+            className={`absolute left-0 top-0 bottom-0 w-[65%] bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto ${
+              isSwiping
+                ? ''
+                : isClosingGenres
+                  ? 'animate-slideOutLeft'
+                  : 'animate-slideInLeft'
+            }`}
             style={{
-              transform: `translateX(${genresSidebarOffset}px)`,
-              transition: isSwiping ? 'none' : 'transform 0.25s ease-out'
+              transform: isSwiping ? `translateX(${genresSidebarOffset}px)` : undefined,
+              transition: isSwiping ? 'none' : undefined
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -2578,7 +2594,7 @@ function HomeContent() {
                     onClick={() => {
                       setSelectedCategory(category);
                       setCurrentView('discover');
-                      setShowMobileGenres(false);
+                      handleCloseGenres();
                     }}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
                       isSelected

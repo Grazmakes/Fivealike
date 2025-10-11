@@ -160,6 +160,20 @@
     animation: slideInLeft 0.25s ease-out;
   }
 
+  /* Slide out to left animation */
+  @keyframes slideOutLeft {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  .animate-slideOutLeft {
+    animation: slideOutLeft 0.25s ease-in forwards;
+  }
+
   /* Scale in animation */
   @keyframes scaleIn {
     from {
