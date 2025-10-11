@@ -381,5 +381,95 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     members: ['Matt Talbott', 'Tim Lash', 'Jeff Dimpsey', 'Bryan St. Pere'],
     sourceUrl: 'https://music.apple.com/us/artist/hum/150387',
     id: '22dGSRAi8vbIwnDPrXGIoC'
+  },
+  'The Ocean': {
+    name: 'The Ocean',
+    biography: 'The Ocean (also known as The Ocean Collective) is a German progressive metal band from Berlin. Known for their conceptual albums and heavy, atmospheric sound.',
+    formed: '2000',
+    genres: ['Progressive Metal', 'Post-Metal', 'Sludge Metal'],
+    members: ['Robin Staps', 'Mattias Hägerstrand', 'Paul Seidel', 'Peter Voigtmann', 'David Ramis Åhfeldt'],
+    sourceUrl: 'https://music.apple.com/us/artist/the-ocean/156488385',
+    id: '0Of52OWKkg7JJd7BouvAHy'
+  },
+  'Exodus': {
+    name: 'Exodus',
+    biography: 'Exodus is an American thrash metal band from the San Francisco Bay Area. One of the pioneering bands of the thrash metal movement.',
+    formed: '1979',
+    genres: ['Thrash Metal', 'Heavy Metal'],
+    members: ['Gary Holt', 'Tom Hunting', 'Jack Gibson', 'Lee Altus', 'Steve "Zetro" Souza'],
+    sourceUrl: 'https://music.apple.com/us/artist/exodus/78365134',
+    id: '1R84VlXZIz27t5w1zBm0dH'
+  },
+  'Overkill': {
+    name: 'Overkill',
+    biography: 'Overkill is an American thrash metal band from New Jersey. One of the longest-running thrash metal bands, known for their speed and aggression.',
+    formed: '1980',
+    genres: ['Thrash Metal', 'Speed Metal'],
+    members: ['Bobby "Blitz" Ellsworth', 'D.D. Verni', 'Dave Linsk', 'Derek Tailer', 'Jason Bittner'],
+    sourceUrl: 'https://music.apple.com/us/artist/overkill/78602516',
+    id: '6FGmETJ96xDL0OYfat7qGG'
+  },
+  'Dark Angel': {
+    name: 'Dark Angel',
+    biography: 'Dark Angel is an American thrash metal band from Los Angeles. Known for their fast, complex, and technical thrash metal style.',
+    formed: '1981',
+    genres: ['Thrash Metal', 'Speed Metal'],
+    members: ['Ron Rinehart', 'Eric Meyer', 'Jim Durkin', 'Mike Gonzalez', 'Gene Hoglan'],
+    sourceUrl: 'https://music.apple.com/us/artist/dark-angel/77982616',
+    id: '3okbJPaULffLrISadcGfaH'
+  },
+  'Machine Head': {
+    name: 'Machine Head',
+    biography: 'Machine Head is an American heavy metal band from Oakland, California. Known for their groove metal sound and powerful live performances.',
+    formed: '1991',
+    genres: ['Heavy Metal', 'Groove Metal', 'Thrash Metal'],
+    members: ['Robb Flynn', 'Jared MacEachern', 'Wacław "Vogg" Kiełtyka', 'Matt Alston'],
+    sourceUrl: 'https://music.apple.com/us/artist/machine-head/472065',
+    id: '0uD37qM98wbXzbQxgD0HzA'
+  },
+  'Enslaved': {
+    name: 'Enslaved',
+    biography: 'Enslaved is a Norwegian extreme metal band from Bergen. Known for pioneering viking metal and progressive black metal.',
+    formed: '1991',
+    genres: ['Progressive Black Metal', 'Viking Metal', 'Extreme Metal'],
+    members: ['Grutle Kjellson', 'Ivar Bjørnson', 'Arve Isdal', 'Håkon Vinje', 'Iver Sandøy'],
+    sourceUrl: 'https://music.apple.com/us/artist/enslaved/3339386',
+    id: '1VhGU1PbC4XNWvHEztLaVM'
+  },
+  'Quicksand': {
+    name: 'Quicksand',
+    biography: 'Quicksand is an American post-hardcore band from New York City. Known for their influential sound combining hardcore punk with alternative rock.',
+    formed: '1990',
+    genres: ['Post-Hardcore', 'Alternative Metal', 'Hardcore Punk'],
+    members: ['Walter Schreifels', 'Sergio Vega', 'Alan Cage', 'Aaron Stauffer'],
+    sourceUrl: 'https://music.apple.com/us/artist/quicksand/3498182',
+    id: '1NPQ2F0w5ALaguVRT7yYEU'
+  },
+  'Rishloo': {
+    name: 'Rishloo',
+    biography: 'Rishloo is an American progressive rock band from Seattle. Known for their complex song structures and atmospheric sound.',
+    formed: '2002',
+    genres: ['Progressive Rock', 'Progressive Metal', 'Art Rock'],
+    members: ['Andrew Stroud', 'Dave Gillis', 'Zack Olive', 'Jesse Brock'],
+    sourceUrl: 'https://music.apple.com/us/artist/rishloo/72823761',
+    id: '0CkmkTlKC8xTahIEJpYHRr'
+  },
+  'Sigur Rós': {
+    name: 'Sigur Rós',
+    biography: 'Sigur Rós is an Icelandic post-rock band known for their ethereal sound and Jónsi\'s falsetto vocals. They often sing in Icelandic and Hopelandic (a made-up language).',
+    formed: '1994',
+    genres: ['Post-Rock', 'Dream Pop', 'Ambient'],
+    members: ['Jón Þór Birgisson', 'Georg Hólm', 'Kjartan Sveinsson'],
+    sourceUrl: 'https://music.apple.com/us/artist/sigur-rós/454882',
+    id: '6UUrUCIZtQeOf8tC0WuzRy'
+  },
+  'Joey Bada$$': {
+    name: 'Joey Bada$$',
+    biography: 'Joey Bada$$ is an American rapper from Brooklyn, New York. Known for his old-school hip-hop style and socially conscious lyrics.',
+    formed: '2010',
+    genres: ['Hip-Hop', 'East Coast Hip-Hop', 'Boom Bap'],
+    members: ['Joey Bada$$'],
+    sourceUrl: 'https://music.apple.com/us/artist/joey-badass/536054634',
+    id: '0Y5xf9cXRfVvrwVNxCsPJm'
   }
 };
