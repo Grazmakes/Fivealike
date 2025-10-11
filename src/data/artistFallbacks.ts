@@ -1,6 +1,6 @@
 export interface ArtistFallback {
-  name: string;
-  biography: string;
+  name?: string;
+  biography?: string;
   image?: string;
   formed?: string;
   genres?: string[];
