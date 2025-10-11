@@ -773,23 +773,24 @@ function HomeContent() {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchCurrentX = 0;
-    const sidebarWidth = window.innerWidth * 0.65; // 65% of screen width
+    let isSwipingLocal = false;
+    const sidebarWidth = typeof window !== 'undefined' ? window.innerWidth * 0.65 : 0;
 
     const handleTouchStart = (e: TouchEvent) => {
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
 
-      // Check if starting from left edge or sidebar is already open
+      // Check if starting from left edge
       const startedFromLeftEdge = touchStartX < 50;
-      const startedFromSidebar = showMobileGenres && touchStartX < sidebarWidth;
 
-      if (startedFromLeftEdge || startedFromSidebar) {
+      if (startedFromLeftEdge) {
+        isSwipingLocal = true;
         setIsSwiping(true);
       }
     };
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isSwiping) return;
+      if (!isSwipingLocal) return;
 
       touchCurrentX = e.touches[0].clientX;
       const deltaX = touchCurrentX - touchStartX;
@@ -798,52 +799,35 @@ function HomeContent() {
       // Check if it's a horizontal swipe
       const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
 
-      if (isHorizontalSwipe) {
-        if (showMobileGenres) {
-          // Sidebar is open, track closing gesture
-          if (deltaX < 0) {
-            // Swiping left to close
-            const offset = Math.max(deltaX, -sidebarWidth);
-            setGenresSidebarOffset(offset);
-          }
-        } else {
-          // Sidebar is closed, track opening gesture
-          if (deltaX > 0 && touchStartX < 50) {
-            // Swiping right from edge to open
-            const offset = Math.min(deltaX, sidebarWidth) - sidebarWidth;
-            setGenresSidebarOffset(offset);
-            if (deltaX > 20) {
-              setShowMobileGenres(true);
-            }
-          }
+      if (isHorizontalSwipe && deltaX > 0) {
+        // Swiping right from edge to open
+        const offset = Math.min(deltaX, sidebarWidth) - sidebarWidth;
+        setGenresSidebarOffset(offset);
+
+        if (deltaX > 20) {
+          setShowMobileGenres(true);
         }
       }
     };
 
     const handleTouchEnd = () => {
-      if (!isSwiping) return;
+      if (!isSwipingLocal) return;
 
+      isSwipingLocal = false;
       setIsSwiping(false);
+
       const deltaX = touchCurrentX - touchStartX;
       const deltaY = touchCurrentX - touchStartY;
 
       // Check if it's a horizontal swipe
       const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
 
-      if (showMobileGenres) {
-        // Decide whether to close based on swipe distance
-        if (deltaX < -sidebarWidth * 0.3) {
-          // Swiped more than 30% of sidebar width - close it
-          setShowMobileGenres(false);
-        }
-      } else {
-        // Check if should open
-        const startedFromLeftEdge = touchStartX < 50;
-        const swipedRight = deltaX > 100;
+      // Check if should open
+      const startedFromLeftEdge = touchStartX < 50;
+      const swipedRight = deltaX > 100;
 
-        if (isHorizontalSwipe && startedFromLeftEdge && swipedRight) {
-          setShowMobileGenres(true);
-        }
+      if (isHorizontalSwipe && startedFromLeftEdge && swipedRight) {
+        setShowMobileGenres(true);
       }
 
       // Reset offset with animation
@@ -851,7 +835,7 @@ function HomeContent() {
     };
 
     // Only add listeners on mobile (screen width < 1024px)
-    const isMobileDevice = window.innerWidth < 1024;
+    const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 1024;
     if (isMobileDevice) {
       document.addEventListener('touchstart', handleTouchStart, { passive: true });
       document.addEventListener('touchmove', handleTouchMove, { passive: true });
@@ -865,7 +849,7 @@ function HomeContent() {
         document.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [showMobileGenres, isSwiping]);
+  }, []);
 
   // Handle scroll to top
   const scrollToTop = () => {
