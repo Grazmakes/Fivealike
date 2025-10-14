@@ -67,6 +67,7 @@ const tutorialSteps: TutorialStep[] = [
     gradient: 'from-blue-500 to-indigo-600',
     features: [
       'Search by keyword, category, or username',
+      'On mobile: Swipe right from the left edge to reveal the genres menu',
       'Browse categories: Movies, Music, Books, TV, Food, Travel, Games',
       'Filter by trending or newest lists',
       'Click any list to see full details and vote',
