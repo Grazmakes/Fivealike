@@ -34,6 +34,22 @@ type AmazonCategory =
   | 'Games'
   | undefined;
 
+// Helper function for case-insensitive artist lookup
+const findArtistInFallbacks = (artistName: string) => {
+  // Try exact match first
+  if (artistFallbacks[artistName]) {
+    return artistFallbacks[artistName];
+  }
+
+  // Try case-insensitive match
+  const lowerName = artistName.toLowerCase();
+  const matchingKey = Object.keys(artistFallbacks).find(
+    key => key.toLowerCase() === lowerName
+  );
+
+  return matchingKey ? artistFallbacks[matchingKey] : null;
+};
+
 const RICH_WIKIPEDIA_CATEGORIES = [
   'Travel',
   'Sports',
@@ -175,7 +191,7 @@ const useFallbackData = (category: string | undefined, itemName: string) =>
       ].filter(Boolean);
 
       for (const candidate of candidates) {
-        const artist = mockArtistData[candidate] || artistFallbacks[candidate];
+        const artist = mockArtistData[candidate] || findArtistInFallbacks(candidate);
         if (artist) {
           return {
             type: 'music',
@@ -717,7 +733,7 @@ export default function SimpleItemDetails({
       : null;
 
     // Check artistFallbacks for Spotify ID if API didn't provide one
-    const fallbackArtist = artistFallbacks[itemName];
+    const fallbackArtist = findArtistInFallbacks(itemName);
 
     // Try to get Spotify ID from multiple sources
     let finalSpotifyId = data.spotifyId || data.id || fallbackArtist?.id;
