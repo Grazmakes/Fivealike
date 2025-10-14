@@ -83,10 +83,18 @@ export default function TopHeader({
   const [showAntiSocialTooltip, setShowAntiSocialTooltip] = useState(false);
   const [showSearchSettings, setShowSearchSettings] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const searchSettingsRef = useRef<HTMLDivElement>(null);
   const unreadCount = notifications.filter(n => n.unread).length;
+
+  // Keep mobile search open when there's a search query
+  useEffect(() => {
+    if (searchQuery && !showMobileSearch) {
+      setShowMobileSearch(true);
+    }
+  }, [searchQuery, showMobileSearch]);
 
   // Handle click outside to close dropdowns (including mobile touch)
   useEffect(() => {
@@ -113,10 +121,10 @@ export default function TopHeader({
 
   return (
     <NavigationErrorBoundary>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm h-20">
-        <div className="flex items-center justify-between px-6 h-full">
-          {/* Logo - left aligned */}
-          <div className="flex-shrink-0">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="flex items-center justify-between px-6 py-3 lg:py-0 lg:h-20">
+          {/* Logo - left aligned (hidden on mobile when search is active) */}
+          <div className={`flex-shrink-0 ${showMobileSearch ? 'hidden lg:flex' : 'flex'}`}>
             <button
               onClick={() => onNavigateToHome?.()}
               className="flex flex-col items-start hover:opacity-80 transition-opacity"
@@ -130,8 +138,8 @@ export default function TopHeader({
             </button>
           </div>
 
-          {/* Search Bar - center aligned (hidden on mobile) */}
-          <div className="hidden lg:flex flex-1 max-w-2xl mx-8">
+          {/* Search Bar - center aligned on desktop, full width on mobile when active */}
+          <div className={`${showMobileSearch ? 'flex flex-1' : 'hidden'} lg:flex lg:flex-1 lg:max-w-2xl lg:mx-8`}>
             <div className="relative w-full">
               <input
                 type="text"
@@ -149,6 +157,7 @@ export default function TopHeader({
                   onClick={() => {
                     setSearchQuery('');
                     onClearSearch?.();
+                    setShowMobileSearch(false);
                   }}
                   className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
                 >
@@ -179,6 +188,17 @@ export default function TopHeader({
 
           {/* Right side Actions */}
           <div className="flex items-center space-x-4 flex-shrink-0">
+            {/* Mobile Search Button (only shown on mobile when search is not active) */}
+            {!showMobileSearch && (
+              <button
+                onClick={() => setShowMobileSearch(true)}
+                className="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Search"
+              >
+                <Search size={20} />
+              </button>
+            )}
+
             {/* Notifications */}
             <div className="relative" ref={notificationsRef}>
               <button
