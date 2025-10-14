@@ -503,8 +503,8 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
                   className="event-card-custom border border-gray-200 dark:border-gray-600 rounded-xl p-6 hover:shadow-md transition-all duration-200 cursor-pointer"
                   onClick={() => handleGroupClick(group.id)}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 space-y-3">
+                  <div className="flex flex-col lg:flex-row items-start justify-between gap-4">
+                    <div className="flex-1 space-y-3 w-full lg:w-auto">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-xl flex items-center justify-center">
                           <span className="text-xl">{group.name.charAt(0)}</span>
@@ -553,15 +553,15 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
                         </div>
                       )}
                     </div>
-                    
-                    <div className="ml-6 flex flex-col items-end space-y-2">
+
+                    <div className="flex flex-col items-start lg:items-end space-y-2 w-full lg:w-auto lg:ml-6">
                       {isUserMember(group.id) ? (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             handleLeaveGroup(group.id);
                           }}
-                          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                          className="w-full lg:w-auto px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                         >
                           Leave
                         </button>
@@ -571,12 +571,12 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
                             e.stopPropagation();
                             handleJoinGroup(group.id);
                           }}
-                          className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
+                          className="w-full lg:w-auto px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
                         >
                           Join Group
                         </button>
                       )}
-                      
+
                       <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400">
                         <div className="flex items-center space-x-1">
                           <MessageSquare size={12} />
