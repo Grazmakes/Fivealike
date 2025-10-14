@@ -210,9 +210,9 @@ export default function EventCard({
 
       {/* RSVP and Stats */}
       <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
           {/* Attendance Info */}
-          <div className="flex items-center space-x-4 text-sm">
+          <div className="flex items-center flex-wrap gap-x-4 gap-y-2 text-sm">
             <div className="flex items-center space-x-1 text-green-600 dark:text-green-400">
               <Users size={16} />
               <span className="font-medium">{counts.going} going</span>
@@ -229,7 +229,7 @@ export default function EventCard({
 
           {/* RSVP Buttons */}
           {!isHost && (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <button
                 onClick={() => handleRSVP('going')}
                 className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
@@ -253,7 +253,7 @@ export default function EventCard({
               </button>
               <button
                 onClick={() => handleRSVP('not_going')}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                   userRSVP === 'not_going'
                     ? 'bg-gray-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
