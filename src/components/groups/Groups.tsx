@@ -349,29 +349,29 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <div className="flex items-start gap-4">
           {onBack && (
             <button
               onClick={onBack}
-              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
             >
               <ArrowLeft size={20} />
             </button>
           )}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+          <div className="flex-1">
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
               <Shapes className="text-green-500 mr-2" size={28} />
               Groups
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400 max-w-2xl">
               Connect with people who share your interests
             </p>
           </div>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center px-4 py-3 rounded-lg transition-all duration-200 bg-green-600 text-white hover:bg-green-700 font-medium whitespace-nowrap"
+          className="flex items-center justify-center lg:justify-start px-4 py-3 rounded-lg transition-all duration-200 bg-green-600 text-white hover:bg-green-700 font-medium whitespace-nowrap"
         >
           <Plus size={22} className="mr-2" />
           <span className="text-lg">Create Group</span>
