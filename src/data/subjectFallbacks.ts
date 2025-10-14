@@ -150,6 +150,11 @@ export const subjectFallbacks: Record<string, SubjectFallback> = {
 };
 
 Object.values(artistFallbacks).forEach((artist) => {
+  // Skip artists without names (Spotify ID-only entries)
+  if (!artist.name) {
+    return;
+  }
+
   let sourceName = 'Five Alike Library';
   if (artist.sourceUrl) {
     if (artist.sourceUrl.includes('music.apple.com')) {
