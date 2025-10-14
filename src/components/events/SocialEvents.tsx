@@ -228,20 +228,20 @@ export default function SocialEvents({ events, setEvents, userProfile, onJoinEve
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
+        <nav className="-mb-px flex space-x-2 lg:space-x-8">
           {eventTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+              className={`py-2 px-2 lg:px-1 border-b-2 font-medium text-sm flex items-center space-x-1 lg:space-x-2 whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <tab.icon size={16} />
-              <span>{tab.label}</span>
+              <span className="text-xs lg:text-sm">{tab.label}</span>
             </button>
           ))}
         </nav>
