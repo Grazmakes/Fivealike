@@ -184,7 +184,7 @@ export default function SocialEvents({ events, setEvents, userProfile, onJoinEve
               Social Events
             </h1>
             <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400 max-w-2xl">
-              putting the &ldquo;social&rdquo; back in social media through local meetups and virtual hangouts
+              Putting the &ldquo;social&rdquo; back in social media through local meetups and virtual hangouts
             </p>
           </div>
         </div>
@@ -229,12 +229,12 @@ export default function SocialEvents({ events, setEvents, userProfile, onJoinEve
 
       {/* Tabs */}
       <div className="border-b border-gray-200 dark:border-gray-700">
-        <nav className="-mb-px flex flex-wrap gap-x-2 gap-y-1 lg:gap-x-8 lg:gap-y-0">
+        <nav className="-mb-px flex flex-wrap justify-center gap-x-2 gap-y-1 lg:justify-start lg:gap-x-8 lg:gap-y-0">
           {eventTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-3 lg:px-1 border-b-2 font-medium text-sm flex items-center space-x-1 lg:space-x-2 whitespace-nowrap ${
+              className={`py-2 px-2 lg:px-1 border-b-2 font-medium text-sm flex items-center space-x-1 lg:space-x-2 whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
