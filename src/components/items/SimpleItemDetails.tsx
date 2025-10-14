@@ -718,7 +718,16 @@ export default function SimpleItemDetails({
 
     // Check artistFallbacks for Spotify ID if API didn't provide one
     const fallbackArtist = artistFallbacks[itemName];
-    const finalSpotifyId = data.spotifyId || data.id || fallbackArtist?.id;
+
+    // Try to get Spotify ID from multiple sources
+    let finalSpotifyId = data.spotifyId || data.id || fallbackArtist?.id;
+
+    // Also check subjectFallbacks for Spotify ID
+    if (!finalSpotifyId) {
+      const fallbackKey = normalizeSubjectKey(itemName, category || 'Music');
+      const subjectFallback = subjectFallbacks[fallbackKey];
+      finalSpotifyId = subjectFallback?.spotifyId || subjectFallback?.id;
+    }
 
     // Determine Spotify embed type based on category
     let spotifyType: 'artist' | 'track' | 'album' = 'artist';
@@ -738,6 +747,7 @@ export default function SimpleItemDetails({
       dataSpotifyId: data.spotifyId,
       dataId: data.id,
       fallbackId: fallbackArtist?.id,
+      subjectFallbackId: subjectFallbacks[normalizeSubjectKey(itemName, category || 'Music')]?.spotifyId,
       finalId: finalSpotifyId
     });
 
