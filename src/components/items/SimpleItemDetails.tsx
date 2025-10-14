@@ -69,11 +69,15 @@ const limitToSentences = (text: string, maxSentences: number = 4): string => {
   return sentences.slice(0, maxSentences).join(' ').trim();
 };
 
-const buildSpotifyEmbedUrl = (options: { type: 'artist' | 'show'; id?: string; fallbackQuery: string }) => {
+const buildSpotifyEmbedUrl = (options: { type: 'artist' | 'show' | 'track' | 'album'; id?: string; fallbackQuery: string }) => {
   const { type, id, fallbackQuery } = options;
 
   if (id && id.trim().length > 0) {
-    const pathSegment = type === 'show' ? 'show' : 'artist';
+    let pathSegment = 'artist';
+    if (type === 'show') pathSegment = 'show';
+    else if (type === 'track') pathSegment = 'track';
+    else if (type === 'album') pathSegment = 'album';
+
     return `https://open.spotify.com/embed/${pathSegment}/${id}?utm_source=generator&theme=0&compact=1&autoplay=0`;
   }
 
@@ -716,8 +720,21 @@ export default function SimpleItemDetails({
     const fallbackArtist = artistFallbacks[itemName];
     const finalSpotifyId = data.spotifyId || data.id || fallbackArtist?.id;
 
+    // Determine Spotify embed type based on category
+    let spotifyType: 'artist' | 'track' | 'album' = 'artist';
+    if (category) {
+      const lowerCategory = category.toLowerCase();
+      if (lowerCategory === 'songs' || lowerCategory === 'song') {
+        spotifyType = 'track';
+      } else if (lowerCategory === 'albums' || lowerCategory === 'album') {
+        spotifyType = 'album';
+      }
+    }
+
     console.log('[Music Debug]', {
       itemName,
+      category,
+      spotifyType,
       dataSpotifyId: data.spotifyId,
       dataId: data.id,
       fallbackId: fallbackArtist?.id,
@@ -725,7 +742,7 @@ export default function SimpleItemDetails({
     });
 
     const spotifyEmbedSrc = buildSpotifyEmbedUrl({
-      type: 'artist',
+      type: spotifyType,
       id: finalSpotifyId,
       fallbackQuery: data.name || itemName
     });
