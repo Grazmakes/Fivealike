@@ -884,6 +884,18 @@ export async function POST(request: Request) {
       data = await fetchWikipedia(subject);
     }
 
+    // If still no data, check fallbackData before returning 404
+    if (!data && fallbackData) {
+      data = {
+        description: fallbackData.description || '',
+        image: fallbackData.image || fallbackData.artwork,
+        sourceName: fallbackData.sourceName || 'Five Alike Library',
+        sourceUrl: fallbackData.sourceUrl || '',
+        ...(fallbackData.id && { id: fallbackData.id }),
+        ...(fallbackData.spotifyId && { spotifyId: fallbackData.spotifyId })
+      };
+    }
+
     if (!data) {
       return NextResponse.json({ description: '', sourceName: 'Not found' }, { status: 404 });
     }
