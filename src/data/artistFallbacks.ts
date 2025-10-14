@@ -379,6 +379,7 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     formed: '1989',
     genres: ['Alternative Rock', 'Space Rock', 'Shoegaze'],
     members: ['Matt Talbott', 'Tim Lash', 'Jeff Dimpsey', 'Bryan St. Pere'],
+    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/28/07/95/280795c7-2f6f-e1aa-7f64-24d617d6a49a/886445635768.jpg/600x600bb.jpg',
     sourceUrl: 'https://music.apple.com/us/artist/hum/150387',
     id: '22dGSRAi8vbIwnDPrXGIoC'
   },
@@ -388,6 +389,7 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     formed: '2000',
     genres: ['Progressive Metal', 'Post-Metal', 'Sludge Metal'],
     members: ['Robin Staps', 'Mattias Hägerstrand', 'Paul Seidel', 'Peter Voigtmann', 'David Ramis Åhfeldt'],
+    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/e1/3e/c0/e13ec0a8-e01b-6c90-7dcf-5bb50e5f3f34/884388501720.jpg/600x600bb.jpg',
     sourceUrl: 'https://music.apple.com/us/artist/the-ocean/156488385',
     id: '0Of52OWKkg7JJd7BouvAHy'
   },
@@ -442,6 +444,7 @@ export const artistFallbacks: Record<string, ArtistFallback> = {
     formed: '1990',
     genres: ['Post-Hardcore', 'Alternative Metal', 'Hardcore Punk'],
     members: ['Walter Schreifels', 'Sergio Vega', 'Alan Cage', 'Aaron Stauffer'],
+    image: 'https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/75/aa/8d/75aa8db2-7b3d-b9b2-c876-14fa7e7e6de5/603497829347.jpg/600x600bb.jpg',
     sourceUrl: 'https://music.apple.com/us/artist/quicksand/3498182',
     id: '1NPQ2F0w5ALaguVRT7yYEU'
   },
