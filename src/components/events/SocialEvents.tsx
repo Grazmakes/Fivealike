@@ -168,29 +168,29 @@ export default function SocialEvents({ events, setEvents, userProfile, onJoinEve
   return (
     <div className="space-y-6 px-4 lg:px-0">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <div className="flex items-start gap-4">
           {onBack && (
             <button
               onClick={onBack}
-              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
             >
               <ArrowLeft size={20} />
             </button>
           )}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+          <div className="flex-1">
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-2 flex items-center">
               <Calendar className="text-green-500 mr-2" size={28} />
               Social Events
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              putting the &ldquo;social&rdquo; back in the social media through local meetups and virtual hangouts
+            <p className="text-sm lg:text-base text-gray-600 dark:text-gray-400 max-w-2xl">
+              putting the &ldquo;social&rdquo; back in social media through local meetups and virtual hangouts
             </p>
           </div>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="flex items-center px-4 py-3 rounded-lg transition-all duration-200 bg-green-600 text-white hover:bg-green-700 font-medium whitespace-nowrap"
+          className="flex items-center justify-center lg:justify-start px-4 py-3 rounded-lg transition-all duration-200 bg-green-600 text-white hover:bg-green-700 font-medium whitespace-nowrap"
         >
           <Plus size={22} className="mr-2" />
           <span className="text-lg">Create Event</span>
@@ -228,13 +228,13 @@ export default function SocialEvents({ events, setEvents, userProfile, onJoinEve
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-hide">
-        <nav className="-mb-px flex space-x-2 lg:space-x-8">
+      <div className="border-b border-gray-200 dark:border-gray-700">
+        <nav className="-mb-px flex flex-wrap gap-x-2 gap-y-1 lg:gap-x-8 lg:gap-y-0">
           {eventTabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-2 lg:px-1 border-b-2 font-medium text-sm flex items-center space-x-1 lg:space-x-2 whitespace-nowrap ${
+              className={`py-2 px-3 lg:px-1 border-b-2 font-medium text-sm flex items-center space-x-1 lg:space-x-2 whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-primary-500 text-primary-600 dark:text-primary-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
