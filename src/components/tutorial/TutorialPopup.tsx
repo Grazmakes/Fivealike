@@ -21,16 +21,14 @@ interface TutorialPopupProps {
 const tutorialSteps: TutorialStep[] = [
   {
     title: 'Welcome to Five Alike!',
-    description: 'Discover "5 more just like it" for anything you love. Browse curated recommendation lists across movies, music, books, TV shows, food, and more.',
+    description: 'Discover "5 more just like it" for anything you love.',
     icon: <Sparkles size={48} className="text-emerald-600" />,
     color: 'emerald',
     gradient: 'from-emerald-500 to-teal-600',
     features: [
       'Browse "If you like X, try these FIVE ALIKE..." lists',
-      'Discover new favorites across all categories',
       'Vote and comment on recommendations',
-      'Save lists to revisit later',
-      'Follow users with great taste'
+      'Save lists to revisit later'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-700">
@@ -61,17 +59,14 @@ const tutorialSteps: TutorialStep[] = [
   },
   {
     title: 'Browse & Discover',
-    description: 'Find recommendations that match your interests.',
+    description: 'Find what you love.',
     icon: <Search size={48} className="text-blue-600" />,
     color: 'blue',
     gradient: 'from-blue-500 to-indigo-600',
     features: [
-      'Search by keyword, category, or username',
-      'On mobile: Swipe right from the left edge to reveal the genres menu',
-      'Browse categories: Movies, Music, Books, TV, Food, Travel, Games',
-      'Filter by trending or newest lists',
-      'Click any list to see full details and vote',
-      'Bookmark items to try later'
+      'Search by keyword or username',
+      'Swipe right to see all genres',
+      'Click any list to vote and comment'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
@@ -92,16 +87,14 @@ const tutorialSteps: TutorialStep[] = [
   },
   {
     title: 'Create Your Own Lists',
-    description: 'Share your recommendations with the community.',
+    description: 'Share what you love.',
     icon: <Grid size={48} className="text-purple-600" />,
     color: 'purple',
     gradient: 'from-purple-500 to-pink-600',
     features: [
-      'Click "Create List" to get started',
-      'Pick a category and choose 5 items',
-      'Add descriptions to help others',
-      'Watch as people vote on your recommendations',
-      'Earn reputation by creating great lists'
+      'Click "Create List" to start',
+      'Pick a category and add 5 items',
+      'Share with the community'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-700">
@@ -235,7 +228,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
         <div className="p-2 lg:p-4 flex-1 overflow-y-auto">
           {/* Description */}
           <div className="text-center mb-2 lg:mb-6">
-            <p className="text-gray-600 dark:text-gray-400 text-xs lg:text-base leading-snug lg:leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-400 text-base lg:text-lg leading-relaxed">
               {step.description}
             </p>
           </div>
@@ -243,15 +236,15 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
           {/* Compact Single Column Layout */}
           <div className="space-y-2 lg:space-y-4 mb-2 lg:mb-4">
             {/* Features List */}
-            <div className="space-y-1 lg:space-y-2">
-              <h4 className="text-xs lg:text-base font-semibold text-gray-900 dark:text-white mb-1 lg:mb-3 flex items-center">
-                <Play className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 text-blue-600" />
+            <div className="space-y-2 lg:space-y-2">
+              <h4 className="text-sm lg:text-base font-semibold text-gray-900 dark:text-white mb-2 lg:mb-3 flex items-center">
+                <Play className="w-4 h-4 lg:w-4 lg:h-4 mr-2 lg:mr-2 text-blue-600" />
                 Key Features
               </h4>
               {step.features.map((feature, index) => (
                 <div
                   key={index}
-                  className={`flex items-start space-x-1 lg:space-x-2 p-1 lg:p-2 rounded transition-all duration-300 ${
+                  className={`flex items-start space-x-2 lg:space-x-2 p-2 lg:p-2 rounded transition-all duration-300 ${
                     showDemo ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'
                   }`}
                   style={{
@@ -264,7 +257,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
                       '#fef2f2'}`
                   }}
                 >
-                  <div className={`w-1 h-1 lg:w-2 lg:h-2 rounded-full mt-1 lg:mt-1.5 flex-shrink-0 ${
+                  <div className={`w-2 h-2 lg:w-2 lg:h-2 rounded-full mt-1.5 lg:mt-1.5 flex-shrink-0 ${
                     step.color === 'emerald' ? 'bg-emerald-500' :
                     step.color === 'blue' ? 'bg-blue-500' :
                     step.color === 'purple' ? 'bg-purple-500' :
@@ -272,7 +265,7 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
                     step.color === 'yellow' ? 'bg-yellow-500' :
                     'bg-red-500'
                   }`} />
-                  <span className="text-gray-700 dark:text-gray-300 text-[11px] lg:text-sm leading-snug lg:leading-relaxed">
+                  <span className="text-gray-700 dark:text-gray-300 text-sm lg:text-sm leading-relaxed lg:leading-relaxed">
                     {feature}
                   </span>
                 </div>
@@ -281,9 +274,9 @@ export default function TutorialPopup({ onClose }: TutorialPopupProps) {
 
             {/* Interactive Demo */}
             {step.demoElement && (
-              <div className="space-y-1 lg:space-y-2">
-                <h4 className="text-xs lg:text-base font-semibold text-gray-900 dark:text-white mb-1 lg:mb-3 flex items-center">
-                  <Zap className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2 text-purple-600" />
+              <div className="space-y-2 lg:space-y-2">
+                <h4 className="text-sm lg:text-base font-semibold text-gray-900 dark:text-white mb-2 lg:mb-3 flex items-center">
+                  <Zap className="w-4 h-4 lg:w-4 lg:h-4 mr-2 lg:mr-2 text-purple-600" />
                   Example
                 </h4>
                 <div className={`transition-all duration-500 transform ${
