@@ -166,7 +166,7 @@ export default function SocialEvents({ events, setEvents, userProfile, onJoinEve
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 lg:px-0">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
