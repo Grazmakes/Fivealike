@@ -495,7 +495,7 @@ const fetchFromSpotifyShow = async (subject: string): Promise<{ id?: string; ima
 };
 
 const fetchCategoryArtwork = async (subject: string, category?: string): Promise<SubjectInfo | null> => {
-  if (!category) {
+  if (!category || typeof category !== 'string') {
     return null;
   }
 
@@ -715,7 +715,7 @@ const fetchCategoryArtwork = async (subject: string, category?: string): Promise
 
 const fetchDuckDuckGo = async (subject: string, category?: string): Promise<SubjectInfo | null> => {
   const segments = [subject];
-  if (category && category.toLowerCase() !== 'general') {
+  if (category && typeof category === 'string' && category.toLowerCase() !== 'general') {
     segments.push(category);
   }
   const query = segments.join(' ');
@@ -827,7 +827,7 @@ export async function POST(request: Request) {
     }
 
     // For music, prioritize live API calls over fallbacks
-    const isMusicCategory = category && ['music', 'artist', 'song', 'songs', 'album', 'albums'].includes(category.toLowerCase());
+    const isMusicCategory = category && typeof category === 'string' && ['music', 'artist', 'song', 'songs', 'album', 'albums'].includes(category.toLowerCase());
 
     let data: SubjectInfo | null = null;
     let categoryDetails: SubjectInfo | null = null;
