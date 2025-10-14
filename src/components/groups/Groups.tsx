@@ -347,7 +347,7 @@ export default function Groups({ userProfile, onCreateGroup, onJoinGroup, onLeav
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 lg:px-0">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex items-start gap-4">
