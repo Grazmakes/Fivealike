@@ -111,7 +111,7 @@ export default function LeaderboardPage({ onBack, onAuthorClick, onTitleClick, o
   }, [activeCategory, activeTimePeriod]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-4 lg:px-0">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
         <button
