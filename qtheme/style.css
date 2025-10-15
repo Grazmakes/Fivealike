@@ -1,0 +1,255 @@
+:root {
+  --mst-background: #111827;
+  --mst-surface: #1f2937;
+  --mst-accent: #38bdf8;
+  --mst-accent-muted: #0ea5e9;
+  --mst-text: #f3f4f6;
+  --mst-text-muted: #9ca3af;
+  --mst-success: #22c55e;
+  --mst-danger: #ef4444;
+}
+
+body {
+  background: var(--mst-background);
+  color: var(--mst-text);
+  font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+a {
+  color: var(--mst-accent);
+}
+
+#desktop {
+  background: transparent;
+}
+
+#header,
+#mainMenu,
+#sidepanel,
+#torrentTable,
+#propertiesWidget {
+  background: var(--mst-surface) !important;
+  border-color: rgba(148, 163, 184, 0.15) !important;
+  color: var(--mst-text);
+}
+
+#HSplitter,
+#VSplitter {
+  background: rgba(148, 163, 184, 0.15) !important;
+}
+
+#mainMenu .ui-tabs-nav li.ui-tabs-active a {
+  color: var(--mst-text) !important;
+}
+
+.button,
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  background: var(--mst-accent);
+  color: var(--mst-text);
+  border: none;
+  border-radius: 9999px;
+  padding: 0.4rem 1rem;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.button:hover,
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+  background: var(--mst-accent-muted);
+  transform: translateY(-1px);
+}
+
+table {
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+th {
+  color: var(--mst-text-muted);
+  font-weight: 500;
+}
+
+.statusText,
+.priority,
+.availability {
+  color: var(--mst-text-muted);
+}
+
+.progressbar {
+  background: rgba(15, 118, 110, 0.35);
+}
+
+.progressbar .value {
+  background: linear-gradient(90deg, var(--mst-accent), var(--mst-accent-muted));
+}
+
+.progressbarText {
+  color: var(--mst-text);
+  font-weight: 600;
+}
+
+#searchOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 5000;
+  display: none;
+  flex-direction: column;
+  padding: env(safe-area-inset-top, 1rem) 1rem env(safe-area-inset-bottom, 1.5rem);
+}
+
+#searchOverlay.active {
+  display: flex;
+}
+
+#searchOverlay header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+#searchOverlay h2 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+#searchOverlay .search-input-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#searchOverlay .search-input-group input {
+  flex: 1 1 auto;
+  border-radius: 9999px;
+  padding: 0.6rem 1rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--mst-text);
+}
+
+#searchOverlay .search-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+#searchOverlay .search-item {
+  border-radius: 1rem;
+  background: rgba(30, 41, 59, 0.8);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+#searchOverlay .search-item h3 {
+  font-size: 1rem;
+  margin: 0;
+  color: var(--mst-text);
+}
+
+#searchOverlay .meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--mst-text-muted);
+}
+
+#searchOverlay .actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+#searchOverlay .actions button {
+  flex: 1 1 auto;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+#mobileActionBar {
+  position: fixed;
+  bottom: env(safe-area-inset-bottom, 0);
+  left: 0;
+  right: 0;
+  padding: 0.6rem 1rem calc(env(safe-area-inset-bottom, 0) + 0.6rem);
+  background: linear-gradient(0deg, rgba(17, 24, 39, 0.95) 0%, rgba(17, 24, 39, 0.65) 80%, transparent 100%);
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  z-index: 4000;
+}
+
+#mobileActionBar button {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 1024px) {
+  #mainSplitter {
+    flex-direction: column !important;
+    gap: 1rem;
+  }
+
+  #sidepanel {
+    order: 2;
+  }
+
+  #desktop {
+    padding-bottom: 5.5rem;
+  }
+
+  #mobileActionBar {
+    display: flex;
+  }
+
+  #mainMenu {
+    display: none !important;
+  }
+
+  #HSplitter,
+  #propertiesWidget {
+    min-height: 280px !important;
+  }
+
+  #transferListFiltersToolbar {
+    flex-wrap: wrap;
+  }
+
+  .linked {
+    flex-direction: column;
+  }
+}
+
+.toast {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom, 0) + 5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(17, 94, 89, 0.95);
+  color: var(--mst-text);
+  padding: 0.65rem 1.1rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  z-index: 6000;
+  display: none;
+}
+
+.toast.error {
+  background: rgba(153, 27, 27, 0.95);
+}
+
+.toast.show {
+  display: block;
+}

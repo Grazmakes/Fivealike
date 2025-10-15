@@ -1,0 +1,11 @@
+{
+  "name": "Mobile Search Theme",
+  "version": "0.1.0",
+  "description": "Mobile-first qBittorrent WebUI theme with built-in search overlay.",
+  "slug": "mobile_search_theme",
+  "author": "Codex Assistant",
+  "license": "MIT",
+  "minWebUIVersion": "4.5.0",
+  "homepage": "https://example.com/mobile-search-theme",
+  "themeApi": 2
+}
