@@ -912,9 +912,28 @@ export default function SimpleItemDetails({
     if (!data) return renderGeneric();
 
     const title = data.name || data.original_name || itemName;
-    const posterUrl = data.poster_path
-      ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-      : data.image || data.artwork || null;
+    const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, category || 'TV Shows')];
+    const toPosterUrl = (path?: string | null) => {
+      if (!path || typeof path !== 'string') {
+        return null;
+      }
+      return path.startsWith('http') ? path : `https://image.tmdb.org/t/p/w500${path}`;
+    };
+    const posterCandidates: Array<string | null | undefined> = [
+      toPosterUrl(data.poster_path),
+      typeof data.image === 'string' ? data.image : null,
+      typeof data.artwork === 'string' ? data.artwork : null,
+      toPosterUrl(fallbackData?.poster_path),
+      typeof fallbackData?.image === 'string' ? fallbackData.image : null,
+      typeof fallbackData?.artwork === 'string' ? fallbackData.artwork : null,
+      toPosterUrl(subjectFallback?.poster_path),
+      typeof subjectFallback?.image === 'string' ? subjectFallback.image : null,
+      typeof subjectFallback?.artwork === 'string' ? subjectFallback.artwork : null
+    ];
+    const posterUrl =
+      posterCandidates.find(
+        (candidate): candidate is string => typeof candidate === 'string' && candidate.trim().length > 0
+      ) || null;
     const firstAirYear = data.first_air_date
       ? new Date(data.first_air_date).getFullYear()
       : data.year || data.startYear;
