@@ -2480,7 +2480,36 @@ function HomeContent() {
         
         {/* Left Vertical Separator */}
         <div className="hidden lg:block w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed left-64 top-0 h-screen"></div>
-        
+
+        {/* Global Mobile Search Bar - Always visible at top */}
+        <div className="lg:hidden fixed left-0 right-0 top-[60px] bg-transparent px-0 py-2 z-40">
+          <div className="relative flex items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search lists, authors, or topics..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    handleSearch(searchQuery.trim());
+                  }
+                }}
+                className="w-full pl-12 pr-16 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-0 focus:border-gray-400 dark:focus:border-gray-500 transition-all text-base font-medium shadow-lg"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Main Content Area - Fixed width to prevent expansion */}
         <div data-main-content className="fixed left-0 lg:left-80 top-20 right-0 lg:right-64 bottom-0 lg:bottom-0 pb-16 lg:pb-0 overflow-y-auto overflow-x-hidden pr-1 bg-transparent pt-8 z-30">
           {/* Back to Top Button */}
