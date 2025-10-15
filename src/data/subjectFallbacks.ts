@@ -788,4 +788,11 @@ subjectFallbacks[normalizeKey('The Sopranos', 'TV Shows')] = {
   sourceUrl: 'https://www.themoviedb.org/tv/1398-the-sopranos'
 };
 
+subjectFallbacks[normalizeKey('Making Fun', 'TV Shows')] = {
+  description: 'Making Fun is a Netflix competition series where makers create unique crafts and DIY projects, celebrating creativity and craftsmanship.',
+  image: 'https://image.tmdb.org/t/p/w500/hIhgv3SVXPRVZWmULjH5kXwbCOm.jpg',
+  sourceName: 'TMDB',
+  sourceUrl: 'https://www.themoviedb.org/tv/91009-making-fun'
+};
+
 export const normalizeSubjectKey = normalizeKey;
