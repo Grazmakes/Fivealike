@@ -254,20 +254,17 @@ export function HighFivedBadge({
 
       {/* Enhanced Tooltip */}
       {showTooltip && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50 bg-gray-900 text-white text-sm rounded-lg py-2 px-3 shadow-lg whitespace-nowrap">
+        <div className="fixed md:absolute bottom-20 md:bottom-full left-1/2 transform -translate-x-1/2 md:mb-2 z-50 bg-gray-900 text-white text-sm rounded-lg py-2 px-3 shadow-lg max-w-[280px] md:max-w-none md:whitespace-nowrap">
           <div className="flex items-center space-x-1">
             <Hand size={12} />
             <span className="font-semibold">Certi-fived Badge</span>
           </div>
           <div className="text-xs mt-1 text-gray-200">
-            This list is popular! 10+ people liked
-          </div>
-          <div className="text-xs text-gray-200">
-            everything on the list - that&apos;s why they got Certi-fived!
+            This list is popular! 10+ people liked everything on the list - that&apos;s why they got Certi-fived!
           </div>
 
           {/* Tooltip arrow */}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+          <div className="hidden md:block absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
         </div>
       )}
     </div>

@@ -68,19 +68,55 @@ const tutorialSteps: TutorialStep[] = [
       'Search or tap any list to see details'
     ],
     demoElement: (
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
-        <div className="space-y-2">
-          <div className="bg-white dark:bg-gray-800 p-2 rounded border text-sm">
-            🔍 Search lists, items, or users...
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700 overflow-hidden relative">
+        <div className="flex items-center space-x-2">
+          {/* Animated swipe gesture */}
+          <div className="relative">
+            <div className="text-4xl animate-[wiggle_2s_ease-in-out_infinite]">
+              👉
+            </div>
           </div>
-          <div className="flex flex-wrap gap-1">
-            <span className="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200 rounded text-xs">Movies</span>
-            <span className="px-2 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-200 rounded text-xs">TV Shows</span>
-            <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded text-xs">Music</span>
-            <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 rounded text-xs">Books</span>
-            <span className="px-2 py-1 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-200 rounded text-xs">Food</span>
+
+          {/* Sliding menu animation */}
+          <div className="flex-1 relative h-32">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full animate-[slideIn_2s_ease-in-out_infinite]">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 space-y-2">
+                  <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Genres Menu</div>
+                  <div className="space-y-1">
+                    <div className="flex items-center space-x-2 text-xs">
+                      <span className="text-lg">🎬</span>
+                      <span>Movies</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <span className="text-lg">🎵</span>
+                      <span>Music</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-xs">
+                      <span className="text-lg">📚</span>
+                      <span>Books</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <style jsx>{`
+          @keyframes wiggle {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(8px); }
+            75% { transform: translateX(4px); }
+          }
+
+          @keyframes slideIn {
+            0% { transform: translateX(-100%); opacity: 0; }
+            30% { transform: translateX(0); opacity: 1; }
+            70% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(-100%); opacity: 0; }
+          }
+        `}</style>
       </div>
     )
   },
