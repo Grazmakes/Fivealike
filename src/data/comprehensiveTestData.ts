@@ -4934,6 +4934,42 @@ export const comprehensiveTestLists: List[] = [
     comments: [],
     saves: 76,
     isRejected: false
+  },
+  {
+    id: 315,
+    title: 'If you like "Frank Zappa", try these FIVE ALIKE...',
+    author: '@graz',
+    category: 'Music',
+    date: '1/15/2025',
+    votes: 124,
+    upvotes: 132,
+    downvotes: 8,
+    userVote: null,
+    highFives: 78,
+    userHighFived: false,
+    items: ['Captain Beefheart', 'The Mothers of Invention', 'Mr. Bungle', 'Primus', 'King Crimson'],
+    description: 'Experimental, genre-bending musicians with complex compositions, satirical lyrics, and virtuoso performances.',
+    comments: [],
+    saves: 94,
+    isRejected: false
+  },
+  {
+    id: 316,
+    title: 'If you like "Making Fun" (Netflix), try these FIVE ALIKE...',
+    author: '@graz',
+    category: 'TV Shows',
+    date: '1/15/2025',
+    votes: 87,
+    upvotes: 92,
+    downvotes: 5,
+    userVote: null,
+    highFives: 54,
+    userHighFived: false,
+    items: ['The Toys That Made Us', 'Abstract: The Art of Design', 'Chef\'s Table', 'Blown Away', 'Nailed It!'],
+    description: 'Uplifting competition shows celebrating creativity, craftsmanship, and the joy of making things.',
+    comments: [],
+    saves: 68,
+    isRejected: false
   }
 ];
 
