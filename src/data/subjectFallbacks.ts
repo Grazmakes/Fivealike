@@ -10,9 +10,40 @@ export interface SubjectFallback {
 
 import { artistFallbacks } from '@/data/artistFallbacks';
 
+const canonicalizeCategory = (category?: string) => {
+  if (!category) return 'general';
+  const normalized = category.toLowerCase().trim();
+
+  if (['tv shows', 'tv show', 'tv', 'television', 'series', 'show', 'shows'].includes(normalized)) {
+    return 'tv shows';
+  }
+
+  if (['movies', 'movie', 'film', 'films', 'cinema'].includes(normalized)) {
+    return 'movies';
+  }
+
+  if (['music', 'song', 'songs', 'album', 'albums', 'artist', 'artists'].includes(normalized)) {
+    return 'music';
+  }
+
+  if (['books', 'book', 'novel', 'novels', 'literature'].includes(normalized)) {
+    return 'books';
+  }
+
+  if (['podcasts', 'podcast', 'audio show', 'audio shows'].includes(normalized)) {
+    return 'podcasts';
+  }
+
+  if (['games', 'game', 'video game', 'video games'].includes(normalized)) {
+    return 'games';
+  }
+
+  return normalized;
+};
+
 const normalizeKey = (subject: string, category?: string) => {
   const name = subject.toLowerCase().trim();
-  const cat = category ? category.toLowerCase().trim() : 'general';
+  const cat = canonicalizeCategory(category);
   return `${name}|${cat}`;
 };
 
