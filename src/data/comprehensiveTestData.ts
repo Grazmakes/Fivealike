@@ -4955,7 +4955,7 @@ export const comprehensiveTestLists: List[] = [
   },
   {
     id: 316,
-    title: 'If you like "Making Fun" (Netflix), try these FIVE ALIKE...',
+    title: 'If you like "Making Fun", try these FIVE ALIKE...',
     author: '@graz',
     category: 'TV Shows',
     date: '1/15/2025',
