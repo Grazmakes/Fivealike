@@ -21,14 +21,13 @@ interface TutorialPopupProps {
 const tutorialSteps: TutorialStep[] = [
   {
     title: 'Welcome to Five Alike!',
-    description: 'Discover "5 more just like it" for anything you love.',
+    description: 'Get 5 recommendations for anything you love.',
     icon: <Sparkles size={48} className="text-emerald-600" />,
     color: 'emerald',
     gradient: 'from-emerald-500 to-teal-600',
     features: [
-      'Browse "If you like X, try these FIVE ALIKE..." lists',
-      'Vote and comment on recommendations',
-      'Save lists to revisit later'
+      'Discover lists like "If you like X, try these 5"',
+      'Vote, comment, and save your favorites'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-700">
@@ -58,15 +57,15 @@ const tutorialSteps: TutorialStep[] = [
     )
   },
   {
-    title: 'Browse & Discover',
-    description: 'Find what you love.',
+    title: 'Swipe to Browse Genres',
+    description: 'Swipe right from the left edge to see all categories.',
     icon: <Search size={48} className="text-blue-600" />,
     color: 'blue',
     gradient: 'from-blue-500 to-indigo-600',
     features: [
-      'Search by keyword or username',
-      'Swipe right to see all genres',
-      'Click any list to vote and comment'
+      '👉 Swipe right to reveal the genres menu',
+      'Browse Movies, Music, Books, TV, Food & more',
+      'Search or tap any list to see details'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
@@ -87,14 +86,13 @@ const tutorialSteps: TutorialStep[] = [
   },
   {
     title: 'Create Your Own Lists',
-    description: 'Share what you love.',
+    description: 'Share your recommendations with the community.',
     icon: <Grid size={48} className="text-purple-600" />,
     color: 'purple',
     gradient: 'from-purple-500 to-pink-600',
     features: [
-      'Click "Create List" to start',
-      'Pick a category and add 5 items',
-      'Share with the community'
+      'Tap "Create List" to get started',
+      'Add 5 recommendations with details'
     ],
     demoElement: (
       <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-xl border border-purple-200 dark:border-purple-700">
