@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 });
     }
 
-    const apiKey = process.env.TMDB_API_KEY;
+    const apiKey = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
     if (apiKey && apiKey !== 'your_tmdb_api_key_here') {
       try {

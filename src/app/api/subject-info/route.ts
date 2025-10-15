@@ -75,7 +75,7 @@ const fetchWithTimeout = async (input: string, init?: RequestInit, timeout = DEF
 };
 
 const fetchFromTMDB = async (subject: string, type: 'movie' | 'tv'): Promise<SubjectInfo | null> => {
-  const apiKey = process.env.TMDB_API_KEY;
+  const apiKey = process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY;
   if (!apiKey) {
     return null;
   }

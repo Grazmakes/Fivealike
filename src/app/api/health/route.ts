@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
     timestamp: new Date().toISOString(),
     version: '1.0.0',
     apis: {
-      tmdb: process.env.TMDB_API_KEY ? 'configured' : 'missing',
+      tmdb: process.env.TMDB_API_KEY || process.env.NEXT_PUBLIC_TMDB_API_KEY ? 'configured' : 'missing',
       omdb: process.env.OMDB_API_KEY ? 'configured' : 'missing',
       google_books: process.env.GOOGLE_BOOKS_API_KEY ? 'configured' : 'missing',
       rawg: process.env.RAWG_API_KEY ? 'configured' : 'missing',
