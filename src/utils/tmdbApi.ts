@@ -161,6 +161,7 @@ const fetchViaSubjectInfo = async (itemName: string, category?: string) => {
       year: data.release_date?.substring(0, 4) || data.first_air_date?.substring(0, 4),
       rating: data.vote_average,
       poster: data.poster_path ? getTMDBImageUrl(data.poster_path) : data.image,
+      poster_path: data.poster_path,
       image: data.image,
       sourceName: data.sourceName,
       sourceUrl: data.sourceUrl,
@@ -203,7 +204,8 @@ export async function getItemDetailsByName(itemName: string, category?: string):
           genres: details.genres?.map(g => g.name).join(', '),
           runtime: details.runtime,
           director: details.director,
-          poster: getTMDBImageUrl(details.poster_path)
+          poster: getTMDBImageUrl(details.poster_path),
+          poster_path: details.poster_path
         };
       }
     } else if (bestMatch.media_type === 'tv' || (bestMatch.name && !bestMatch.title)) {
@@ -218,7 +220,8 @@ export async function getItemDetailsByName(itemName: string, category?: string):
           genres: details.genres?.map(g => g.name).join(', '),
           seasons: details.number_of_seasons,
           creators: details.created_by?.map(c => c.name).join(', '),
-          poster: getTMDBImageUrl(details.poster_path)
+          poster: getTMDBImageUrl(details.poster_path),
+          poster_path: details.poster_path
         };
       }
     }
@@ -230,7 +233,8 @@ export async function getItemDetailsByName(itemName: string, category?: string):
       description: bestMatch.overview,
       year: (bestMatch.release_date || bestMatch.first_air_date)?.substring(0, 4),
       rating: bestMatch.vote_average,
-      poster: getTMDBImageUrl(bestMatch.poster_path)
+      poster: getTMDBImageUrl(bestMatch.poster_path),
+      poster_path: bestMatch.poster_path
     };
 
     if (!fallback.poster) {

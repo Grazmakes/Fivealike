@@ -905,10 +905,13 @@ export default function SimpleItemDetails({
       effectiveData.poster_path ? `https://image.tmdb.org/t/p/w500${effectiveData.poster_path}` : null,
       typeof effectiveData.image === 'string' ? effectiveData.image : null,
       typeof effectiveData.artwork === 'string' ? effectiveData.artwork : null,
+      typeof effectiveData.poster === 'string' ? effectiveData.poster : null,
       typeof fallbackSubject?.image === 'string' ? fallbackSubject.image : null,
       typeof fallbackSubject?.artwork === 'string' ? fallbackSubject.artwork : null,
+      typeof fallbackSubject?.poster === 'string' ? fallbackSubject.poster : null,
       subjectFallback?.image,
-      subjectFallback?.artwork
+      subjectFallback?.artwork,
+      subjectFallback?.poster
     ];
     const posterUrl = posterCandidates.find(
       (candidate): candidate is string => typeof candidate === 'string' && candidate.trim().length > 0
@@ -968,12 +971,15 @@ export default function SimpleItemDetails({
       toPosterUrl(effectiveData.poster_path),
       typeof effectiveData.image === 'string' ? effectiveData.image : null,
       typeof effectiveData.artwork === 'string' ? effectiveData.artwork : null,
+      typeof effectiveData.poster === 'string' ? effectiveData.poster : null,
       toPosterUrl(fallbackData?.poster_path),
       typeof fallbackSubject?.image === 'string' ? fallbackSubject.image : null,
       typeof fallbackSubject?.artwork === 'string' ? fallbackSubject.artwork : null,
+      typeof fallbackSubject?.poster === 'string' ? fallbackSubject.poster : null,
       toPosterUrl(subjectFallback?.poster_path),
       typeof subjectFallback?.image === 'string' ? subjectFallback.image : null,
-      typeof subjectFallback?.artwork === 'string' ? subjectFallback.artwork : null
+      typeof subjectFallback?.artwork === 'string' ? subjectFallback.artwork : null,
+      typeof subjectFallback?.poster === 'string' ? subjectFallback.poster : null
     ];
     const posterUrl =
       posterCandidates.find(
