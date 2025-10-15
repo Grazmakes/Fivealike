@@ -866,16 +866,29 @@ export default function SimpleItemDetails({
   };
 
   const renderMovies = () => {
-    if (!data) return renderGeneric();
+    const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, category || 'Movies')];
+    const effectiveData = data || fallbackData || subjectFallback;
 
-    const title = data.title || data.original_title || itemName;
-    const posterUrl = data.poster_path
-      ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
-      : data.image || data.artwork || null;
-    const releaseYear = data.release_date
-      ? new Date(data.release_date).getFullYear()
-      : data.year;
-    const description = data.overview || data.description;
+    if (!effectiveData) return renderGeneric();
+
+    const title = effectiveData.title || effectiveData.original_title || itemName;
+    const posterCandidates: Array<string | null | undefined> = [
+      effectiveData.poster_path ? `https://image.tmdb.org/t/p/w500${effectiveData.poster_path}` : null,
+      typeof effectiveData.image === 'string' ? effectiveData.image : null,
+      typeof effectiveData.artwork === 'string' ? effectiveData.artwork : null,
+      typeof fallbackData?.image === 'string' ? fallbackData.image : null,
+      typeof fallbackData?.artwork === 'string' ? fallbackData.artwork : null,
+      subjectFallback?.image,
+      subjectFallback?.artwork
+    ];
+    const posterUrl = posterCandidates.find(
+      (candidate): candidate is string => typeof candidate === 'string' && candidate.trim().length > 0
+    ) || null;
+
+    const releaseYear = effectiveData.release_date
+      ? new Date(effectiveData.release_date).getFullYear()
+      : effectiveData.year;
+    const description = effectiveData.overview || effectiveData.description;
 
     return (
       <div className="flex flex-col items-start gap-4">
@@ -909,10 +922,12 @@ export default function SimpleItemDetails({
   };
 
   const renderTVShows = () => {
-    if (!data) return renderGeneric();
-
-    const title = data.name || data.original_name || itemName;
     const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, category || 'TV Shows')];
+    const effectiveData = data || fallbackData || subjectFallback;
+
+    if (!effectiveData) return renderGeneric();
+
+    const title = effectiveData.name || effectiveData.original_name || itemName;
     const toPosterUrl = (path?: string | null) => {
       if (!path || typeof path !== 'string') {
         return null;
@@ -920,9 +935,9 @@ export default function SimpleItemDetails({
       return path.startsWith('http') ? path : `https://image.tmdb.org/t/p/w500${path}`;
     };
     const posterCandidates: Array<string | null | undefined> = [
-      toPosterUrl(data.poster_path),
-      typeof data.image === 'string' ? data.image : null,
-      typeof data.artwork === 'string' ? data.artwork : null,
+      toPosterUrl(effectiveData.poster_path),
+      typeof effectiveData.image === 'string' ? effectiveData.image : null,
+      typeof effectiveData.artwork === 'string' ? effectiveData.artwork : null,
       toPosterUrl(fallbackData?.poster_path),
       typeof fallbackData?.image === 'string' ? fallbackData.image : null,
       typeof fallbackData?.artwork === 'string' ? fallbackData.artwork : null,
@@ -934,14 +949,14 @@ export default function SimpleItemDetails({
       posterCandidates.find(
         (candidate): candidate is string => typeof candidate === 'string' && candidate.trim().length > 0
       ) || null;
-    const firstAirYear = data.first_air_date
-      ? new Date(data.first_air_date).getFullYear()
-      : data.year || data.startYear;
-    const description = data.overview || data.description;
-    const countries = Array.isArray(data.origin_country)
-      ? data.origin_country
-      : data.country
-      ? [data.country]
+    const firstAirYear = effectiveData.first_air_date
+      ? new Date(effectiveData.first_air_date).getFullYear()
+      : effectiveData.year || effectiveData.startYear;
+    const description = effectiveData.overview || effectiveData.description;
+    const countries = Array.isArray(effectiveData.origin_country)
+      ? effectiveData.origin_country
+      : effectiveData.country
+      ? [effectiveData.country]
       : [];
 
     return (
