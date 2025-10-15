@@ -1,7 +1,10 @@
-const TMDB_API_KEY = process.env.TMDB_API_KEY || 'your_tmdb_api_key';
+const PUBLIC_TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || '';
+const TMDB_API_KEY = PUBLIC_TMDB_API_KEY && PUBLIC_TMDB_API_KEY !== 'your_tmdb_api_key'
+  ? PUBLIC_TMDB_API_KEY
+  : '';
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-const TMDB_DISABLED = !process.env.TMDB_API_KEY || process.env.TMDB_API_KEY === 'your_tmdb_api_key';
+const TMDB_DISABLED = !TMDB_API_KEY;
 const DEFAULT_TIMEOUT = 2000;
 
 const fetchWithTimeout = async (url: string) => {
@@ -131,12 +134,52 @@ export function getTMDBImageUrl(path: string | null): string | null {
 }
 
 // Smart search that tries to match the best result
-export async function getItemDetailsByName(itemName: string): Promise<any> {
+const fetchViaSubjectInfo = async (itemName: string, category?: string) => {
+  if (!category) return null;
+
   try {
+    const response = await fetch('/api/subject-info', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subject: itemName, category }),
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
+    if (!data) {
+      return null;
+    }
+
+    return {
+      type: category.toLowerCase().includes('tv') ? 'tv' : 'movie',
+      name: itemName,
+      description: data.description || '',
+      year: data.release_date?.substring(0, 4) || data.first_air_date?.substring(0, 4),
+      rating: data.vote_average,
+      poster: data.poster_path ? getTMDBImageUrl(data.poster_path) : data.image,
+      image: data.image,
+      sourceName: data.sourceName,
+      sourceUrl: data.sourceUrl,
+    };
+  } catch (error) {
+    return null;
+  }
+};
+
+export async function getItemDetailsByName(itemName: string, category?: string): Promise<any> {
+  try {
+    if (TMDB_DISABLED) {
+      return fetchViaSubjectInfo(itemName, category);
+    }
+
     const searchResults = await searchTMDB(itemName);
     
     if (searchResults.length === 0) {
-      return null;
+      return fetchViaSubjectInfo(itemName, category);
     }
     
     // Find the best match (exact title match or first result)
@@ -181,7 +224,7 @@ export async function getItemDetailsByName(itemName: string): Promise<any> {
     }
     
     // Fallback to search result data
-    return {
+    const fallback = {
       type: bestMatch.media_type || 'movie',
       name: bestMatch.title || bestMatch.name || itemName,
       description: bestMatch.overview,
@@ -189,8 +232,20 @@ export async function getItemDetailsByName(itemName: string): Promise<any> {
       rating: bestMatch.vote_average,
       poster: getTMDBImageUrl(bestMatch.poster_path)
     };
-    
+
+    if (!fallback.poster) {
+      const subjectInfo = await fetchViaSubjectInfo(itemName, category);
+      if (subjectInfo?.poster || subjectInfo?.image) {
+        return { ...fallback, poster: subjectInfo.poster || subjectInfo.image };
+      }
+    }
+
+    return fallback;
   } catch (error) {
+    const subjectInfo = await fetchViaSubjectInfo(itemName, category);
+    if (subjectInfo) {
+      return subjectInfo;
+    }
     return null;
   }
 }

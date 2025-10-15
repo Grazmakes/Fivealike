@@ -72,7 +72,7 @@ export interface MusicSearchResult {
 }
 
 class APIService {
-  private readonly TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || '';
+  private readonly TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY || process.env.TMDB_API_KEY || '';
   private readonly TMDB_BASE_URL = 'https://api.themoviedb.org/3';
   private readonly OMDB_API_KEY = process.env.NEXT_PUBLIC_OMDB_API_KEY || '';
   private readonly OMDB_BASE_URL = 'https://www.omdbapi.com';

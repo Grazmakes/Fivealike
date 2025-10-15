@@ -521,7 +521,7 @@ function ListCard({
     try {
       // Only use TMDB API for Movies and TV Shows categories
       if (list.category === 'Movies' || list.category === 'TV Shows') {
-        const tmdbResult = await getItemDetailsByName(itemName);
+        const tmdbResult = await getItemDetailsByName(itemName, list.category);
 
         if (tmdbResult) {
           // Cache the result
