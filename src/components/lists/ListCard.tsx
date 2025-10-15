@@ -1018,6 +1018,7 @@ function ListCard({
                 category={list.category}
                 showCloseButton={false}
                 hideSpotifyEmbed
+                initialData={mainSubjectData || mainSubjectFallback || null}
               />
             </div>
           </div>
@@ -1106,6 +1107,7 @@ function ListCard({
                     itemName={item}
                     category={list.category}
                     onClose={() => setExpandedItem(null)}
+                    initialData={cachedDetails || null}
                   />
                 </div>
               )}

@@ -18,6 +18,7 @@ interface SimpleItemDetailsProps {
   onClose?: () => void;
   showCloseButton?: boolean;
   hideSpotifyEmbed?: boolean;
+  initialData?: any;
 }
 
 type ZoomImage = {
@@ -117,6 +118,27 @@ const buildAmazonUrl = (category: AmazonCategory, itemName: string): string => {
     default:
       return `https://www.amazon.com/s?k=${searchTerm}`;
   }
+};
+
+const mergeWithFallback = (primary: any, fallback: any | null | undefined) => {
+  if (!fallback) return primary;
+  if (!primary) return fallback;
+
+  return {
+    ...fallback,
+    ...primary,
+    description: primary.description || fallback.description,
+    image: primary.image || primary.artwork || fallback.image,
+    artwork: primary.artwork || primary.image || fallback.image,
+    poster_path: primary.poster_path || fallback.poster_path,
+    genres: primary.genres || fallback.genres,
+    bio: primary.bio || fallback.bio,
+    coverArt: primary.coverArt || fallback.coverArt,
+    images: primary.images || fallback.images,
+    albums: primary.albums || fallback.albums,
+    id: primary.id || fallback.id,
+    spotifyId: primary.spotifyId || fallback.spotifyId
+  };
 };
 
 type ArtworkProps = {
@@ -260,15 +282,42 @@ export default function SimpleItemDetails({
   category,
   onClose,
   showCloseButton = true,
-  hideSpotifyEmbed = false
+  hideSpotifyEmbed = false,
+  initialData
 }: SimpleItemDetailsProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>(initialData || null);
   const [zoomImage, setZoomImage] = useState<ZoomImage | null>(null);
   const [forceWikipedia, setForceWikipedia] = useState(false);
 
   const fallbackData = useFallbackData(category, itemName);
+  const fallbackBase = useMemo(() => {
+    if (initialData && fallbackData) {
+      return mergeWithFallback(initialData, fallbackData);
+    }
+    return initialData || fallbackData || null;
+  }, [initialData, fallbackData]);
+
+  useEffect(() => {
+    if (!fallbackBase) return;
+
+    setData(prev => {
+      if (!prev) {
+        return fallbackBase;
+      }
+
+      const needsImage = !prev.image && fallbackBase.image;
+      const needsPoster = !prev.poster_path && fallbackBase.poster_path;
+      const needsDescription = (!prev.description || prev.description.length < (fallbackBase.description?.length || 0)) && fallbackBase.description;
+
+      if (needsImage || needsPoster || needsDescription) {
+        return mergeWithFallback(prev, fallbackBase);
+      }
+
+      return prev;
+    });
+  }, [fallbackBase]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -390,8 +439,8 @@ export default function SimpleItemDetails({
 
             if (!response.ok) {
               if (response.status === 404) {
-                if (fallbackData) {
-                  setData(fallbackData);
+                if (fallbackBase) {
+                  setData(fallbackBase);
                   setError(null);
                   return;
                 }
@@ -407,12 +456,12 @@ export default function SimpleItemDetails({
 
             const { results } = await response.json();
             if (results && results.length > 0) {
-              setData(mergeWithFallback(results[0], fallbackData));
+              setData(mergeWithFallback(results[0], fallbackBase));
               return;
             }
 
-            if (fallbackData) {
-              setData(fallbackData);
+            if (fallbackBase) {
+              setData(fallbackBase);
               setError(null);
               return;
             }
@@ -422,8 +471,8 @@ export default function SimpleItemDetails({
             return;
           } catch (err) {
             console.error('[SimpleItemDetails] Movies fetch error:', err);
-            if (fallbackData) {
-              setData(fallbackData);
+            if (fallbackBase) {
+              setData(fallbackBase);
               setError(null);
               return;
             }
@@ -440,8 +489,8 @@ export default function SimpleItemDetails({
 
             if (!response.ok) {
               if (response.status === 404) {
-                if (fallbackData) {
-                  setData(fallbackData);
+                if (fallbackBase) {
+                  setData(fallbackBase);
                   setError(null);
                   return;
                 }
@@ -457,12 +506,12 @@ export default function SimpleItemDetails({
 
             const { results } = await response.json();
             if (results && results.length > 0) {
-              setData(mergeWithFallback(results[0], fallbackData));
+              setData(mergeWithFallback(results[0], fallbackBase));
               return;
             }
 
-            if (fallbackData) {
-              setData(fallbackData);
+            if (fallbackBase) {
+              setData(fallbackBase);
               setError(null);
               return;
             }
@@ -472,8 +521,8 @@ export default function SimpleItemDetails({
             return;
           } catch (err) {
             console.error('[SimpleItemDetails] TV fetch error:', err);
-            if (fallbackData) {
-              setData(fallbackData);
+            if (fallbackBase) {
+              setData(fallbackBase);
               setError(null);
               return;
             }
@@ -689,27 +738,6 @@ export default function SimpleItemDetails({
     setZoomImage(image);
   };
 
-  const mergeWithFallback = (primary: any, fallback: any | null | undefined) => {
-    if (!fallback) return primary;
-    if (!primary) return fallback;
-
-    return {
-      ...fallback,
-      ...primary,
-      description: primary.description || fallback.description,
-      image: primary.image || primary.artwork || fallback.image,
-      artwork: primary.artwork || primary.image || fallback.image,
-      poster_path: primary.poster_path || fallback.poster_path,
-      genres: primary.genres || fallback.genres,
-      bio: primary.bio || fallback.bio,
-      coverArt: primary.coverArt || fallback.coverArt,
-      images: primary.images || fallback.images,
-      albums: primary.albums || fallback.albums,
-      id: primary.id || fallback.id,
-      spotifyId: primary.spotifyId || fallback.spotifyId
-    };
-  };
-
   const renderMusic = () => {
     if (!data) return renderGeneric();
 
@@ -867,7 +895,8 @@ export default function SimpleItemDetails({
 
   const renderMovies = () => {
     const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, category || 'Movies')];
-    const effectiveData = data || fallbackData || subjectFallback;
+    const fallbackSubject = fallbackBase || subjectFallback;
+    const effectiveData = data || fallbackSubject;
 
     if (!effectiveData) return renderGeneric();
 
@@ -876,8 +905,8 @@ export default function SimpleItemDetails({
       effectiveData.poster_path ? `https://image.tmdb.org/t/p/w500${effectiveData.poster_path}` : null,
       typeof effectiveData.image === 'string' ? effectiveData.image : null,
       typeof effectiveData.artwork === 'string' ? effectiveData.artwork : null,
-      typeof fallbackData?.image === 'string' ? fallbackData.image : null,
-      typeof fallbackData?.artwork === 'string' ? fallbackData.artwork : null,
+      typeof fallbackSubject?.image === 'string' ? fallbackSubject.image : null,
+      typeof fallbackSubject?.artwork === 'string' ? fallbackSubject.artwork : null,
       subjectFallback?.image,
       subjectFallback?.artwork
     ];
@@ -923,7 +952,8 @@ export default function SimpleItemDetails({
 
   const renderTVShows = () => {
     const subjectFallback = subjectFallbacks[normalizeSubjectKey(itemName, category || 'TV Shows')];
-    const effectiveData = data || fallbackData || subjectFallback;
+    const fallbackSubject = fallbackBase || subjectFallback;
+    const effectiveData = data || fallbackSubject;
 
     if (!effectiveData) return renderGeneric();
 
@@ -939,8 +969,8 @@ export default function SimpleItemDetails({
       typeof effectiveData.image === 'string' ? effectiveData.image : null,
       typeof effectiveData.artwork === 'string' ? effectiveData.artwork : null,
       toPosterUrl(fallbackData?.poster_path),
-      typeof fallbackData?.image === 'string' ? fallbackData.image : null,
-      typeof fallbackData?.artwork === 'string' ? fallbackData.artwork : null,
+      typeof fallbackSubject?.image === 'string' ? fallbackSubject.image : null,
+      typeof fallbackSubject?.artwork === 'string' ? fallbackSubject.artwork : null,
       toPosterUrl(subjectFallback?.poster_path),
       typeof subjectFallback?.image === 'string' ? subjectFallback.image : null,
       typeof subjectFallback?.artwork === 'string' ? subjectFallback.artwork : null
