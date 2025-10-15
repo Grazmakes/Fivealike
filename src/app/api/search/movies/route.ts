@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { subjectFallbacks, normalizeSubjectKey } from '@/data/subjectFallbacks';
 
 export async function GET(request: NextRequest) {
   try {
@@ -67,7 +68,53 @@ export async function GET(request: NextRequest) {
         )
       : mockMovies;
 
-    return NextResponse.json({ results: filteredMovies.slice(0, limit) });
+    if (filteredMovies.length > 0) {
+      return NextResponse.json({ results: filteredMovies.slice(0, limit) });
+    }
+
+    if (query) {
+      const fallbackKey = normalizeSubjectKey(query, 'Movies');
+      const fallback = subjectFallbacks[fallbackKey];
+
+      if (fallback) {
+        let posterPath: string | null = null;
+
+        if (typeof fallback.image === 'string') {
+          try {
+            const url = new URL(fallback.image);
+            if (url.hostname.includes('tmdb.org') && url.pathname.includes('/t/p/')) {
+              const [, sizeAndPath] = url.pathname.split('/t/p/');
+              if (sizeAndPath) {
+                const slashIndex = sizeAndPath.indexOf('/');
+                if (slashIndex >= 0) {
+                  posterPath = sizeAndPath.substring(slashIndex);
+                } else {
+                  posterPath = `/${sizeAndPath}`;
+                }
+              }
+            }
+          } catch {
+            posterPath = null;
+          }
+        }
+
+        return NextResponse.json({
+          results: [
+            {
+              id: -1,
+              title: query,
+              overview: fallback.description,
+              poster_path: posterPath,
+              image: fallback.image,
+              sourceName: fallback.sourceName,
+              sourceUrl: fallback.sourceUrl
+            }
+          ]
+        });
+      }
+    }
+
+    return NextResponse.json({ results: [] });
   } catch (error) {
     console.error('Movies search error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
