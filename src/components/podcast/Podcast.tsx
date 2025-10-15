@@ -528,66 +528,66 @@ export default function Podcast({ onEpisodeLike, onEpisodePlay, onBack }: Podcas
               key={episode.id}
               className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
             >
-              <div className="flex items-start space-x-4">
+              <div className="flex items-start space-x-3 md:space-x-4">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handlePlayPause(episode);
                   }}
-                  className="p-3 bg-primary-100 dark:bg-primary-900 hover:bg-primary-200 dark:hover:bg-primary-800 text-primary-600 dark:text-primary-400 rounded-full transition-colors"
+                  className="p-3 bg-primary-100 dark:bg-primary-900 hover:bg-primary-200 dark:hover:bg-primary-800 text-primary-600 dark:text-primary-400 rounded-full transition-colors flex-shrink-0"
                 >
-                  {currentEpisode?.id === episode.id && isPlaying ? 
+                  {currentEpisode?.id === episode.id && isPlaying ?
                     <Pause size={20} /> : <Play size={20} />
                   }
                 </button>
 
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-1">
-                    <h4 
-                      className="font-medium text-gray-900 dark:text-white cursor-pointer hover:text-primary-600 dark:hover:text-primary-400"
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start gap-2 mb-1 flex-wrap">
+                    <h4
+                      className="font-medium text-gray-900 dark:text-white cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 flex-1 min-w-0 break-words"
                       onClick={() => setSelectedEpisode(episode)}
                     >
                       {episode.title}
                     </h4>
-                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs">
+                    <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs flex-shrink-0">
                       Ep. {episode.episode}
                     </span>
                   </div>
-                  
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-2 leading-relaxed">
+
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 leading-relaxed break-words">
                     {episode.description}
                   </p>
-                  
-                  <div className="flex items-center space-x-4 text-xs text-gray-500 dark:text-gray-400 mb-2">
+
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mb-3">
                     <div className="flex items-center space-x-1">
-                      <Users size={12} />
-                      <span>{episode.hosts.join(' & ')}</span>
+                      <Users size={12} className="flex-shrink-0" />
+                      <span className="truncate">{episode.hosts.join(' & ')}</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <Calendar size={12} />
+                      <Calendar size={12} className="flex-shrink-0" />
                       <span>{formatDate(episode.publishedAt)}</span>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <Clock size={12} />
+                      <Clock size={12} className="flex-shrink-0" />
                       <span>{formatTime(episode.duration)}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-xs font-medium">
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-xs font-medium flex-shrink-0">
                         {episode.featuredList.category}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 break-words">
                         Featuring &ldquo;{episode.featuredList.title}&rdquo; by {episode.featuredList.author}
                       </span>
                     </div>
 
-                    <div className="flex items-center space-x-3">
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
                         {episode.playCount.toLocaleString()} plays
                       </span>
-                      
+
                       <button
                         onClick={(e) => handleLike(episode.id, e)}
                         className={`flex items-center space-x-1 text-sm transition-colors ${
