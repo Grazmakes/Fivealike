@@ -618,72 +618,79 @@ export default function Podcast({ onEpisodeLike, onEpisodePlay, onBack }: Podcas
               {/* Comment Section */}
               {showComments === episode.id && (
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600" onClick={(e) => e.stopPropagation()}>
-                  {/* Existing Comments */}
-                  {episodeComments[episode.id] && episodeComments[episode.id].length > 0 && (
-                    <div className="mb-4 space-y-3">
-                      {episodeComments[episode.id].map((comment) => (
-                        <div key={comment.id} className="space-y-2">
-                          <div className="flex space-x-3">
-                            <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center flex-shrink-0">
-                              <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
-                                {comment.avatar}
-                              </span>
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-2 mb-1">
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">
-                                  {comment.user}
-                                </span>
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
-                                  {new Date(comment.time).toLocaleDateString()}
+                  {/* Comments Container with limited height and scroll */}
+                  <div className="max-h-60 overflow-y-auto pr-2">
+                    {/* Existing Comments */}
+                    {episodeComments[episode.id] && episodeComments[episode.id].length > 0 && (
+                      <div className="mb-4 space-y-4">
+                        {episodeComments[episode.id].map((comment) => (
+                          <div key={comment.id} className="space-y-3">
+                            <div className="flex space-x-3">
+                              <div className="flex-shrink-0 w-8 h-8 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                                <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
+                                  {comment.avatar}
                                 </span>
                               </div>
-                              <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
-                                {comment.content}
-                              </p>
-                              <button
-                                onClick={() => {
-                                  setReplyingTo(comment.id);
-                                  setNewComment(`@${comment.user} `);
-                                }}
-                                className="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
-                              >
-                                Reply
-                              </button>
-                            </div>
-                          </div>
-                          
-                          {/* Replies */}
-                          {comment.replies && comment.replies.length > 0 && (
-                            <div className="ml-11 space-y-2">
-                              {comment.replies.map((reply: any) => (
-                                <div key={reply.id} className="flex space-x-3">
-                                  <div className="w-6 h-6 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <span className="text-xs font-medium text-primary-600 dark:text-primary-400">
-                                      {reply.avatar}
+                              <div className="flex-1 min-w-0">
+                                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
+                                  <div className="flex items-center space-x-2 mb-1">
+                                    <span className="text-sm font-medium text-primary-600 dark:text-primary-400">
+                                      {comment.user}
+                                    </span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                      {new Date(comment.time).toLocaleDateString()}
                                     </span>
                                   </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center space-x-2 mb-1">
-                                      <span className="text-sm font-medium text-gray-900 dark:text-white">
-                                        {reply.user}
-                                      </span>
-                                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                                        {new Date(reply.time).toLocaleDateString()}
+                                  <p className="text-sm text-gray-900 dark:text-gray-100">
+                                    {comment.content}
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    setReplyingTo(comment.id);
+                                    setNewComment(`@${comment.user} `);
+                                  }}
+                                  className="text-xs text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 mt-1 ml-3"
+                                >
+                                  Reply
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Replies */}
+                            {comment.replies && comment.replies.length > 0 && (
+                              <div className="ml-11">
+                                {comment.replies.map((reply: any) => (
+                                  <div key={reply.id} className="flex space-x-3 mb-2">
+                                    <div className="flex-shrink-0 w-7 h-7 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
+                                      <span className="text-xs font-medium text-primary-600 dark:text-primary-400">
+                                        {reply.avatar}
                                       </span>
                                     </div>
-                                    <p className="text-sm text-gray-700 dark:text-gray-300">
-                                      {reply.content}
-                                    </p>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-2">
+                                        <div className="flex items-center space-x-2 mb-1">
+                                          <span className="text-xs font-medium text-primary-600 dark:text-primary-400">
+                                            {reply.user}
+                                          </span>
+                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            {new Date(reply.time).toLocaleDateString()}
+                                          </span>
+                                        </div>
+                                        <p className="text-sm text-gray-900 dark:text-gray-100">
+                                          {reply.content}
+                                        </p>
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                   
                   {/* Add Comment Form */}
                   <div className="flex space-x-3">
