@@ -188,17 +188,6 @@ export default function TopHeader({
 
           {/* Right side Actions */}
           <div className="flex items-center space-x-4 flex-shrink-0">
-            {/* Mobile Search Button (only shown on mobile when search is not active) */}
-            {!showMobileSearch && (
-              <button
-                onClick={() => setShowMobileSearch(true)}
-                className="lg:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                aria-label="Search"
-              >
-                <Search size={20} />
-              </button>
-            )}
-
             {/* Notifications */}
             <div className="relative" ref={notificationsRef}>
               <button
