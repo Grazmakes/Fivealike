@@ -2633,7 +2633,7 @@ function HomeContent() {
             </div>
 
             {/* Genre List */}
-            <div className="px-2 py-2 pb-6">
+            <div className="px-2 py-2 pb-24">
               {categories.map((category) => {
                 const listCount = allLists.filter(list => list.category === category && !list.isRejected).length;
                 const IconComponent = categoryIcons[category] || BookOpen;
