@@ -2633,7 +2633,7 @@ function HomeContent() {
             </div>
 
             {/* Genre List */}
-            <div className="px-2 py-2">
+            <div className="px-2 py-2 pb-6">
               {categories.map((category) => {
                 const listCount = allLists.filter(list => list.category === category && !list.isRejected).length;
                 const IconComponent = categoryIcons[category] || BookOpen;
@@ -2671,7 +2671,7 @@ function HomeContent() {
                     handleRejectListsClick();
                     handleCloseGenres();
                   }}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 mb-2"
                 >
                   <div className="flex items-center space-x-3">
                     <span className="text-lg">💩</span>
