@@ -821,10 +821,11 @@ subjectFallbacks[normalizeKey('The Sopranos', 'TV Shows')] = {
 
 subjectFallbacks[normalizeKey('Making Fun', 'TV Shows')] = {
   description: 'Making Fun is a Netflix competition series where makers create unique crafts and DIY projects, celebrating creativity and craftsmanship.',
-  image: 'https://image.tmdb.org/t/p/w500/hIhgv3SVXPRVZWmULjH5kXwbCOm.jpg',
-  poster_path: '/hIhgv3SVXPRVZWmULjH5kXwbCOm.jpg',
+  image: 'https://image.tmdb.org/t/p/w500/pY8p4kFwnTyBq71MsvvV2ZFfrDA.jpg',
+  poster_path: '/pY8p4kFwnTyBq71MsvvV2ZFfrDA.jpg',
   sourceName: 'TMDB',
-  sourceUrl: 'https://www.themoviedb.org/tv/91009-making-fun'
+  sourceUrl: 'https://www.themoviedb.org/tv/157429-making-fun',
+  id: '157429'
 };
 
 export const normalizeSubjectKey = normalizeKey;
