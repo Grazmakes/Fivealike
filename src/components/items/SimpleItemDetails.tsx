@@ -917,6 +917,14 @@ export default function SimpleItemDetails({
       (candidate): candidate is string => typeof candidate === 'string' && candidate.trim().length > 0
     ) || null;
 
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[SimpleItemDetails][Movies] poster candidates', {
+        itemName,
+        posterCandidates,
+        chosen: posterUrl
+      });
+    }
+
     const releaseYear = effectiveData.release_date
       ? new Date(effectiveData.release_date).getFullYear()
       : effectiveData.year;
@@ -985,6 +993,14 @@ export default function SimpleItemDetails({
       posterCandidates.find(
         (candidate): candidate is string => typeof candidate === 'string' && candidate.trim().length > 0
       ) || null;
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.debug('[SimpleItemDetails][TV] poster candidates', {
+        itemName,
+        posterCandidates,
+        chosen: posterUrl
+      });
+    }
     const firstAirYear = effectiveData.first_air_date
       ? new Date(effectiveData.first_air_date).getFullYear()
       : effectiveData.year || effectiveData.startYear;
