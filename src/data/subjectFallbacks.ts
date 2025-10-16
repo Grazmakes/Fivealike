@@ -215,6 +215,39 @@ subjectFallbacks[normalizeKey('Wordle', 'Games')] = {
   sourceUrl: 'https://www.nytimes.com/games/wordle/index.html'
 };
 
+// Add experimental/avant-garde music artists for Frank Zappa list
+subjectFallbacks[normalizeKey('Captain Beefheart', 'Music')] = {
+  description: 'Captain Beefheart, born Don Van Vliet, was an American singer, songwriter, and visual artist known for his experimental approach to blues and rock music, particularly the groundbreaking album Trout Mask Replica.',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Captain_Beefheart',
+  id: '2k8kY9zHUWxuTtwV4UutHw',
+  spotifyId: '2k8kY9zHUWxuTtwV4UutHw'
+};
+
+subjectFallbacks[normalizeKey('The Mothers of Invention', 'Music')] = {
+  description: 'The Mothers of Invention were an American rock band from California, led by Frank Zappa, known for their experimental and satirical approach to rock music and complex compositions.',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/The_Mothers_of_Invention',
+  id: '3P2gYnypDVi90ZavnaAhfL',
+  spotifyId: '3P2gYnypDVi90ZavnaAhfL'
+};
+
+subjectFallbacks[normalizeKey('Primus', 'Music')] = {
+  description: 'Primus is an American rock band known for their unique funk metal sound, virtuoso bass playing by Les Claypool, and quirky, often surreal lyrics and musical experimentation.',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/Primus_(band)',
+  id: '64mPnRMMeudAet0E62ypkx',
+  spotifyId: '64mPnRMMeudAet0E62ypkx'
+};
+
+subjectFallbacks[normalizeKey('King Crimson', 'Music')] = {
+  description: 'King Crimson are an English progressive rock band formed in 1968, pioneering the genre with complex compositions, unusual time signatures, and innovative use of Mellotron and other experimental sounds.',
+  sourceName: 'Wikipedia',
+  sourceUrl: 'https://en.wikipedia.org/wiki/King_Crimson',
+  id: '7M1FPw29m5FbicYzS2xdpi',
+  spotifyId: '7M1FPw29m5FbicYzS2xdpi'
+};
+
 // Add comprehensive podcast fallbacks with Wikipedia descriptions
 // Note: Using placeholder images as Spotify artwork URLs require authentication
 subjectFallbacks[normalizeKey('Lex Fridman Podcast', 'Podcasts')] = {
