@@ -86,6 +86,7 @@ function HomeContent() {
   const [showCommunityGuidelines, setShowCommunityGuidelines] = useState(false);
   const [showRedditChat, setShowRedditChat] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [showSearchBar, setShowSearchBar] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showMobileGenres, setShowMobileGenres] = useState(false);
   const [genresSidebarOffset, setGenresSidebarOffset] = useState(0);
@@ -768,6 +769,20 @@ function HomeContent() {
       observer.disconnect();
     };
   }, [currentView, isLoggedIn]);
+
+  // Search bar scroll detection - show when user starts scrolling
+  useEffect(() => {
+    const mainContent = document.querySelector('[data-main-content]');
+    if (!mainContent) return;
+
+    const handleScroll = () => {
+      const scrollPosition = mainContent.scrollTop;
+      setShowSearchBar(scrollPosition > 50); // Show after 50px of scroll
+    };
+
+    mainContent.addEventListener('scroll', handleScroll);
+    return () => mainContent.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Swipe gesture detection for mobile genres sidebar with animation
   useEffect(() => {
@@ -2481,8 +2496,12 @@ function HomeContent() {
         {/* Left Vertical Separator */}
         <div className="hidden lg:block w-px bg-gray-200 dark:bg-gray-700 flex-shrink-0 fixed left-64 top-0 h-screen"></div>
 
-        {/* Global Mobile Search Bar - Always visible at top */}
-        <div className="lg:hidden fixed left-0 right-0 top-[60px] bg-transparent px-0 py-2 z-40">
+        {/* Global Mobile Search Bar - Appears when scrolling */}
+        <div className={`lg:hidden fixed left-0 right-0 top-[60px] bg-transparent px-0 py-2 z-40 transition-all duration-300 ${
+          showSearchBar
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 -translate-y-full pointer-events-none'
+        }`}>
           <div className="relative flex items-center">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
