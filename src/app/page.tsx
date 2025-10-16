@@ -294,6 +294,9 @@ function HomeContent() {
     const mentionUnread = mentionNotifications.filter((n) => !n.isRead).length;
     return regularUnread + mentionUnread;
   }, [notifications, mentionNotifications]);
+  const rejectedListsCount = useMemo(() => {
+    return allLists.filter(list => list.isRejected).length;
+  }, [allLists]);
   const [savedLists, setSavedLists] = useState<number[]>([]);
   const [itemVotes, setItemVotes] = useState<ItemVotes>({});
   const [bookmarkedItems, setBookmarkedItems] = useState<BookmarkedItem[]>([]);
@@ -2660,6 +2663,22 @@ function HomeContent() {
                   </button>
                 );
               })}
+
+              {/* The S#it List */}
+              {rejectedListsCount > 0 && (
+                <button
+                  onClick={() => {
+                    handleRejectListsClick();
+                    handleCloseGenres();
+                  }}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="text-lg">💩</span>
+                    <span className="text-base font-medium">S#it List</span>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         </div>
